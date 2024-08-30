@@ -1,0 +1,41 @@
+cmake_minimum_required(VERSION 3.10)
+project(Booking_vr_server)
+
+# Устанавливаем стандарт C++
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Указываем пути к заголовочным файлам и библиотекам MySQL Connector
+set(C_Connector_include_dir "${CMAKE_CURRENT_SOURCE_DIR}/include/MySQL Connector C++ 9.0/include/jdbc")
+set(Header_include_dir "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
+set(C_Connector_lib_dir "${CMAKE_CURRENT_SOURCE_DIR}/include/MySQL Connector C++ 9.0/lib64/vs14")
+
+# Добавляем пути к директориям с заголовками
+include_directories(${C_Connector_include_dir})
+include_directories(${Header_include_dir})
+
+# Путь к директории исходников и инициализация переменной SOURCES
+file(GLOB SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
+
+# Создаем исполняемый файл
+add_executable(Booking_vr_server ${SOURCES})
+
+# Ищем библиотеку MySQL Connector
+find_library(C_Connector_LIB NAMES mysqlcppconn PATHS ${C_Connector_lib_dir})
+
+# Проверяем, что библиотека найдена
+if (NOT C_Connector_LIB)
+    message(FATAL_ERROR "MySQL Connector C++ library not found!")
+endif()
+
+# Линкуем MySQL Connector с нашим проектом
+target_link_libraries(Booking_vr_server ${C_Connector_LIB})
+
+
+# Копируем файл конфигурации в папку с .exe файлом
+add_custom_command(TARGET Booking_vr_server POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_SOURCE_DIR}/db_config.conf"  # Путь к файлу конфигурации
+        "$<TARGET_FILE_DIR:Booking_vr_server>/db_config.conf"  # Куда копируем
+)
