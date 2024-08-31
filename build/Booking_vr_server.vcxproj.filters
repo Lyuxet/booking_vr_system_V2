@@ -4,6 +4,9 @@
     <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\Connect_to_DB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\booking_vr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

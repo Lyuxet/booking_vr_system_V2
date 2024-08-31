@@ -1,3 +1,4 @@
+use booking_vr;
 -- Создание таблицы GameSchedule
 CREATE TABLE GameSchedule (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
