@@ -8,7 +8,6 @@ int main(void){
     try
     {
         conn.Connect_database();
-        std::cout << "Connect succsessful" << std::endl;
         conn.Disconnect_database();
     }
     catch(const std::exception& e)

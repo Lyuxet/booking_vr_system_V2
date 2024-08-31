@@ -141,3 +141,5 @@ BEGIN
 	AND time_game = OLD.time_game;
 END$$
 DELIMITER ;
+
+
