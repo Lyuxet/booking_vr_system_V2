@@ -9,18 +9,34 @@ void Booking::Add_date(const Client_data& client, const Booking_data& booking) {
 }
 
 void Arena::Open_arena() {
+    ScopeGuard gurd(booking_, clients_);
     try {
         // Получаем соединение из пула
         std::unique_ptr<sql::Connection> conn = pool_.GetConnection();
+        booking_.type_game = "OPEN";
         executeTransaction(std::move(conn));
-        std::cout << "Transaction completed successfully." << std::endl;
+        std::cout << "Transaction Open game completed successfully." << std::endl;
     } catch (const std::exception& e) {
-        std::cerr << "Exception: " << e.what() << std::endl;
-    }
+        std::cerr << "Open arena Exception: " << e.what() << std::endl;
+        throw;
+    } 
+    
 }
 
 void Arena::Close_arena() {
-    // Логика закрытия арены, если требуется
+    ScopeGuard gurd(booking_, clients_);
+    try
+    {
+        std::unique_ptr<sql::Connection> conn = pool_.GetConnection();
+        booking_.type_game = "CLOSE";
+        booking_.players_count = 10;
+        executeTransaction(std::move(conn));
+        std::cout << "Transaction Close game completed successfully." << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Close arena Exception: " << e.what() << std::endl;
+        throw;
+    }
+    
 }
 
 void Arena::executeTransaction(std::unique_ptr<sql::Connection> conn) {
@@ -40,16 +56,17 @@ void Arena::executeTransaction(std::unique_ptr<sql::Connection> conn) {
         std::unique_ptr<sql::PreparedStatement> pstmt2;
         if (booking_.name_game == "ARENA SHOOTER") {
             pstmt2 = std::unique_ptr<sql::PreparedStatement>(conn->prepareStatement(
-                "INSERT INTO ArenaShooterStats(date_game, time_game, players_count, comment_game) VALUES (?,?,?,?)"));
+                "INSERT INTO ArenaShooterStats(date_game, time_game, players_count, comment_game, type_game) VALUES (?,?,?,?,?)"));
         } else if (booking_.name_game == "ARENA QUEST") {
             pstmt2 = std::unique_ptr<sql::PreparedStatement>(conn->prepareStatement(
-                "INSERT INTO ArenaQuestStats(date_game, time_game, players_count, comment_game) VALUES (?,?,?,?)"));
+                "INSERT INTO ArenaQuestStats(date_game, time_game, players_count, comment_game, type_game) VALUES (?,?,?,?,?)"));
         }
 
         pstmt2->setString(1, booking_.date_game);
         pstmt2->setString(2, booking_.time_game);
-        pstmt2->setString(3, booking_.players_count);
+        pstmt2->setInt(3, booking_.players_count);
         pstmt2->setString(4, booking_.comment_game);
+        pstmt2->setString(5, booking_.type_game);
         pstmt2->execute();
 
         // Добавление в таблицу бронирований
@@ -65,13 +82,13 @@ void Arena::executeTransaction(std::unique_ptr<sql::Connection> conn) {
 
         conn->commit(); // Завершаем транзакцию
     } catch (const sql::SQLException& e) {
-        std::cerr << "SQLException: " << e.what() << std::endl;
-        std::cerr << "MySQL error code: " << e.getErrorCode() << std::endl;
-        std::cerr << "SQLState: " << e.getSQLState() << std::endl;
+        std::cerr << "Transaction SQLException: " << e.what() << std::endl;
+        std::cerr << "Transaction MySQL error code: " << e.getErrorCode() << std::endl;
+        std::cerr << "Transaction SQLState: " << e.getSQLState() << std::endl;
         conn->rollback(); // Откатываем транзакцию в случае ошибки
         throw; // Пробрасываем исключение дальше
     } catch (const std::exception& e) {
-        std::cerr << "Exception: " << e.what() << std::endl;
+        std::cerr << "Transaction Exception: " << e.what() << std::endl;
         conn->rollback(); // Откатываем транзакцию в случае ошибки
         throw; // Пробрасываем исключение дальше
     }

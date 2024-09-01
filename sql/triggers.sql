@@ -52,8 +52,8 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Time slot for this game is already taken.';
     ELSE
         -- Если время свободно, добавляем запись в таблицу расписания
-        INSERT INTO GameSchedule (name_game, date_game, time_game, players_count, free_slots, comment_game)
-        VALUES (NEW.name_game, NEW.date_game, NEW.time_game, NEW.players_count, NEW.free_slots, NEW.comment_game);
+        INSERT INTO GameSchedule (type_game, name_game, date_game, time_game, players_count, max_players, free_slots, comment_game)
+        VALUES (NEW.type_game, NEW.name_game, NEW.date_game, NEW.time_game, NEW.players_count, NEW.max_players, NEW.free_slots, NEW.comment_game);
     END IF;
 END$$
 
@@ -124,8 +124,8 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Time slot for this game is already taken.';
     ELSE
         -- Если время свободно, добавляем запись в таблицу расписания
-        INSERT INTO GameSchedule (name_game, date_game, time_game, players_count, free_slots, comment_game)
-        VALUES (NEW.name_game, NEW.date_game, NEW.time_game, NEW.players_count, NEW.free_slots, NEW.comment_game);
+        INSERT INTO GameSchedule (type_game, name_game, date_game, time_game, players_count, max_players, free_slots, comment_game)
+        VALUES (NEW.type_game, NEW.name_game, NEW.date_game, NEW.time_game, NEW.players_count, NEW.max_players, NEW.free_slots, NEW.comment_game);
     END IF;
 END$$
 

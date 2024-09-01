@@ -9,11 +9,34 @@ struct Client_data {
 };
 
 struct Booking_data {
+    std::string type_game;
     std::string name_game;
     std::string date_game;
     std::string time_game;
-    std::string players_count;
+    int players_count = 0;
     std::string comment_game;
+};
+
+class ScopeGuard {
+public:
+    ScopeGuard(Booking_data& booking, Client_data& clients) : booking_(booking), clients_(clients) {}
+    ~ScopeGuard() {
+        booking_.comment_game = "";
+        booking_.date_game = "";
+        booking_.name_game = "";
+        booking_.players_count = 0;
+        booking_.time_game = "";
+        booking_.type_game = "";
+
+        clients_.first_name = "";
+        clients_.last_name = "";
+        clients_.phone = "";
+        clients_.email = "";
+
+    }
+private:
+    Booking_data& booking_;
+    Client_data& clients_;
 };
 
 class Booking {

@@ -2,12 +2,13 @@ use booking_vr;
 -- Создание таблицы GameSchedule
 CREATE TABLE GameSchedule (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    type_game VARCHAR(50) NOT NULL,
     name_game VARCHAR(50) NOT NULL,
     date_game DATE NOT NULL,
     time_game TIME NOT NULL,
     players_count INT DEFAULT 0 NOT NULL,
-    max_players INT DEFAULT 10 NOT NULL,
-    free_slots INT DEFAULT 10 NOT NULL,
+    max_players INT NOT NULL,
+    free_slots INT NOT NULL,
 	comment_game VARCHAR(400) DEFAULT 'Резерв' NOT NULL,
     UNIQUE (date_game, time_game, name_game)  -- Уникальная комбинация по дате, времени и названию игры
 );
@@ -17,6 +18,7 @@ CREATE INDEX idx_game_schedule ON GameSchedule (name_game, date_game, time_game)
 
 -- Создание таблицы ArenaShooterStats
 CREATE TABLE ArenaShooterStats (
+    type_game VARCHAR(50) NOT NULL,
     name_game VARCHAR(50) DEFAULT 'ARENA SHOOTER' NOT NULL,
     date_game DATE NOT NULL,
     time_game TIME NOT NULL,
@@ -32,6 +34,7 @@ CREATE TABLE ArenaShooterStats (
 
 -- Создание таблицы ArenaShooterStats
 CREATE TABLE ArenaQuestStats (
+    type_game VARCHAR(50) NOT NULL,
     name_game VARCHAR(50) DEFAULT 'ARENA QUEST' NOT NULL,
     date_game DATE NOT NULL,
     time_game TIME NOT NULL,
