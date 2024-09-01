@@ -2,6 +2,8 @@
 #include "booking_vr.h"
 #include <iostream>
 
+
+
 int main() {
     try {
         // Путь к файлу конфигурации
@@ -13,7 +15,7 @@ int main() {
 
         // Создаем данные клиента и бронирования
         Client_data client = {"Иван", "Иванов", "+79161234560", "ivanov@example.ru"};
-        Booking_data booking = {"","ARENA SHOOTER", "2024-08-30", "13:00:00", 9, "Комментарий к игре"};
+        Booking_data booking = {"","ARENA QUEST", "2024-08-30", "13:00:00", 3, "Комментарий к игре"};
 
         // Создаем объект Arena и добавляем данные
         Arena arena(pool);  // Передаем пул соединений в объект Arena

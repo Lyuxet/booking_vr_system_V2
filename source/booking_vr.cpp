@@ -13,6 +13,7 @@ void Arena::Open_arena() {
     try {
         // Получаем соединение из пула
         std::unique_ptr<sql::Connection> conn = pool_.GetConnection();
+        ConnectionGuard guard(conn, pool_);
         booking_.type_game = "OPEN";
         executeTransaction(std::move(conn));
         std::cout << "Transaction Open game completed successfully." << std::endl;
@@ -39,9 +40,37 @@ void Arena::Close_arena() {
     
 }
 
-void Arena::executeTransaction(std::unique_ptr<sql::Connection> conn) {
+void Cubes::Open_cubes(){
+    ScopeGuard gurd(booking_, clients_);
+     try {
+        // Получаем соединение из пула
+        std::unique_ptr<sql::Connection> conn = pool_.GetConnection();
+        booking_.type_game = "CUBES";
+        executeTransaction(std::move(conn));
+        std::cout << "Transaction Cubes completed successfully." << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Cubes Exception: " << e.what() << std::endl;
+        throw;
+    } 
+}
+
+void Booking::executeTransaction(std::unique_ptr<sql::Connection> conn) {
     try {
         conn->setAutoCommit(false); // Отключаем автокоммит
+
+        std::unique_ptr<sql::PreparedStatement> pstmtCheck(conn->prepareStatement(
+            "SELECT * FROM GameSchedule WHERE name_game = ? AND date_game = ? AND time_game = ?"));
+        pstmtCheck->setString(1, booking_.name_game);
+        pstmtCheck->setString(2, booking_.date_game);
+        pstmtCheck->setString(3, booking_.time_game);
+
+        std::unique_ptr<sql::ResultSet> res(pstmtCheck->executeQuery());
+
+        if (res->next()) {
+            // Если запись найдена, значит слот уже занят
+            throw std::runtime_error("Selected time slot is already booked.");
+        } 
+
 
         // Добавление в таблицу клиентов
         std::unique_ptr<sql::PreparedStatement> pstmt1(conn->prepareStatement(
@@ -60,6 +89,9 @@ void Arena::executeTransaction(std::unique_ptr<sql::Connection> conn) {
         } else if (booking_.name_game == "ARENA QUEST") {
             pstmt2 = std::unique_ptr<sql::PreparedStatement>(conn->prepareStatement(
                 "INSERT INTO ArenaQuestStats(date_game, time_game, players_count, comment_game, type_game) VALUES (?,?,?,?,?)"));
+        }else if (booking_.name_game == "CUBES"){
+            pstmt2 = std::unique_ptr<sql::PreparedStatement>(conn->prepareStatement(
+                "INSERT INTO Cubes(date_game, time_game, players_count, comment_game, type_game) VALUES (?,?,?,?,?)"));
         }
 
         pstmt2->setString(1, booking_.date_game);

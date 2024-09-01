@@ -17,6 +17,20 @@ struct Booking_data {
     std::string comment_game;
 };
 
+class ConnectionGuard {
+public:
+    ConnectionGuard(std::unique_ptr<sql::Connection>& conn, ConnectionPool& pool)
+        : conn_(conn), pool_(pool) {}
+    ~ConnectionGuard() {
+        if (conn_) {
+            pool_.ReleaseConnection(std::move(conn_));
+        }
+    }
+private:
+    std::unique_ptr<sql::Connection>& conn_;
+    ConnectionPool& pool_;
+};
+
 class ScopeGuard {
 public:
     ScopeGuard(Booking_data& booking, Client_data& clients) : booking_(booking), clients_(clients) {}
@@ -46,6 +60,7 @@ public:
     void Add_date(const Client_data& client, const Booking_data& booking);
 
 protected:
+    void executeTransaction(std::unique_ptr<sql::Connection> conn);
     Client_data clients_;
     Booking_data booking_;
     ConnectionPool& pool_;
@@ -56,7 +71,10 @@ public:
     Arena(ConnectionPool& pool) : Booking(pool) {}
     void Open_arena();
     void Close_arena();
+};
 
-private:
-    void executeTransaction(std::unique_ptr<sql::Connection> conn);
+class Cubes : public Booking{
+public:
+    Cubes(ConnectionPool& pool) : Booking(pool) {}
+    void Open_cubes();
 };
