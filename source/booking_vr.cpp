@@ -15,6 +15,7 @@ void Arena::Open_arena() {
     ScopeGuard guard(booking_, clients_);
     try {
         std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
+        ConnectionGuard conn_guard(conn, pool_);
         executeTransaction(conn);
         std::cout << "Transaction Open game completed successfully." << std::endl;
     } catch (const std::exception& e) {
@@ -27,6 +28,7 @@ void Arena::Close_arena() {
     ScopeGuard guard(booking_, clients_);
     try {
         std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
+        ConnectionGuard conn_guard(conn, pool_);
         booking_.type_game = "CLOSE";
         booking_.players_count = 10;
         executeTransaction(conn);
@@ -41,6 +43,7 @@ void Cubes::Open_cubes() {
     ScopeGuard guard(booking_, clients_);
     try {
         std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
+        ConnectionGuard conn_guard(conn, pool_);
         executeTransaction(conn);
         std::cout << "Transaction Cubes completed successfully." << std::endl;
     } catch (const std::exception& e) {
