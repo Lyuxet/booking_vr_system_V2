@@ -3,9 +3,14 @@
 #include <cppconn/exception.h>
 #include <fstream>
 #include <iostream>
-ConnectionPool::ConnectionPool(size_t poolSize, const std::string& configFilePath)
-    : poolSize_(poolSize), configFilePath_(configFilePath) {}
 
+// Конструктор
+ConnectionPool::ConnectionPool(size_t poolSize, const std::string& configFilePath)
+    : poolSize_(poolSize), configFilePath_(configFilePath) {
+    Init_pool();
+}
+
+// Инициализация пула соединений
 void ConnectionPool::Init_pool() {
     DBConfig config = ReadDBConfig(configFilePath_);
     for (size_t i = 0; i < poolSize_; ++i) {
@@ -13,21 +18,25 @@ void ConnectionPool::Init_pool() {
     }
 }
 
-std::unique_ptr<sql::Connection> ConnectionPool::GetConnection() {
-    std::lock_guard<std::mutex> lock(mutex_);
-    if (pool_.empty()) {
-        throw std::runtime_error("No available connections in the pool.");
+// Получение соединения из пула
+std::shared_ptr<sql::Connection> ConnectionPool::GetConnection() {
+    std::unique_lock<std::mutex> lock(mutex_);
+    while (pool_.empty()) {
+        condVar_.wait(lock); // Ожидаем, пока не появится свободное соединение
     }
-    std::unique_ptr<sql::Connection> conn = std::move(pool_.front());
+    auto conn = std::move(pool_.front());
     pool_.pop();
     return conn;
 }
 
-void ConnectionPool::ReleaseConnection(std::unique_ptr<sql::Connection> conn) {
+// Возвращение соединения в пул
+void ConnectionPool::ReleaseConnection(std::shared_ptr<sql::Connection> conn) {
     std::lock_guard<std::mutex> lock(mutex_);
     pool_.push(std::move(conn));
+    condVar_.notify_one(); // Уведомляем, что есть доступное соединение
 }
 
+// Чтение конфигурации из файла
 DBConfig ConnectionPool::ReadDBConfig(const std::string& file_name) {
     std::ifstream in_file(file_name);
     if (!in_file.is_open()) {
@@ -54,31 +63,44 @@ DBConfig ConnectionPool::ReadDBConfig(const std::string& file_name) {
             }
         }
     }
-    in_file.close();
     return config;
 }
 
-std::unique_ptr<sql::Connection> ConnectionPool::CreateConnection(const DBConfig& config) {
+// Создание нового соединения
+std::shared_ptr<sql::Connection> ConnectionPool::CreateConnection(const DBConfig& config) {
     std::string tcp_ip = "tcp://" + config.host;
     sql::mysql::MySQL_Driver* driver = sql::mysql::get_mysql_driver_instance();
-    std::unique_ptr<sql::Connection> conn(driver->connect(tcp_ip, config.user, config.password));
+    auto conn = std::shared_ptr<sql::Connection>(driver->connect(tcp_ip, config.user, config.password));
     conn->setSchema(config.dbname);
     return conn;
 }
 
+
+// Конструктор
 Transaction::Transaction(std::shared_ptr<sql::Connection> conn)
     : conn_(conn), committed_(false) {
-    conn_->setAutoCommit(false);
+    conn_->setAutoCommit(false); // Отключаем автоматический коммит
 }
 
+// Деструктор
 Transaction::~Transaction() {
     if (!committed_) {
-        conn_->rollback();
-        std::cerr << "Transaction rolled back due to failure." << std::endl;
+        try {
+            conn_->rollback(); // Откатываем изменения, если не закоммичено
+            std::cerr << "Transaction rolled back due to failure." << std::endl;
+        } catch (const sql::SQLException& e) {
+            std::cerr << "Error during rollback: " << e.what() << std::endl;
+        }
     }
 }
 
+// Коммит транзакции
 void Transaction::commit() {
-    conn_->commit();
-    committed_ = true;
+    try {
+        conn_->commit(); // Фиксируем изменения
+        committed_ = true;
+    } catch (const sql::SQLException& e) {
+        std::cerr << "Error during commit: " << e.what() << std::endl;
+        throw; // Перебрасываем исключение дальше
+    }
 }

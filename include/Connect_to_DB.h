@@ -33,23 +33,24 @@ public:
     ConnectionPool(size_t poolSize, const std::string& configFilePath);
 
     void Init_pool();
-    std::unique_ptr<sql::Connection> GetConnection();
-    void ReleaseConnection(std::unique_ptr<sql::Connection> conn);
+    std::shared_ptr<sql::Connection> GetConnection();
+    void ReleaseConnection(std::shared_ptr<sql::Connection> conn);
 
 private:
     std::string configFilePath_;
-    std::queue<std::unique_ptr<sql::Connection>> pool_;
+    std::queue<std::shared_ptr<sql::Connection>> pool_;
     std::mutex mutex_;
+    std::condition_variable condVar_;
     size_t poolSize_;
 
     DBConfig ReadDBConfig(const std::string& file_name);
-    std::unique_ptr<sql::Connection> CreateConnection(const DBConfig& config);
+    std::shared_ptr<sql::Connection> CreateConnection(const DBConfig& config);
 };
 
 // Класс для управления транзакциями
 class Transaction {
 public:
-    Transaction(std::shared_ptr<sql::Connection> conn);
+    explicit Transaction(std::shared_ptr<sql::Connection> conn);
     ~Transaction();
 
     void commit();
@@ -58,4 +59,3 @@ private:
     std::shared_ptr<sql::Connection> conn_;
     bool committed_;
 };
-

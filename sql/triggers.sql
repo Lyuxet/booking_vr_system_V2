@@ -211,7 +211,7 @@ CREATE TRIGGER 	delete_cubes_schedule
 BEFORE DELETE ON Cubes
 FOR EACH ROW
 BEGIN
-	DELETE FROM GameSchedule
+	DELETE FROM GameSchedule	
     WHERE name_game = OLD.name_game
     AND date_game = OLD.date_game
 	AND time_game = OLD.time_game;
