@@ -14,10 +14,11 @@ int main() {
         std::string configPath = "db_config.conf";
 
         // Инициализируем пул соединений
-        ConnectionPool pool(5, configPath);
+        ConnectionPool pool(20, configPath);
         pool.Init_pool();
 
         TestIncludeOpenArena(pool);
+        TestDelete(pool);
         
     } 
     catch (const sql::SQLException& e) {
