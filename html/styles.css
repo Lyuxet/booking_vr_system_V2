@@ -2,12 +2,14 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: black;
 }
 
 .header-container {
     display: flex;
     justify-content: center; /* Центрирование заголовка по горизонтали */
     margin: 20px 0;
+    color: white;
 }
 
 .booking-container {
@@ -15,6 +17,7 @@ body {
     flex-direction: column;
     align-items: flex-start; /* Выровнять кнопки по левому краю */
     margin-left: 20px; /* Отступ от левого края */
+    
 }
 
 .booking-row {
@@ -46,12 +49,19 @@ body {
 
 .booking-button:hover {
     border-color: #0026ff;
+    border-width: 2px; /* Ширина границы при наведении */
 }
 
 .booking-button .line {
     border-bottom: 3px solid #fff;
     width: 100%;
     margin: 5px 0;
+}
+
+.booking-button.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    background-color: #d3d3d3; /* Серый цвет для неактивной кнопки */
 }
 
 .player-input {
@@ -61,6 +71,14 @@ body {
     border: 1px solid #ccc;
     padding: 5px;
     box-sizing: border-box;
+    background-color: black;
+    color: white;
+}
+
+.booking-button.disabled .player-input {
+    background-color: #e0e0e0; /* Светло-серый фон для неактивного текстового поля */
+    border: 1px solid #ccc; /* Обычная граница для неактивного поля */
+    cursor: not-allowed; /* Указываем, что поле неактивно */
 }
 
 .booking-button .seats {
