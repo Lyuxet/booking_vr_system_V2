@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бронирование игры на арене</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header-container">
+        <h1>Бронирование игры на арене</h1>
+    </div>
+
+    <div class="booking-container">
+        <div class="booking-row">
+            <!-- Кнопка с информацией -->
+            <button id="timeButton1" class="booking-button">
+                <div class="time">11:15 - 12:00</div>
+                <div class="line"></div>
+                <div class="price"> 1200 ₽</div>
+                <div class="players"><input type="text" id="playerInput1" value="" class="player-input" /></div>
+                <div class="seats">Свободно: <span id="seatsCount1">10</span> мест</div>
+            </button>
+
+            <button id="timeButton2" class="booking-button">
+                <div class="time">12:15 - 13:00</div>
+                <div class="line"></div>
+                <div class="price">1200 ₽</div>
+                <div class="players"><input type="text" id="playerInput2" value="" class="player-input" /></div>
+                <div class="seats">Свободно: <span id="seatsCount2">10</span> мест</div>
+            </button>
+
+            <button id="timeButton3" class="booking-button">
+                <div class="time">13:15 - 14:00</div>
+                <div class="line"></div>
+                <div class="price">1200 ₽</div>
+                <div class="players"><input type="text" id="playerInput3" value="" class="player-input" /></div>
+                <div class="seats">Свободно: <span id="seatsCount3">10</span> мест</div>
+            </button>
+        </div>
+        <div class="booking-row">
+        
+        </div>
+    </div>
+
+    <script>
+        // Событие нажатия на кнопки
+        document.querySelectorAll(".booking-button").forEach(button => {
+            button.addEventListener("click", function() {
+                this.classList.toggle("selected");
+            });
+        });
+
+        document.querySelectorAll(".player-input").forEach(input => {
+            input.addEventListener("click", function(event) {
+                // Получить родительскую кнопку
+                const button = this.closest(".booking-button");
+                // Проверить, активна ли кнопка
+                if (button.classList.contains("selected")) {
+                    event.stopPropagation(); // Остановить всплытие события клика
+                }
+            });
+        });
+    </script>
+
+    <script src="../js/script_button_text_box.js"></script> <!-- Подключение JavaScript файла -->
+</body>
+</html>

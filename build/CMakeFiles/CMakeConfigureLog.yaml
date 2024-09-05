@@ -24,7 +24,7 @@ events:
       The output was:
       0
       Версия MSBuild 17.10.4+10fbfbf2e для .NET Framework
-      Сборка начата 05.09.2024 14:14:58.
+      Сборка начата 05.09.2024 15:02:35.
       
       Проект "C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\3.29.3\\CompilerIdC\\CompilerIdC.vcxproj" в узле 1 (целевые объекты по умолчанию).
       PrepareForBuild:
@@ -53,7 +53,7 @@ events:
           Предупреждений: 0
           Ошибок: 0
       
-      Прошло времени 00:00:00.51
+      Прошло времени 00:00:00.70
       
       
       Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
@@ -79,7 +79,7 @@ events:
       The output was:
       0
       Версия MSBuild 17.10.4+10fbfbf2e для .NET Framework
-      Сборка начата 05.09.2024 14:14:58.
+      Сборка начата 05.09.2024 15:02:36.
       
       Проект "C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\3.29.3\\CompilerIdCXX\\CompilerIdCXX.vcxproj" в узле 1 (целевые объекты по умолчанию).
       PrepareForBuild:
@@ -108,7 +108,7 @@ events:
           Предупреждений: 0
           Ошибок: 0
       
-      Прошло времени 00:00:00.52
+      Прошло времени 00:00:00.54
       
       
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
@@ -127,8 +127,8 @@ events:
     checks:
       - "Detecting C compiler ABI info"
     directories:
-      source: "C:/Users/Lyuxet/projects/booking_vr/build/CMakeFiles/CMakeScratch/TryCompile-lkgtiu"
-      binary: "C:/Users/Lyuxet/projects/booking_vr/build/CMakeFiles/CMakeScratch/TryCompile-lkgtiu"
+      source: "C:/Users/Lyuxet/projects/booking_vr/build/CMakeFiles/CMakeScratch/TryCompile-lv2v67"
+      binary: "C:/Users/Lyuxet/projects/booking_vr/build/CMakeFiles/CMakeScratch/TryCompile-lv2v67"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
       CMAKE_C_FLAGS_DEBUG: "/MDd /Zi /Ob0 /Od /RTC1"
@@ -137,40 +137,40 @@ events:
       variable: "CMAKE_C_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/Lyuxet/projects/booking_vr/build/CMakeFiles/CMakeScratch/TryCompile-lkgtiu'
+        Change Dir: 'C:/Users/Lyuxet/projects/booking_vr/build/CMakeFiles/CMakeScratch/TryCompile-lv2v67'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_0a42e.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_d285d.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         Версия MSBuild 17.10.4+10fbfbf2e для .NET Framework
-        Сборка начата 05.09.2024 14:14:59.
+        Сборка начата 05.09.2024 15:02:37.
         
-        Проект "C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\CMakeScratch\\TryCompile-lkgtiu\\cmTC_0a42e.vcxproj" в узле 1 (целевые объекты по умолчанию).
+        Проект "C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\CMakeScratch\\TryCompile-lv2v67\\cmTC_d285d.vcxproj" в узле 1 (целевые объекты по умолчанию).
         PrepareForBuild:
-          Создание каталога "cmTC_0a42e.dir\\Debug\\".
+          Создание каталога "cmTC_d285d.dir\\Debug\\".
           Структурированный вывод включен. Форматирование диагностики компилятора будет отражать иерархию ошибок. Подробнее см. https://aka.ms/cpp/structured-output.
-          Создание каталога "C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\CMakeScratch\\TryCompile-lkgtiu\\Debug\\".
-          Создание каталога "cmTC_0a42e.dir\\Debug\\cmTC_0a42e.tlog\\".
+          Создание каталога "C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\CMakeScratch\\TryCompile-lv2v67\\Debug\\".
+          Создание каталога "cmTC_d285d.dir\\Debug\\cmTC_d285d.tlog\\".
         InitializeBuildStatus:
-          Создание "cmTC_0a42e.dir\\Debug\\cmTC_0a42e.tlog\\unsuccessfulbuild", так как было задано "AlwaysCreate".
-          Обращение к "cmTC_0a42e.dir\\Debug\\cmTC_0a42e.tlog\\unsuccessfulbuild".
+          Создание "cmTC_d285d.dir\\Debug\\cmTC_d285d.tlog\\unsuccessfulbuild", так как было задано "AlwaysCreate".
+          Обращение к "cmTC_d285d.dir\\Debug\\cmTC_d285d.tlog\\unsuccessfulbuild".
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.40.33807\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_0a42e.dir\\Debug\\\\" /Fd"cmTC_0a42e.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.29\\Modules\\CMakeCCompilerABI.c"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.40.33807\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_d285d.dir\\Debug\\\\" /Fd"cmTC_d285d.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.29\\Modules\\CMakeCCompilerABI.c"
           Оптимизирующий компилятор Microsoft (R) C/C++ версии 19.40.33812 для x64
           (C) Корпорация Майкрософт (Microsoft Corporation).  Все права защищены.
-          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_0a42e.dir\\Debug\\\\" /Fd"cmTC_0a42e.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.29\\Modules\\CMakeCCompilerABI.c"
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_d285d.dir\\Debug\\\\" /Fd"cmTC_d285d.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.29\\Modules\\CMakeCCompilerABI.c"
           CMakeCCompilerABI.c
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.40.33807\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\CMakeScratch\\TryCompile-lkgtiu\\Debug\\cmTC_0a42e.exe" /INCREMENTAL /ILK:"cmTC_0a42e.dir\\Debug\\cmTC_0a42e.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/Lyuxet/projects/booking_vr/build/CMakeFiles/CMakeScratch/TryCompile-lkgtiu/Debug/cmTC_0a42e.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/Lyuxet/projects/booking_vr/build/CMakeFiles/CMakeScratch/TryCompile-lkgtiu/Debug/cmTC_0a42e.lib" /MACHINE:X64  /machine:x64 cmTC_0a42e.dir\\Debug\\CMakeCCompilerABI.obj
-          cmTC_0a42e.vcxproj -> C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\CMakeScratch\\TryCompile-lkgtiu\\Debug\\cmTC_0a42e.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.40.33807\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\CMakeScratch\\TryCompile-lv2v67\\Debug\\cmTC_d285d.exe" /INCREMENTAL /ILK:"cmTC_d285d.dir\\Debug\\cmTC_d285d.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/Lyuxet/projects/booking_vr/build/CMakeFiles/CMakeScratch/TryCompile-lv2v67/Debug/cmTC_d285d.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/Lyuxet/projects/booking_vr/build/CMakeFiles/CMakeScratch/TryCompile-lv2v67/Debug/cmTC_d285d.lib" /MACHINE:X64  /machine:x64 cmTC_d285d.dir\\Debug\\CMakeCCompilerABI.obj
+          cmTC_d285d.vcxproj -> C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\CMakeScratch\\TryCompile-lv2v67\\Debug\\cmTC_d285d.exe
         FinalizeBuildStatus:
-          Файл "cmTC_0a42e.dir\\Debug\\cmTC_0a42e.tlog\\unsuccessfulbuild" удаляется.
-          Обращение к "cmTC_0a42e.dir\\Debug\\cmTC_0a42e.tlog\\cmTC_0a42e.lastbuildstate".
-        Сборка проекта "C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\CMakeScratch\\TryCompile-lkgtiu\\cmTC_0a42e.vcxproj" завершена (целевые объекты по умолчанию).
+          Файл "cmTC_d285d.dir\\Debug\\cmTC_d285d.tlog\\unsuccessfulbuild" удаляется.
+          Обращение к "cmTC_d285d.dir\\Debug\\cmTC_d285d.tlog\\cmTC_d285d.lastbuildstate".
+        Сборка проекта "C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\CMakeScratch\\TryCompile-lv2v67\\cmTC_d285d.vcxproj" завершена (целевые объекты по умолчанию).
         
         Сборка успешно завершена.
             Предупреждений: 0
             Ошибок: 0
         
-        Прошло времени 00:00:00.49
+        Прошло времени 00:00:00.56
         
       exitCode: 0
   -
@@ -210,8 +210,8 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "C:/Users/Lyuxet/projects/booking_vr/build/CMakeFiles/CMakeScratch/TryCompile-fmym5m"
-      binary: "C:/Users/Lyuxet/projects/booking_vr/build/CMakeFiles/CMakeScratch/TryCompile-fmym5m"
+      source: "C:/Users/Lyuxet/projects/booking_vr/build/CMakeFiles/CMakeScratch/TryCompile-qo1yrv"
+      binary: "C:/Users/Lyuxet/projects/booking_vr/build/CMakeFiles/CMakeScratch/TryCompile-qo1yrv"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /W3 /GR /EHsc"
       CMAKE_CXX_FLAGS_DEBUG: "/MDd /Zi /Ob0 /Od /RTC1"
@@ -221,40 +221,40 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/Lyuxet/projects/booking_vr/build/CMakeFiles/CMakeScratch/TryCompile-fmym5m'
+        Change Dir: 'C:/Users/Lyuxet/projects/booking_vr/build/CMakeFiles/CMakeScratch/TryCompile-qo1yrv'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_bf172.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_50e56.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         Версия MSBuild 17.10.4+10fbfbf2e для .NET Framework
-        Сборка начата 05.09.2024 14:15:00.
+        Сборка начата 05.09.2024 15:02:38.
         
-        Проект "C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\CMakeScratch\\TryCompile-fmym5m\\cmTC_bf172.vcxproj" в узле 1 (целевые объекты по умолчанию).
+        Проект "C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\CMakeScratch\\TryCompile-qo1yrv\\cmTC_50e56.vcxproj" в узле 1 (целевые объекты по умолчанию).
         PrepareForBuild:
-          Создание каталога "cmTC_bf172.dir\\Debug\\".
+          Создание каталога "cmTC_50e56.dir\\Debug\\".
           Структурированный вывод включен. Форматирование диагностики компилятора будет отражать иерархию ошибок. Подробнее см. https://aka.ms/cpp/structured-output.
-          Создание каталога "C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\CMakeScratch\\TryCompile-fmym5m\\Debug\\".
-          Создание каталога "cmTC_bf172.dir\\Debug\\cmTC_bf172.tlog\\".
+          Создание каталога "C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\CMakeScratch\\TryCompile-qo1yrv\\Debug\\".
+          Создание каталога "cmTC_50e56.dir\\Debug\\cmTC_50e56.tlog\\".
         InitializeBuildStatus:
-          Создание "cmTC_bf172.dir\\Debug\\cmTC_bf172.tlog\\unsuccessfulbuild", так как было задано "AlwaysCreate".
-          Обращение к "cmTC_bf172.dir\\Debug\\cmTC_bf172.tlog\\unsuccessfulbuild".
+          Создание "cmTC_50e56.dir\\Debug\\cmTC_50e56.tlog\\unsuccessfulbuild", так как было задано "AlwaysCreate".
+          Обращение к "cmTC_50e56.dir\\Debug\\cmTC_50e56.tlog\\unsuccessfulbuild".
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.40.33807\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_bf172.dir\\Debug\\\\" /Fd"cmTC_bf172.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.29\\Modules\\CMakeCXXCompilerABI.cpp"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.40.33807\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_50e56.dir\\Debug\\\\" /Fd"cmTC_50e56.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.29\\Modules\\CMakeCXXCompilerABI.cpp"
           Оптимизирующий компилятор Microsoft (R) C/C++ версии 19.40.33812 для x64
           (C) Корпорация Майкрософт (Microsoft Corporation).  Все права защищены.
-          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_bf172.dir\\Debug\\\\" /Fd"cmTC_bf172.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.29\\Modules\\CMakeCXXCompilerABI.cpp"
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_50e56.dir\\Debug\\\\" /Fd"cmTC_50e56.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.29\\Modules\\CMakeCXXCompilerABI.cpp"
           CMakeCXXCompilerABI.cpp
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.40.33807\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\CMakeScratch\\TryCompile-fmym5m\\Debug\\cmTC_bf172.exe" /INCREMENTAL /ILK:"cmTC_bf172.dir\\Debug\\cmTC_bf172.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/Lyuxet/projects/booking_vr/build/CMakeFiles/CMakeScratch/TryCompile-fmym5m/Debug/cmTC_bf172.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/Lyuxet/projects/booking_vr/build/CMakeFiles/CMakeScratch/TryCompile-fmym5m/Debug/cmTC_bf172.lib" /MACHINE:X64  /machine:x64 cmTC_bf172.dir\\Debug\\CMakeCXXCompilerABI.obj
-          cmTC_bf172.vcxproj -> C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\CMakeScratch\\TryCompile-fmym5m\\Debug\\cmTC_bf172.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.40.33807\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\CMakeScratch\\TryCompile-qo1yrv\\Debug\\cmTC_50e56.exe" /INCREMENTAL /ILK:"cmTC_50e56.dir\\Debug\\cmTC_50e56.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/Lyuxet/projects/booking_vr/build/CMakeFiles/CMakeScratch/TryCompile-qo1yrv/Debug/cmTC_50e56.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/Lyuxet/projects/booking_vr/build/CMakeFiles/CMakeScratch/TryCompile-qo1yrv/Debug/cmTC_50e56.lib" /MACHINE:X64  /machine:x64 cmTC_50e56.dir\\Debug\\CMakeCXXCompilerABI.obj
+          cmTC_50e56.vcxproj -> C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\CMakeScratch\\TryCompile-qo1yrv\\Debug\\cmTC_50e56.exe
         FinalizeBuildStatus:
-          Файл "cmTC_bf172.dir\\Debug\\cmTC_bf172.tlog\\unsuccessfulbuild" удаляется.
-          Обращение к "cmTC_bf172.dir\\Debug\\cmTC_bf172.tlog\\cmTC_bf172.lastbuildstate".
-        Сборка проекта "C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\CMakeScratch\\TryCompile-fmym5m\\cmTC_bf172.vcxproj" завершена (целевые объекты по умолчанию).
+          Файл "cmTC_50e56.dir\\Debug\\cmTC_50e56.tlog\\unsuccessfulbuild" удаляется.
+          Обращение к "cmTC_50e56.dir\\Debug\\cmTC_50e56.tlog\\cmTC_50e56.lastbuildstate".
+        Сборка проекта "C:\\Users\\Lyuxet\\projects\\booking_vr\\build\\CMakeFiles\\CMakeScratch\\TryCompile-qo1yrv\\cmTC_50e56.vcxproj" завершена (целевые объекты по умолчанию).
         
         Сборка успешно завершена.
             Предупреждений: 0
             Ошибок: 0
         
-        Прошло времени 00:00:00.51
+        Прошло времени 00:00:00.50
         
       exitCode: 0
   -

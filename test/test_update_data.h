@@ -15,7 +15,7 @@ void WorkerThreadUpdate(ConnectionPool& pool, int thread_index) {
         Client_data client = {"Иван", "Иванов", "+79161234560", "ivanov@example.ru"};
 
         client.current_phone = client.phone;
-
+        
         // Бронирование с уникальным временем
         Booking_data booking = {"OPEN", "ARENA QUEST", "2024-08-30", "13:00:00", 1, "Комментарий к игре"};
 
