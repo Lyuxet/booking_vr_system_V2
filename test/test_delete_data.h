@@ -12,7 +12,7 @@ std::mutex mtxDelete; // Мьютекс для синхронизации дос
 
 void WorkerThreadDelete(ConnectionPool& pool, int thread_index) {
     try {
-        Booking_data booking = {"CLOSE", "ARENA QUEST", "2024-08-30", "13:00:00", 1, "Комментарий к игре"};
+        Booking_data booking = {"OPEN", "ARENA QUEST", "2024-08-30", "13:00:00", 1, "Комментарий к игре"};
         
         // Изменяем время на основе индекса потока
         std::string new_time = add_hours_to_time(booking.time_game, thread_index);

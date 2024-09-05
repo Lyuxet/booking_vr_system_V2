@@ -86,7 +86,7 @@ BEGIN
         ) THEN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Time slot for this game is already taken.';
         END IF;
-        
+
         -- Обновляем запись в таблице GameSchedule с новыми ключевыми полями
         UPDATE GameSchedule 
         SET type_game = NEW.type_game, 
@@ -218,7 +218,7 @@ BEGIN
         ) THEN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Time slot for this game is already taken.';
         END IF;
-        
+
         -- Обновляем запись в таблице GameSchedule с новыми ключевыми полями
         UPDATE GameSchedule 
         SET type_game = NEW.type_game, 
@@ -248,6 +248,7 @@ BEGIN
 END$$
 
 DELIMITER ;
+
 
 DELIMITER $$
 CREATE TRIGGER 	delete_quest_schedule
@@ -349,7 +350,7 @@ BEGIN
         ) THEN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Time slot for this game is already taken.';
         END IF;
-        
+
         -- Обновляем запись в таблице GameSchedule с новыми ключевыми полями
         UPDATE GameSchedule 
         SET type_game = NEW.type_game, 

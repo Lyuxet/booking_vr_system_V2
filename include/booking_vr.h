@@ -9,6 +9,9 @@ struct Client_data {
     std::string last_name;
     std::string phone;
     std::string email;
+    std::string current_phone;
+    
+
 };
 
 // Структура для хранения данных бронирования
@@ -19,6 +22,8 @@ struct Booking_data {
     std::string time_game;
     int players_count = 0;
     std::string comment_game;
+    std::string current_date_game;
+    std::string current_time_game;
 };
 
 // Класс для управления ресурсами соединения
@@ -78,6 +83,7 @@ public:
 
     void AddDataByInsertAndUpdate(const Client_data& client, const Booking_data& booking);
     void AddDataByDelete(const Booking_data& booking);
+    void Update();
     void Delete();
 
 protected:

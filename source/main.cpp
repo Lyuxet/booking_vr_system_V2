@@ -2,6 +2,7 @@
 #include "booking_vr.h"
 #include "test_insert_data.h"
 #include "test_delete_data.h"
+#include "test_update_data.h"
 #include <iostream>
 #include <thread>
 #include <vector>
@@ -22,6 +23,7 @@ int main() {
         std::vector<std::thread> threads;
 
         TestIncludeOpenArena(pool, numThreads, threads);
+        TestUpdateOpenArena(pool, numThreads, threads);
         TestDelete(pool, numThreads, threads);
         
     } 
