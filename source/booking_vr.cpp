@@ -6,9 +6,23 @@
 #include <thread>
 #include <cstdlib>
 
+std::mutex mtxtest;
 
+void Booking::PrintInsertBooking(){
+    std::cout << "Забронировано " << booking_.name_game 
+    << " с типом " << booking_.type_game 
+    << " на " << booking_.date_game << " " << booking_.time_game
+    << std::endl;
+}
 
-void Booking::AddDataByInsert(const Client_data& client, const Booking_data& booking) {
+void Booking::PrintDeleteBooking(){
+    std::cout << "Удалено бронирование " << booking_.name_game 
+    << " с типом " << booking_.type_game 
+    << " на " << booking_.date_game << " " << booking_.time_game
+    << std::endl;
+}
+
+void Booking::AddDataByInsertAndUpdate(const Client_data& client, const Booking_data& booking) {
     clients_ = client;
     booking_ = booking;
 }
@@ -22,8 +36,10 @@ void Arena::Open_arena() {
         std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
         ConnectionGuard conn_guard(conn, pool_);
         executeTransactionInsert(conn);
-        std::cout << "Transaction Open game completed successfully." << std::endl;
+        std::lock_guard<std::mutex> lock(mtxtest);
+        PrintInsertBooking();
     } catch (const std::exception& e) {
+        std::lock_guard<std::mutex> lock(mtxtest);
         std::cerr << "Open arena Exception: " << e.what() << std::endl;
         throw;
     }
@@ -37,7 +53,8 @@ void Arena::Close_arena() {
         booking_.type_game = "CLOSE";
         booking_.players_count = 10;
         executeTransactionInsert(conn);
-        std::cout << "Transaction Close game completed successfully." << std::endl;
+        std::lock_guard<std::mutex> lock(mtxtest);
+        PrintInsertBooking();
     } catch (const std::exception& e) {
         std::cerr << "Close arena Exception: " << e.what() << std::endl;
         throw;
@@ -51,10 +68,12 @@ void Booking::Delete(){
        std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
        ConnectionGuard conn_guard(conn, pool_);
         executeTransactionDelete(conn);
-        std::cout << "Transaction Delete game completed successfully." << std::endl;
+        std::lock_guard<std::mutex> lock(mtxtest);
+        PrintDeleteBooking();
     }
     catch(const std::exception& e)
     {
+        std::lock_guard<std::mutex> lock(mtxtest);
         std::cerr << "Delete arena Exception: " << e.what() << std::endl;
         throw;
     }
@@ -67,8 +86,11 @@ void Cubes::Open_cubes() {
         std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
         ConnectionGuard conn_guard(conn, pool_);
         executeTransactionInsert(conn);
-        std::cout << "Transaction Cubes completed successfully." << std::endl;
+        std::lock_guard<std::mutex> lock(mtxtest);
+        PrintInsertBooking();
+        
     } catch (const std::exception& e) {
+        std::lock_guard<std::mutex> lock(mtxtest);
         std::cerr << "Cubes Exception: " << e.what() << std::endl;
         throw;
     }
@@ -199,7 +221,8 @@ void Booking::executeTransactionDelete(std::shared_ptr<sql::Connection> conn) {
             std::unique_ptr<sql::ResultSet> res(pstmtCheck->executeQuery());
 
             if (!res->next()) {
-                throw std::runtime_error("Record not found for deletion.");
+                std::string error_message = booking_.name_game + " with time " + booking_.time_game + " not found"; 
+                throw std::runtime_error(error_message);
             }
 
             // Удаление данных из соответствующей таблицы

@@ -33,7 +33,7 @@ void WorkerThreadInsert(ConnectionPool& pool, int thread_index) {
         Client_data client = {"Иван", "Иванов", "+79161234560", "ivanov@example.ru"};
 
         // Бронирование с уникальным временем
-        Booking_data booking = {"OPEN", "ARENA QUEST", "2024-08-30", "13:00:00", 1, "Комментарий к игре"};
+        Booking_data booking = {"CLOSE", "ARENA QUEST", "2024-08-30", "13:00:00", 1, "Комментарий к игре"};
         
         // Изменяем время на основе индекса потока
         std::string new_time = add_hours_to_time(booking.time_game, thread_index);
@@ -46,10 +46,8 @@ void WorkerThreadInsert(ConnectionPool& pool, int thread_index) {
         // Создаем объект Arena и добавляем данные
         Arena arena(pool);  // Передаем пул соединений в объект Arena
         arena.AddDataByInsert(client, booking);
-        arena.Open_arena();
+        arena.Close_arena();
 
-        std::lock_guard<std::mutex> lock(mtx);
-        std::cout << "Поток " << thread_index << ": Данные успешно добавлены в базу данных с временем " << booking.time_game << "." << std::endl;
     } 
     catch (const sql::SQLException& e) {
         std::lock_guard<std::mutex> lock(mtx);
@@ -57,10 +55,9 @@ void WorkerThreadInsert(ConnectionPool& pool, int thread_index) {
     }
 }
 
-void TestIncludeOpenArena(ConnectionPool& pool){
+void TestIncludeOpenArena(ConnectionPool& pool, const int numThreads, std::vector<std::thread>& threads){
     // Создаем и запускаем несколько потоков
-    const int numThreads = 10;
-    std::vector<std::thread> threads;
+    
     
     for (int i = 0; i < numThreads; ++i) {
         threads.emplace_back(WorkerThreadInsert, std::ref(pool), i);
@@ -74,45 +71,3 @@ void TestIncludeOpenArena(ConnectionPool& pool){
     }
 }
 
-void WorkerThreadDelete(ConnectionPool& pool, int thread_index) {
-    try {
-        Booking_data booking = {"OPEN", "ARENA QUEST", "2024-08-30", "13:00:00", 1, "Комментарий к игре"};
-        
-        // Изменяем время на основе индекса потока
-        std::string new_time = add_hours_to_time(booking.time_game, thread_index);
-        int new_players_count = booking.players_count + thread_index;
-        
-        // Обновляем время в структуре бронирования
-        booking.time_game = new_time;
-        booking.players_count = new_players_count;
-
-        // Создаем объект Arena и удаляем данные
-        Arena arena(pool);  // Передаем пул соединений в объект Arena
-        arena.AddDataByDelete(booking);
-        arena.Delete();
-
-        std::lock_guard<std::mutex> lock(mtx);
-        std::cout << "Поток " << thread_index << ": Данные успешно удалены из базы данных с временем " << booking.time_game << "." << std::endl;
-    } 
-    catch (const sql::SQLException& e) {
-        std::lock_guard<std::mutex> lock(mtx);
-        std::cerr << "Поток " << thread_index << ": Ошибка в потоке: " << e.what() << std::endl;
-    }
-}
-
-void TestDelete(ConnectionPool& pool){
-    // Создаем и запускаем несколько потоков
-    const int numThreads = 10;
-    std::vector<std::thread> threads;
-    
-    for (int i = 0; i < numThreads; ++i) {
-        threads.emplace_back(WorkerThreadDelete, std::ref(pool), i);
-    }
-
-    // Ожидаем завершения всех потоков
-    for (auto& t : threads) {
-        if (t.joinable()) {
-            t.join();
-        }
-    }
-}

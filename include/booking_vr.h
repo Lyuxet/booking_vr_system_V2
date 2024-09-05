@@ -76,13 +76,17 @@ public:
     Booking(ConnectionPool& pool) : pool_(pool) {}
     virtual ~Booking() = default;
 
-    void AddDataByInsert(const Client_data& client, const Booking_data& booking);
+    void AddDataByInsertAndUpdate(const Client_data& client, const Booking_data& booking);
     void AddDataByDelete(const Booking_data& booking);
     void Delete();
 
 protected:
     void executeTransactionInsert(std::shared_ptr<sql::Connection> conn);
     void executeTransactionDelete(std::shared_ptr<sql::Connection> conn);
+    void executeTransactionUpdate(std::shared_ptr<sql::Connection> conn);
+    void PrintInsertBooking();
+    void PrintDeleteBooking();
+    void PrintUpdateBooking();
 
     Client_data clients_;
     Booking_data booking_;
@@ -102,6 +106,5 @@ public:
 class Cubes : public Booking {
 public:
     Cubes(ConnectionPool& pool) : Booking(pool) {}
-    
     void Open_cubes();
 };
