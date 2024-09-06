@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const playerInput = button.querySelector('.player-input');
         const seatsCount = button.querySelector('.seats span');
         
+        
         const currentPlayers = parseInt(playerInput.value, 10) || 0;
         if (currentPlayers > maxPlayers) {
             playerInput.value = maxPlayers;
@@ -43,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const playerInput = this.querySelector('.player-input');
         this.classList.toggle('selected');
-
+        
         if (this.classList.contains('selected')) {
             // Если кнопка выбрана, установить значение "1" в текстовое поле
             playerInput.value = 1;
