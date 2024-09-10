@@ -13,6 +13,29 @@
 
 int main(){
 
+
+    try {
+        // Путь к файлу конфигурации
+        std::string configPath = "db_config.conf";
+
+        // Инициализируем пул соединений
+        ConnectionPool pool(5, configPath);
+        pool.Init_pool();
+
+        // Создаем и запускаем несколько потоков
+        const int numThreads = 10;
+        std::vector<std::thread> threads;
+        
+        TestIncludeOpenArena(pool, numThreads, threads);
+        TestUpdateOpenArena(pool, numThreads, threads);
+        TestDelete(pool, numThreads, threads);
+    } 
+    catch (const sql::SQLException& e) {
+        std::cerr << "Main Ошибка: " << e.what() << std::endl;
+    }
+    
+
+    /*
    httplib::Server server;
 
    server.Post("/data", [](const httplib::Request& req, httplib::Response& res){
@@ -30,6 +53,6 @@ int main(){
     std::cout << "Starting server on port 8080..." << std::endl;
     server.listen("0.0.0.0", 8080);
 
-
+    */
 
 }

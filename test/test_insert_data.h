@@ -33,7 +33,7 @@ void WorkerThreadInsert(ConnectionPool& pool, int thread_index) {
         Client_data client = {"Иван", "Иванов", "+79161234560", "ivanov@example.ru"};
 
         // Бронирование с уникальным временем
-        Booking_data booking = {"OPEN", "ARENA QUEST", "2024-08-30", "13:00:00", 1, "Комментарий к игре"};
+        Booking_data booking = {"OPEN", "ARENA QUEST", "2024-08-30", "13:00:00", 1, 1200, "Комментарий к игре"};
         
         // Изменяем время на основе индекса потока
         std::string new_time = add_hours_to_time(booking.time_game, thread_index);

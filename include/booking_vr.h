@@ -21,6 +21,7 @@ struct Booking_data {
     std::string date_game;
     std::string time_game;
     int players_count = 0;
+    int price = 0;
     std::string comment_game;
     std::string current_date_game;
     std::string current_time_game;
