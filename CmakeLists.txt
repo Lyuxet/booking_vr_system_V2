@@ -13,11 +13,15 @@ set(HTTPLIB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/cpp-httplib")
 
 set(C_Connector_lib_dir "${CMAKE_CURRENT_SOURCE_DIR}/include/MySQL Connector C++ 9.0/lib64/vs14")
 
+# Указываем путь к заголовочным файлам nlohmann/json
+set(NLOHMANN_JSON_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/json/include")
+
 # Добавляем пути к директориям с заголовками
 include_directories(${C_Connector_include_dir})
 include_directories(${Header_include_dir})
 include_directories(${Header_test_include_dir})
 include_directories(${HTTPLIB_INCLUDE_DIR})
+include_directories(${NLOHMANN_JSON_INCLUDE_DIR})
 
 # Путь к директории исходников и инициализация переменной SOURCES
 file(GLOB SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
@@ -35,7 +39,6 @@ endif()
 
 # Линкуем MySQL Connector с нашим проектом
 target_link_libraries(Booking_vr_server ${C_Connector_LIB})
-
 
 # Копируем файл конфигурации в папку с .exe файлом
 add_custom_command(TARGET Booking_vr_server POST_BUILD

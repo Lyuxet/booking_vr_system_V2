@@ -3,21 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script>
-        window.onload = function() {
-            // Удаляет параметры запроса и заменяет текущий URL
-            var urlWithoutParams = window.location.pathname + window.location.hash;
-            history.replaceState(null, null, urlWithoutParams);
-        };
-    </script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <script>
-        // Отображаем текущий URL в HTML
-        document.getElementById('url').textContent = window.location.href;
-    </script>
-
     <div class="header-container">
         <h1>Бронирование игры на арене</h1>
     </div>
@@ -39,7 +27,7 @@
                         <div class="line"></div>
                         <div class="price"> 1200 ₽</div>
                         <div class="players"><input type="text" id="playerInput11" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount1">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount11">10</span> мест</div>
                     </button>
 
                     <button id="button12" class="booking-button">
@@ -47,7 +35,7 @@
                         <div class="line"></div>
                         <div class="price">1200 ₽</div>
                         <div class="players"><input type="text" id="playerInput12" placeholder="Кол-мест" value="" class="player-input" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount2">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount12">10</span> мест</div>
                     </button>
 
                     <button id="button13" class="booking-button">
@@ -55,7 +43,7 @@
                         <div class="line"></div>
                         <div class="price">1200 ₽</div>
                         <div class="players"><input type="text" id="playerInput13" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount3">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount13">10</span> мест</div>
                     </button>
                 </div>
                 <div class="booking-row">
@@ -64,7 +52,7 @@
                         <div class="line"></div>
                         <div class="price"> 1400 ₽</div>
                         <div class="players"><input type="text" id="playerInput14" placeholder="Кол-мест" value="" class="player-input" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount1">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount14">10</span> мест</div>
                     </button>
 
                     <button id="button15" class="booking-button">
@@ -72,7 +60,7 @@
                         <div class="line"></div>
                         <div class="price">1400 ₽</div>
                         <div class="players"><input type="text" id="playerInput15" placeholder="Кол-мест" value="" class="player-input" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount2">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount15">10</span> мест</div>
                     </button>
 
                     <button id="button16" class="booking-button">
@@ -80,7 +68,7 @@
                         <div class="line"></div>
                         <div class="price">1400 ₽</div>
                         <div class="players"><input type="text" id="playerInput16" placeholder="Кол-мест" value="" class="player-input" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount3">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount16">10</span> мест</div>
                     </button>
                 </div>
                 <div class="booking-row">
@@ -89,7 +77,7 @@
                         <div class="line"></div>
                         <div class="price"> 1400 ₽</div>
                         <div class="players"><input type="text" id="playerInput17" placeholder="Кол-мест" value="" class="player-input" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount1">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount17">10</span> мест</div>
                     </button>
 
                     <button id="button18" class="booking-button">
@@ -97,7 +85,7 @@
                         <div class="line"></div>
                         <div class="price">1400 ₽</div>
                         <div class="players"><input type="text" id="playerInput18" placeholder="Кол-мест" value="" class="player-input" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount2">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount18">10</span> мест</div>
                     </button>
 
                     <button id="button19" class="booking-button">
@@ -105,7 +93,7 @@
                         <div class="line"></div>
                         <div class="price">1400 ₽</div>
                         <div class="players"><input type="text" id="playerInput19" placeholder="Кол-мест" value="" class="player-input" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount3">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount19">10</span> мест</div>
                     </button>
                 </div>
                 <div class="booking-row">
@@ -114,7 +102,7 @@
                         <div class="line"></div>
                         <div class="price"> 1600 ₽</div>
                         <div class="players"><input type="text" id="playerInput20" placeholder="Кол-мест" value="" class="player-input" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount1">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount20">10</span> мест</div>
                     </button>
 
                     <button id="button21" class="booking-button">
@@ -122,7 +110,7 @@
                         <div class="line"></div>
                         <div class="price">1600 ₽</div>
                         <div class="players"><input type="text" id="playerInput21" placeholder="Кол-мест" value="" class="player-input" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount2">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount21">10</span> мест</div>
                     </button>
 
                     <button id="button22" class="booking-button">
@@ -130,7 +118,7 @@
                         <div class="line"></div>
                         <div class="price">1600 ₽</div>
                         <div class="players"><input type="text" id="playerInput22" placeholder="Кол-мест" value="" class="player-input" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount3">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount22">10</span> мест</div>
                     </button>
                 </div>
             </div>
@@ -140,16 +128,16 @@
                 <h2>Ваши данные</h2>
                 <form id="userDataForm">
                     <label for="firstName">Имя:</label>
-                    <input type="text" id="firstName" name="firstName" required placeholder="Имя*"> 
+                    <input type="text" id="firstName" name="firstName" required placeholder="Имя*" autocomplete="given-name">
 
                     <label for="lastName">Фамилия:</label>
-                    <input type="text" id="lastName" name="lastName"  placeholder="Фамилия">
+                    <input type="text" id="lastName" name="lastName" placeholder="Фамилия" autocomplete="family-name">
 
                     <label for="phone">Телефон:</label>
-                    <input type="tel" id="phone" name="phone" required placeholder="Телефон*">
+                    <input type="tel" id="phone" name="phone" required placeholder="Телефон*" autocomplete="tel">
 
                     <label for="email">Электронная почта:</label>
-                    <input type="email" id="email" name="email" required placeholder="Email*">
+                    <input type="email" id="email" name="email" required placeholder="Email*" autocomplete="email">
 
                     <label for="comment">Комментарий:</label>
                     <textarea id="comment" name="comment" rows="4"></textarea>
