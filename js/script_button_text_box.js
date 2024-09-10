@@ -105,7 +105,8 @@ document.addEventListener('DOMContentLoaded', function () {
         var lastname = document.getElementById('lastName').value;
         var phone = document.getElementById('phone').value;
         var email = document.getElementById('email').value;
-        var price = button.querySelector(".price").value;
+        var comment = document.getElementById('comment').value;
+        var price = 0;
 
         var typegame = 'OPEN';
         var namegame = 'ARENA QUEST';
@@ -122,8 +123,10 @@ document.addEventListener('DOMContentLoaded', function () {
             var time = button.querySelector('.time').textContent;
             selectedTimes.push(time);
 
-            // Получаем значение из текстового поля input
-            var playersCount = button.querySelector('.player-input').value;
+            //Исправить проблему, что не считается ничего
+            var pricebutton = parseInt(button.querySelector('.price').textContent);
+            var playersCount = parseInt(button.querySelector('.player-input').value);
+            price += (pricebutton * playersCount);
             selectedPlayersCount.push(playersCount);
         });
 
@@ -131,6 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var commentField = document.getElementById('comment');
         commentField.value += selectedTimes.join(', ') + "\n";
         commentField.value += selectedPlayersCount.join(', ') + "\n";
+        commentField.value += price;
 
         // Создаем объект данных для отправки
         var postData = {
@@ -142,7 +146,9 @@ document.addEventListener('DOMContentLoaded', function () {
             namegame: namegame,
             times: selectedTimes,
             playerCount: selectedPlayersCount,
-            price: price
+            price: price,
+            comment: comment
+
         };
 
         // Создаем объект XMLHttpRequest
