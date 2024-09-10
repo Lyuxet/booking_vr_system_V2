@@ -4,6 +4,7 @@
 #include "test_delete_data.h"
 #include "test_update_data.h"
 
+#include <nlohmann/json.hpp>
 #include <iostream>
 #include <thread>
 #include <vector>

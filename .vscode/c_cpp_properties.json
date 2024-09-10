@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "./include/MySQL Connector C++ 9.0",
-                "./include/cpp-httplib"
+                "./include/cpp-httplib",
+                "./include/json/include"
 
             ],
             "defines": [
