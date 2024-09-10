@@ -4,7 +4,9 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "./include/MySQL Connector C++ 9.0"
+                "./include/MySQL Connector C++ 9.0",
+                "./include/cpp-httplib"
+
             ],
             "defines": [
                 "_DEBUG",

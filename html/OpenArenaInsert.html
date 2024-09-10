@@ -13,14 +13,11 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>URL изменён!</h1>
-    <p>Текущий URL: <span id="url"></span></p>
     <script>
         // Отображаем текущий URL в HTML
         document.getElementById('url').textContent = window.location.href;
     </script>
 
-    
     <div class="header-container">
         <h1>Бронирование игры на арене</h1>
     </div>
@@ -157,7 +154,7 @@
                     <label for="comment">Комментарий:</label>
                     <textarea id="comment" name="comment" rows="4"></textarea>
 
-                    <button type="submit">Отправить</button>
+                    <button id="add" type="submit">Отправить</button>
                 </form>
             </div>
         </div>

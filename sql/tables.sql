@@ -9,6 +9,7 @@ CREATE TABLE GameSchedule (
     players_count INT DEFAULT 0 NOT NULL,
     max_players INT NOT NULL,
     free_slots INT NOT NULL,
+    price INT NOT NULL,
 	comment_game VARCHAR(400) DEFAULT 'Резерв' NOT NULL,
     UNIQUE (date_game, time_game, name_game)  -- Уникальная комбинация по дате, времени и названию игры
 );
@@ -25,6 +26,7 @@ CREATE TABLE ArenaShooterStats (
     players_count INT DEFAULT 0 NOT NULL,
     max_players INT DEFAULT 10 NOT NULL,
     free_slots INT DEFAULT 10 NOT NULL,
+    price INT NOT NULL,
     comment_game VARCHAR(400) DEFAULT 'Резерв' NOT NULL,
     PRIMARY KEY (name_game, date_game, time_game),  -- Составной ключ
     CONSTRAINT fk_shooter_schedule FOREIGN KEY (name_game, date_game, time_game)
@@ -41,6 +43,7 @@ CREATE TABLE ArenaQuestStats (
     players_count INT DEFAULT 0 NOT NULL,
     max_players INT DEFAULT 10 NOT NULL,
     free_slots INT DEFAULT 10 NOT NULL,
+    price INT NOT NULL,
 	comment_game VARCHAR(400) DEFAULT 'Резерв' NOT NULL,
     PRIMARY KEY (name_game, date_game, time_game),  -- Составной ключ
     CONSTRAINT fk_quest_schedule FOREIGN KEY (name_game, date_game, time_game)
@@ -56,6 +59,7 @@ CREATE TABLE Cubes(
     players_count INT DEFAULT 0 NOT NULL,
     max_players INT DEFAULT 4 NOT NULL,
     free_slots INT DEFAULT 4 NOT NULL,
+    price INT NOT NULL,
 	comment_game VARCHAR(400) DEFAULT 'Резерв' NOT NULL,
     PRIMARY KEY (name_game, date_game, time_game),  -- Составной ключ
     CONSTRAINT fk_cubes_schedule FOREIGN KEY (name_game, date_game, time_game)

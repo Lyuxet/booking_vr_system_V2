@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(C_Connector_include_dir "${CMAKE_CURRENT_SOURCE_DIR}/include/MySQL Connector C++ 9.0/include/jdbc")
 set(Header_include_dir "${CMAKE_CURRENT_SOURCE_DIR}/include")
 set(Header_test_include_dir "${CMAKE_CURRENT_SOURCE_DIR}/test")
+set(HTTPLIB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/cpp-httplib")
 
 set(C_Connector_lib_dir "${CMAKE_CURRENT_SOURCE_DIR}/include/MySQL Connector C++ 9.0/lib64/vs14")
 
@@ -16,6 +17,7 @@ set(C_Connector_lib_dir "${CMAKE_CURRENT_SOURCE_DIR}/include/MySQL Connector C++
 include_directories(${C_Connector_include_dir})
 include_directories(${Header_include_dir})
 include_directories(${Header_test_include_dir})
+include_directories(${HTTPLIB_INCLUDE_DIR})
 
 # Путь к директории исходников и инициализация переменной SOURCES
 file(GLOB SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")

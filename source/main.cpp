@@ -3,33 +3,33 @@
 #include "test_insert_data.h"
 #include "test_delete_data.h"
 #include "test_update_data.h"
+
 #include <iostream>
 #include <thread>
 #include <vector>
+#include <httplib.h>
 
 
 
+int main(){
 
-int main() {
-    try {
-        // Путь к файлу конфигурации
-        std::string configPath = "db_config.conf";
+   httplib::Server server;
 
-        // Инициализируем пул соединений
-        ConnectionPool pool(10, configPath);
-        pool.Init_pool();
+   server.Post("/data", [](const httplib::Request& req, httplib::Response& res){
+      
+   });
 
-        const int numThreads = 10;
-        std::vector<std::thread> threads;
-
-        TestIncludeOpenArena(pool, numThreads, threads);
-        TestUpdateOpenArena(pool, numThreads, threads);
-        TestDelete(pool, numThreads, threads);
+   server.Post("/register", [](const httplib::Request& req, httplib::Response& res) {
         
-    } 
-    catch (const sql::SQLException& e) {
-        std::cerr << "Main Ошибка: " << e.what() << std::endl;
-    }
+   });
 
-    return 0;
+   server.Options("/*", [](const httplib::Request&, httplib::Response& res) {
+        
+    });
+
+    std::cout << "Starting server on port 8080..." << std::endl;
+    server.listen("0.0.0.0", 8080);
+
+
+
 }

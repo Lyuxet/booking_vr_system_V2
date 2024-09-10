@@ -86,7 +86,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;C:\Users\Lyuxet\projects\booking_vr\include\cpp-httplib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -105,10 +105,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;C:\Users\Lyuxet\projects\booking_vr\include\cpp-httplib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;C:\Users\Lyuxet\projects\booking_vr\include\cpp-httplib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -143,7 +143,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;C:\Users\Lyuxet\projects\booking_vr\include\cpp-httplib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -162,10 +162,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;C:\Users\Lyuxet\projects\booking_vr\include\cpp-httplib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;C:\Users\Lyuxet\projects\booking_vr\include\cpp-httplib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -200,7 +200,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;C:\Users\Lyuxet\projects\booking_vr\include\cpp-httplib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
@@ -219,10 +219,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;C:\Users\Lyuxet\projects\booking_vr\include\cpp-httplib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;C:\Users\Lyuxet\projects\booking_vr\include\cpp-httplib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -257,7 +257,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;C:\Users\Lyuxet\projects\booking_vr\include\cpp-httplib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -275,10 +275,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;C:\Users\Lyuxet\projects\booking_vr\include\cpp-httplib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Lyuxet\projects\booking_vr\include\MySQL Connector C++ 9.0\include\jdbc;C:\Users\Lyuxet\projects\booking_vr\include;C:\Users\Lyuxet\projects\booking_vr\test;C:\Users\Lyuxet\projects\booking_vr\include\cpp-httplib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>

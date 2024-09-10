@@ -7,8 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
-
 document.addEventListener('DOMContentLoaded', () => {
     // Получаем все кнопки бронирования
     const bookingButtons = document.querySelectorAll('.booking-button');
@@ -21,8 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const playerInput = button.querySelector('.player-input');
         const seatsCount = button.querySelector('.seats span');
 
-        
-        
         const currentPlayers = parseInt(playerInput.value, 10) || 0;
         if (currentPlayers > maxPlayers) {
             playerInput.value = maxPlayers;
@@ -38,8 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Устанавливаем кнопку как "не нажата", если текстовое поле пустое
         if (playerInput.value === '') {
             button.classList.remove('selected'); // Убираем состояние "выбрано"
-        }
-        if (playerInput.value !== ''){
+        } else {
             button.classList.add('selected');
         }
 
@@ -51,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    
+
     function updateButtonState(button) {
         const timeText = button.querySelector('.time').textContent.trim();
         const [startTime] = timeText.split(' - ').map(time => time.trim());
@@ -71,17 +66,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+
     function handleClick() {
         if (this.classList.contains('disabled')) return;
 
         const playerInput = this.querySelector('.player-input');
         this.classList.toggle('selected');
-        
+
         if (this.classList.contains('selected')) {
-            // Если кнопка выбрана, установить значение "1" в текстовое поле
             playerInput.value = 1;
         } else {
-            // Если кнопка не выбрана, очистить текстовое поле
             playerInput.value = '';
         }
 
@@ -91,21 +85,77 @@ document.addEventListener('DOMContentLoaded', () => {
 
     bookingButtons.forEach(button => {
         const playerInput = button.querySelector('.player-input');
-
-        // Активируем проверку состояния кнопок
         updateButtonState(button);
-
-        // Добавляем обработчик клика по кнопке
         button.addEventListener('click', handleClick);
-
-        playerInput.setAttribute('maxlength', '2'); // Ограничение на 2 символа
-
-        // Обновляем места при изменении значения в текстовом поле
+        playerInput.setAttribute('maxlength', '2');
         playerInput.addEventListener('input', () => updateSeats(button));
-
-        // Предотвращаем клик на текстовом поле от воздействия на кнопку
-        
-        // Инициализация начального значения
         updateSeats(button);
     });
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Обработчик нажатия кнопки "Добавить"
+    var addButton = document.getElementById('add');
+    addButton.addEventListener('click', function (event) {
+        //event.preventDefault(); // Предотвращаем стандартное поведение кнопки
+
+        // Выполняем действия после нажатия на кнопку "Добавить"
+        var selectedButtons = document.querySelectorAll('.booking-button.selected');
+        var firstname = document.getElementById('firstName').value;
+        var lastname = document.getElementById('lastName').value;
+        var phone = document.getElementById('phone').value;
+        var email = document.getElementById('email').value;
+        var price = button.querySelector(".price").value;
+
+        var typegame = 'OPEN';
+        var namegame = 'ARENA QUEST';
+
+        if (selectedButtons.length === 0) {
+            alert('Пожалуйста, выберите хотя бы одно время бронирования.');
+            return;
+        }
+
+       // Собираем все выбранные времена и количество игроков
+        var selectedTimes = [];
+        var selectedPlayersCount = [];
+        selectedButtons.forEach(function (button) {
+            var time = button.querySelector('.time').textContent;
+            selectedTimes.push(time);
+
+            // Получаем значение из текстового поля input
+            var playersCount = button.querySelector('.player-input').value;
+            selectedPlayersCount.push(playersCount);
+        });
+
+        // Обновляем поле комментария
+        var commentField = document.getElementById('comment');
+        commentField.value += selectedTimes.join(', ') + "\n";
+        commentField.value += selectedPlayersCount.join(', ') + "\n";
+
+        // Создаем объект данных для отправки
+        var postData = {
+            firstname: firstname,
+            lastname: lastname,
+            phone: phone,
+            email: email,
+            typegame: typegame,
+            namegame: namegame,
+            times: selectedTimes,
+            playerCount: selectedPlayersCount,
+            price: price
+        };
+
+        // Создаем объект XMLHttpRequest
+        var xhr = new XMLHttpRequest();
+
+        // Настраиваем запрос POST на сервер
+        xhr.open('POST', 'http://localhost:8080/data', true);
+        xhr.setRequestHeader('Content-Type', 'application/json'); // Устанавливаем заголовок для JSON
+
+        // Отправляем данные в формате JSON
+        xhr.send(JSON.stringify(postData));
+    });
+});
+
+
+
