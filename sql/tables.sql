@@ -2,6 +2,7 @@ use booking_vr;
 -- Создание таблицы GameSchedule
 CREATE TABLE GameSchedule (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    place_game VARCHAR(50) NOT NULL,
     type_game VARCHAR(50) NOT NULL,
     name_game VARCHAR(50) NOT NULL,
     date_game DATE NOT NULL,
@@ -19,8 +20,9 @@ CREATE INDEX idx_game_schedule ON GameSchedule (name_game, date_game, time_game)
 
 -- Создание таблицы ArenaShooterStats
 CREATE TABLE ArenaShooterStats (
+	place_game VARCHAR(50) NOT NULL,
     type_game VARCHAR(50) NOT NULL,
-    name_game VARCHAR(50) DEFAULT 'ARENA SHOOTER' NOT NULL,
+    name_game VARCHAR(50) DEFAULT 'SHOOTER' NOT NULL,
     date_game DATE NOT NULL,
     time_game varchar(20) NOT NULL,
     players_count INT DEFAULT 0 NOT NULL,
@@ -36,8 +38,9 @@ CREATE TABLE ArenaShooterStats (
 
 -- Создание таблицы ArenaShooterStats
 CREATE TABLE ArenaQuestStats (
+	place_game VARCHAR(50) NOT NULL,
     type_game VARCHAR(50) NOT NULL,
-    name_game VARCHAR(50) DEFAULT 'ARENA QUEST' NOT NULL,
+    name_game VARCHAR(50) DEFAULT 'QUEST' NOT NULL,
     date_game DATE NOT NULL,
     time_game varchar(20) NOT NULL,
     players_count INT DEFAULT 0 NOT NULL,
@@ -52,7 +55,7 @@ CREATE TABLE ArenaQuestStats (
 );
 
 CREATE TABLE Cubes(
-	type_game VARCHAR(50) DEFAULT 'CUBES' NOT NULL,
+	place_game VARCHAR(50) DEFAULT 'CUBES' NOT NULL,
     name_game VARCHAR(50) DEFAULT 'CUBES' NOT NULL,
     date_game DATE NOT NULL,
     time_game varchar(20) NOT NULL,

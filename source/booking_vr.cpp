@@ -128,9 +128,9 @@ void Booking::executeTransactionInsert(std::shared_ptr<sql::Connection> conn) {
     std::string tableName;
 
     // Определение таблицы в зависимости от типа игры
-    if (booking_.name_game == "ARENA SHOOTER") {
+    if (booking_.name_game == "SHOOTER") {
         tableName = "ArenaShooterStats";
-    } else if (booking_.name_game == "ARENA QUEST") {
+    } else if (booking_.name_game == "QUEST") {
         tableName = "ArenaQuestStats";
     } else if (booking_.name_game == "CUBES") {
         tableName = "Cubes";
@@ -167,8 +167,8 @@ void Booking::executeTransactionInsert(std::shared_ptr<sql::Connection> conn) {
             pstmt1->execute();
 
             // Вставка данных о бронировании
-            std::string queryInsert = "INSERT INTO " + tableName + " (date_game, time_game, players_count, comment_game, type_game, price) "
-                                      "VALUES (?, ?, ?, ?, ?, ?)";
+            std::string queryInsert = "INSERT INTO " + tableName + " (date_game, time_game, players_count, comment_game, type_game, price, place_game) "
+                                      "VALUES (?, ?, ?, ?, ?, ?, ?)";
             std::unique_ptr<sql::PreparedStatement> pstmt2(conn->prepareStatement(queryInsert));
             pstmt2->setString(1, booking_.date_game);
             pstmt2->setString(2, booking_.time_game);
@@ -176,6 +176,7 @@ void Booking::executeTransactionInsert(std::shared_ptr<sql::Connection> conn) {
             pstmt2->setString(4, booking_.comment_game);
             pstmt2->setString(5, booking_.type_game);
             pstmt2->setInt(6, booking_.price);
+            pstmt2->setString(7, booking_.place_game);
             pstmt2->execute();
 
             // Вставка данных о бронировании в таблицу Bookings
@@ -225,9 +226,9 @@ void Booking::executeTransactionDelete(std::shared_ptr<sql::Connection> conn) {
     std::string tableName;
 
     // Определение таблицы в зависимости от типа игры
-    if (booking_.name_game == "ARENA SHOOTER") {
+    if (booking_.name_game == "SHOOTER") {
         tableName = "ArenaShooterStats";
-    } else if (booking_.name_game == "ARENA QUEST") {
+    } else if (booking_.name_game == "QUEST") {
         tableName = "ArenaQuestStats";
     } else if (booking_.name_game == "CUBES") {
         tableName = "Cubes";
@@ -305,9 +306,9 @@ void Booking::executeTransactionUpdate(std::shared_ptr<sql::Connection> conn){
     std::string tableName;
 
     // Определение таблицы в зависимости от типа игры
-    if (booking_.name_game == "ARENA SHOOTER") {
+    if (booking_.name_game == "SHOOTER") {
         tableName = "ArenaShooterStats";
-    } else if (booking_.name_game == "ARENA QUEST") {
+    } else if (booking_.name_game == "QUEST") {
         tableName = "ArenaQuestStats";
     } else if (booking_.name_game == "CUBES") {
         tableName = "Cubes";
@@ -348,7 +349,7 @@ void Booking::executeTransactionUpdate(std::shared_ptr<sql::Connection> conn){
 
             
             // Обновление данных о бронировании (включая дату и время)
-            std::string queryUpdate = "UPDATE " + tableName + " SET date_game = ?, time_game = ?, players_count = ?, comment_game = ?, type_game = ?, price = ? "
+            std::string queryUpdate = "UPDATE " + tableName + " SET date_game = ?, time_game = ?, players_count = ?, comment_game = ?, type_game = ?, price = ?, place_game = ?"
                                       "WHERE name_game = ? AND date_game = ? AND time_game = ?";
             std::unique_ptr<sql::PreparedStatement> pstmtUpdateBooking(conn->prepareStatement(queryUpdate));
             pstmtUpdateBooking->setString(1, booking_.date_game);  // Новая дата
@@ -357,9 +358,10 @@ void Booking::executeTransactionUpdate(std::shared_ptr<sql::Connection> conn){
             pstmtUpdateBooking->setString(4, booking_.comment_game);
             pstmtUpdateBooking->setString(5, booking_.type_game);
             pstmtUpdateBooking->setInt(6, booking_.price);
-            pstmtUpdateBooking->setString(7, booking_.name_game);
-            pstmtUpdateBooking->setString(8, booking_.current_date_game);  // Текущая дата
-            pstmtUpdateBooking->setString(9, booking_.current_time_game);  // Текущее время
+            pstmtUpdateBooking->setString(7, booking_.place_game);
+            pstmtUpdateBooking->setString(8, booking_.name_game);
+            pstmtUpdateBooking->setString(9, booking_.current_date_game);  // Текущая дата
+            pstmtUpdateBooking->setString(10, booking_.current_time_game);  // Текущее время
             pstmtUpdateBooking->execute();
 
             // Обновление данных в таблице Bookings

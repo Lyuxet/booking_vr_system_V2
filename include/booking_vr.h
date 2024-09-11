@@ -16,6 +16,7 @@ struct Client_data {
 
 // Структура для хранения данных бронирования
 struct Booking_data {
+    std::string place_game;
     std::string type_game;
     std::string name_game;
     std::string date_game;

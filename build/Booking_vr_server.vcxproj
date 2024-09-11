@@ -372,6 +372,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\Connect_to_DB.cpp" />
     <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\booking_vr.cpp" />
     <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\main.cpp" />
+    <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\parseInpudData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="C:\Users\Lyuxet\projects\booking_vr\build\ZERO_CHECK.vcxproj">

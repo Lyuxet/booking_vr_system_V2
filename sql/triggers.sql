@@ -40,8 +40,8 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Time slot for this game is already taken.';
     ELSE
         -- Если время свободно, добавляем запись в таблицу расписания
-        INSERT INTO GameSchedule (type_game, name_game, date_game, time_game, players_count, max_players, free_slots, price, comment_game)
-        VALUES (NEW.type_game, NEW.name_game, NEW.date_game, NEW.time_game, NEW.players_count, NEW.max_players, NEW.free_slots, NEW.price, NEW.comment_game);
+        INSERT INTO GameSchedule (place_game, type_game, name_game, date_game, time_game, players_count, max_players, free_slots, price, comment_game)
+        VALUES (NEW.place_game, NEW.type_game, NEW.name_game, NEW.date_game, NEW.time_game, NEW.players_count, NEW.max_players, NEW.free_slots, NEW.price, NEW.comment_game);
     END IF;
 END$$
 
@@ -89,7 +89,8 @@ BEGIN
 
         -- Обновляем запись в таблице GameSchedule с новыми ключевыми полями
         UPDATE GameSchedule 
-        SET type_game = NEW.type_game, 
+        SET place_game = NEW.place_game,
+			type_game = NEW.type_game, 
             name_game = NEW.name_game,
             date_game = NEW.date_game,
             time_game = NEW.time_game,
@@ -175,8 +176,8 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Time slot for this game is already taken.';
     ELSE
         -- Если время свободно, добавляем запись в таблицу расписания
-        INSERT INTO GameSchedule (type_game, name_game, date_game, time_game, players_count, max_players, free_slots, price, comment_game)
-        VALUES (NEW.type_game, NEW.name_game, NEW.date_game, NEW.time_game, NEW.players_count, NEW.max_players, NEW.free_slots, NEW.price, NEW.comment_game);
+        INSERT INTO GameSchedule (place_game, type_game, name_game, date_game, time_game, players_count, max_players, free_slots, price, comment_game)
+        VALUES (NEW.place_game, NEW.type_game, NEW.name_game, NEW.date_game, NEW.time_game, NEW.players_count, NEW.max_players, NEW.free_slots, NEW.price, NEW.comment_game);
     END IF;
 END$$
 DELIMITER ;
@@ -223,7 +224,8 @@ BEGIN
 
         -- Обновляем запись в таблице GameSchedule с новыми ключевыми полями
         UPDATE GameSchedule 
-        SET type_game = NEW.type_game, 
+        SET place_game = NEW.place_game,
+			type_game = NEW.type_game, 
             name_game = NEW.name_game,
             date_game = NEW.date_game,
             time_game = NEW.time_game,
@@ -295,7 +297,7 @@ BEGIN
         WHERE date_game = NEW.date_game
           AND time_game = NEW.time_game
           AND name_game != NEW.name_game
-          AND type_game = NEW.type_game
+          AND place_game = NEW.place_game
     ) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Time slot is already taken by another game.';
     -- Проверяем, занято ли это время для текущей игры
@@ -309,8 +311,8 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Time slot for this game is already taken.';
     ELSE
         -- Если время свободно, добавляем запись в таблицу расписания
-        INSERT INTO GameSchedule (type_game, name_game, date_game, time_game, players_count, max_players, free_slots, price, comment_game)
-        VALUES (NEW.type_game, NEW.name_game, NEW.date_game, NEW.time_game, NEW.players_count, NEW.max_players, NEW.free_slots, NEW.price, NEW.comment_game);
+        INSERT INTO GameSchedule (place_game, name_game, date_game, time_game, players_count, max_players, free_slots, price, comment_game)
+        VALUES (NEW.place_game, NEW.name_game, NEW.date_game, NEW.time_game, NEW.players_count, NEW.max_players, NEW.free_slots, NEW.price, NEW.comment_game);
     END IF;
 END$$
 DELIMITER ;
@@ -340,7 +342,7 @@ BEGIN
             WHERE date_game = NEW.date_game
               AND time_game = NEW.time_game
               AND name_game != NEW.name_game
-              AND type_game = NEW.type_game
+              AND place_game = NEW.place_game
         ) THEN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Time slot is already taken by another game.';
         
@@ -357,7 +359,7 @@ BEGIN
 
         -- Обновляем запись в таблице GameSchedule с новыми ключевыми полями
         UPDATE GameSchedule 
-        SET type_game = NEW.type_game, 
+        SET place_game = NEW.place_game, 
             name_game = NEW.name_game,
             date_game = NEW.date_game,
             time_game = NEW.time_game,
