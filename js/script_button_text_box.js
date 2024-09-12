@@ -13,9 +13,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const bookingButtons = document.querySelectorAll('.booking-button');
     const maxPlayers = 10;
     const minPlayers = 1;
-    const totalSeats = 10; // Общее количество мест
 
-    function updateSeats(button) {
+    function updateSeats(button, availableSeats) {
         const playerInput = button.querySelector('.player-input');
         const seatsCount = button.querySelector('.seats span');
 
@@ -28,8 +27,9 @@ document.addEventListener('DOMContentLoaded', function () {
             playerInput.focus(); // Устанавливаем фокус на текстовое поле
             playerInput.select();
         }
-        const availableSeats = Math.max(0, totalSeats - currentPlayers); // Расчет свободных мест
-        seatsCount.textContent = availableSeats; // Обновление отображаемого количества свободных мест
+
+        // Устанавливаем количество свободных мест, полученное с сервера
+        seatsCount.textContent = availableSeats !== undefined ? availableSeats : Math.max(0, 10 - currentPlayers);
 
         if (playerInput.value === '') {
             button.classList.remove('selected'); // Убираем состояние "выбрано"
@@ -80,30 +80,70 @@ document.addEventListener('DOMContentLoaded', function () {
         updateSeats(this);
     }
 
-    function checkAvailability() {
-        // Создаем запрос через XMLHttpRequest
+    function updateButtonsState(availability) {
+        bookingButtons.forEach((button, index) => {
+            const availableSeats = availability[index]; // Получаем доступные места для текущей кнопки
+            updateSeats(button, availableSeats); // Обновляем места на кнопке
+        });
+    }
 
+
+    function checkAvailability() {
+        // Get date and game name
         var date = document.getElementById('date').value;
-        
+        var namegame = 'QUEST'; // Example value
+    
+        if (!date || !namegame) {
+            console.error('Заполните все поля.');
+            return;
+        }
+    
+        // Create XMLHttpRequest
         const xhr = new XMLHttpRequest();
-        xhr.open('GET', 'http://localhost:8080/checkAvailability', true); // Замените URL на нужный вам
+        xhr.open('GET', `http://localhost:8080/getBookingOpenArena?date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
         xhr.onload = function () {
             if (xhr.status >= 200 && xhr.status < 300) {
-                const response = JSON.parse(xhr.responseText);
-                updateButtonsState(response); // Обновляем состояние кнопок на основе ответа
+                const response = xhr.responseText;
+                console.log(response); // Handle the response
             } else {
                 console.error('Ошибка запроса доступности. Статус:', xhr.status);
             }
         };
+    
         xhr.onerror = function () {
             console.error('Ошибка сети.');
         };
-        xhr.send();
+    
+        xhr.send(); // Send the request
     }
+    
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    // Инициализация кнопок
     bookingButtons.forEach(button => {
         const playerInput = button.querySelector('.player-input');
-        updateButtonState(button);
+        //updateButtonState(button);
         button.addEventListener('click', handleClick);
         playerInput.setAttribute('maxlength', '2');
         playerInput.addEventListener('input', () => updateSeats(button));

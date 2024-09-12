@@ -6,6 +6,7 @@
 #include "parseInpudData.h"
 
 #include <iostream>
+#include <nlohmann/json.hpp>
 #include <thread>
 #include <vector>
 #include <httplib.h>
@@ -65,12 +66,46 @@ static void add(const httplib::Request& req, httplib::Response& res, ConnectionP
     }
 }
 
+// Обработка GET-запроса
+static void get(const httplib::Request& req, httplib::Response& res, ConnectionPool& pool) {
+    try {
+        // Парсим параметры из строки запроса
+        auto queryParams = req.params;
+        
+        // Пример получения параметров
+        auto itDate = queryParams.find("date");
+        if (itDate != queryParams.end()) {
+            std::string date = itDate->second;
+             std::cout << date << std::endl;
+        } else {
+            throw std::runtime_error("Missing parameter: firstname");
+        }
+
+        auto itNameGame = queryParams.find("namegame");
+        if (itNameGame != queryParams.end()) {
+            std::string namegame = itNameGame->second;
+            std::cout << namegame << std::endl;
+        } else {
+            throw std::runtime_error("Missing parameter: firstname");
+        }
+
+        // Ваш код обработки данных
+        // Например, получение данных из базы данных по дате и названию игры
+        // Здесь вы можете добавить соответствующий код для обработки GET-запроса
+
+        res.set_content("Data retrieved successfully", "text/plain");
+
+    } catch (const std::exception& e) {
+        // Логируем ошибки
+        std::cerr << "Error: " << e.what() << std::endl;
+        res.status = 500;
+        res.set_content("Internal Server Error: " + std::string(e.what()), "text/plain");
+    }
+}
 
 
-static void add_cors_headers(httplib::Response& res) {
-    res.set_header("Access-Control-Allow-Origin", "*");
-    res.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    res.set_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+void add_cors_headers(httplib::Response& res) {
 }
 
 int main() {
@@ -80,13 +115,25 @@ int main() {
 
     // Обрабатываем основной POST-запрос с CORS-заголовками
     server.Post("/addBookingOpenArena", [&pool](const httplib::Request& req, httplib::Response& res) {
-        add_cors_headers(res);  // Добавляем CORS-заголовки в ответ
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
         add(req, res, pool);  // Ваша функция для обработки данных
+    });
+
+    // Обрабатываем GET-запросы с CORS-заголовками
+    server.Get("/getBookingOpenArena", [&pool](const httplib::Request& req, httplib::Response& res) {
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        get(req, res, pool);  // Ваша функция для обработки GET-запросов
     });
 
     // Обрабатываем preflight-запросы методом OPTIONS
     server.Options("/*", [](const httplib::Request& req, httplib::Response& res) {
-        add_cors_headers(res);  // Добавляем CORS-заголовки для preflight
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
         res.set_content("", "text/plain");  // Возвращаем пустое тело ответа
         res.status = 204;  // Статус "No Content"
     });

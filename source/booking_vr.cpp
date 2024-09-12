@@ -142,24 +142,10 @@ void Booking::executeTransactionInsert(std::shared_ptr<sql::Connection> conn) {
         try {
             conn->setAutoCommit(false);
 
-            // Проверка на наличие уже забронированного слота
-            std::string queryCheck = "SELECT 1 FROM " + tableName + " WHERE name_game = ? AND date_game = ? AND time_game = ?";
-            std::unique_ptr<sql::PreparedStatement> pstmtCheck(conn->prepareStatement(queryCheck));
-            pstmtCheck->setString(1, booking_.name_game);
-            pstmtCheck->setString(2, booking_.date_game);
-            pstmtCheck->setString(3, booking_.time_game);
-            std::unique_ptr<sql::ResultSet> res(pstmtCheck->executeQuery());
-
-            if (res->next()) {
-                throw std::runtime_error("Selected time slot is already booked.");
-            }
-
             // Вставка данных о клиенте
             std::unique_ptr<sql::PreparedStatement> pstmt1(conn->prepareStatement(
-                "INSERT INTO Clients (first_name, last_name, phone, email) "
-                "VALUES (?, ?, ?, ?) "
-                "ON DUPLICATE KEY UPDATE first_name=VALUES(first_name), last_name=VALUES(last_name), email=VALUES(email)"
-            ));
+                "INSERT IGNORE INTO Clients (first_name, last_name, phone, email) VALUES (?, ?, ?, ?)"
+                ));
             pstmt1->setString(1, clients_.first_name);
             pstmt1->setString(2, clients_.last_name);
             pstmt1->setString(3, clients_.phone);
@@ -167,30 +153,20 @@ void Booking::executeTransactionInsert(std::shared_ptr<sql::Connection> conn) {
             pstmt1->execute();
 
             // Вставка данных о бронировании
-            std::string queryInsert = "INSERT INTO " + tableName + " (date_game, time_game, players_count, comment_game, type_game, price, place_game) "
-                                      "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            std::string queryInsert = "INSERT INTO " + tableName + " (client_id, date_game, time_game, players_count, comment_game, type_game, price, place_game) "
+                                      "VALUES ((SELECT id FROM Clients WHERE phone = ? LIMIT 1),?, ?, ?, ?, ?, ?, ?)";
             std::unique_ptr<sql::PreparedStatement> pstmt2(conn->prepareStatement(queryInsert));
-            pstmt2->setString(1, booking_.date_game);
-            pstmt2->setString(2, booking_.time_game);
-            pstmt2->setInt(3, booking_.players_count);
-            pstmt2->setString(4, booking_.comment_game);
-            pstmt2->setString(5, booking_.type_game);
-            pstmt2->setInt(6, booking_.price);
-            pstmt2->setString(7, booking_.place_game);
+            pstmt2->setString(1, clients_.phone);
+            pstmt2->setString(2, booking_.date_game);
+            pstmt2->setString(3, booking_.time_game);
+            pstmt2->setInt(4, booking_.players_count);
+            pstmt2->setString(5, booking_.comment_game);
+            pstmt2->setString(6, booking_.type_game);
+            pstmt2->setInt(7, booking_.price);
+            pstmt2->setString(8, booking_.place_game);
             pstmt2->execute();
 
-            // Вставка данных о бронировании в таблицу Bookings
-            std::unique_ptr<sql::PreparedStatement> pstmt3(conn->prepareStatement(
-                "INSERT INTO Bookings (client_id, game_id) "
-                "VALUES ((SELECT id FROM Clients WHERE phone = ? LIMIT 1), "
-                "(SELECT id FROM GameSchedule WHERE name_game = ? AND date_game = ? AND time_game = ? LIMIT 1))"
-            ));
-            pstmt3->setString(1, clients_.phone);
-            pstmt3->setString(2, booking_.name_game);
-            pstmt3->setString(3, booking_.date_game);
-            pstmt3->setString(4, booking_.time_game);
-            pstmt3->execute();
-
+        
             conn->commit();
             return;
         } catch (const sql::SQLException& e) {
