@@ -1,25 +1,39 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="header-container">
-        <h1>Бронирование игры на арене</h1>
-    </div>
+<html lang='ru'>
 
-    <div class="content-wrapper">
-        <!-- Flex-контейнер для бронирований и данных клиента -->
-        <div class="main-container">
-            <!-- Новый контейнер для выбора даты -->
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+
+   
+    <title>Название сайта</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    
+
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="fonts/stylesheet.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    
+    <script src="js/script_button_text.js"></script>
+    <script src="js/script_add_book.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="css/datepicker-custom.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/datepicker-ru.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1>Бронирование игры на арене</h1>
             <div class="date-container">
-                <label for="date" class="date-label">Выберите дату:</label>
-                <input type="date" id="date" class="date-picker">
+                <h2>Выберите дату:</h2>
+                <input type="text" id="date"  name="date">
             </div>
-                
-                <!-- Контейнер для бронирований -->
+       
             <div class="booking-container">
                 <div class="booking-row">
                     <button id="button11" class="booking-button">
@@ -27,7 +41,7 @@
                         <div class="line"></div>
                         <div class="price"> 1200 ₽</div>
                         <div class="players"><input type="text" id="playerInput11" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount11">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount1">10</span> мест</div>
                     </button>
 
                     <button id="button12" class="booking-button">
@@ -35,7 +49,7 @@
                         <div class="line"></div>
                         <div class="price">1200 ₽</div>
                         <div class="players"><input type="text" id="playerInput12" placeholder="Кол-мест" value="" class="player-input" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount12">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount2">10</span> мест</div>
                     </button>
 
                     <button id="button13" class="booking-button">
@@ -43,7 +57,7 @@
                         <div class="line"></div>
                         <div class="price">1200 ₽</div>
                         <div class="players"><input type="text" id="playerInput13" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount13">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount3">10</span> мест</div>
                     </button>
                 </div>
                 <div class="booking-row">
@@ -52,7 +66,7 @@
                         <div class="line"></div>
                         <div class="price"> 1400 ₽</div>
                         <div class="players"><input type="text" id="playerInput14" placeholder="Кол-мест" value="" class="player-input" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount14">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount1">10</span> мест</div>
                     </button>
 
                     <button id="button15" class="booking-button">
@@ -60,7 +74,7 @@
                         <div class="line"></div>
                         <div class="price">1400 ₽</div>
                         <div class="players"><input type="text" id="playerInput15" placeholder="Кол-мест" value="" class="player-input" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount15">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount2">10</span> мест</div>
                     </button>
 
                     <button id="button16" class="booking-button">
@@ -68,7 +82,7 @@
                         <div class="line"></div>
                         <div class="price">1400 ₽</div>
                         <div class="players"><input type="text" id="playerInput16" placeholder="Кол-мест" value="" class="player-input" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount16">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount3">10</span> мест</div>
                     </button>
                 </div>
                 <div class="booking-row">
@@ -77,7 +91,7 @@
                         <div class="line"></div>
                         <div class="price"> 1400 ₽</div>
                         <div class="players"><input type="text" id="playerInput17" placeholder="Кол-мест" value="" class="player-input" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount17">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount1">10</span> мест</div>
                     </button>
 
                     <button id="button18" class="booking-button">
@@ -85,7 +99,7 @@
                         <div class="line"></div>
                         <div class="price">1400 ₽</div>
                         <div class="players"><input type="text" id="playerInput18" placeholder="Кол-мест" value="" class="player-input" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount18">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount2">10</span> мест</div>
                     </button>
 
                     <button id="button19" class="booking-button">
@@ -93,7 +107,7 @@
                         <div class="line"></div>
                         <div class="price">1400 ₽</div>
                         <div class="players"><input type="text" id="playerInput19" placeholder="Кол-мест" value="" class="player-input" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount19">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount3">10</span> мест</div>
                     </button>
                 </div>
                 <div class="booking-row">
@@ -102,7 +116,7 @@
                         <div class="line"></div>
                         <div class="price"> 1600 ₽</div>
                         <div class="players"><input type="text" id="playerInput20" placeholder="Кол-мест" value="" class="player-input" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount20">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount1">10</span> мест</div>
                     </button>
 
                     <button id="button21" class="booking-button">
@@ -110,7 +124,7 @@
                         <div class="line"></div>
                         <div class="price">1600 ₽</div>
                         <div class="players"><input type="text" id="playerInput21" placeholder="Кол-мест" value="" class="player-input" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount21">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount2">10</span> мест</div>
                     </button>
 
                     <button id="button22" class="booking-button">
@@ -118,36 +132,34 @@
                         <div class="line"></div>
                         <div class="price">1600 ₽</div>
                         <div class="players"><input type="text" id="playerInput22" placeholder="Кол-мест" value="" class="player-input" /></div>
-                        <div class="seats">Свободно: <span id="seatsCount22">10</span> мест</div>
+                        <div class="seats">Свободно: <span id="seatsCount3">10</span> мест</div>
                     </button>
                 </div>
             </div>
-        </div>
-            <!-- Контейнер с пользовательскими данными -->
-            <div class="user-data-container">
-                <h2>Ваши данные</h2>
-                <form id="userDataForm">
-                    <label for="firstName">Имя:</label>
-                    <input type="text" id="firstName" name="firstName" required placeholder="Имя*" autocomplete="given-name">
-
-                    <label for="lastName">Фамилия:</label>
-                    <input type="text" id="lastName" name="lastName" placeholder="Фамилия" autocomplete="family-name">
-
-                    <label for="phone">Телефон:</label>
-                    <input type="tel" id="phone" name="phone" required placeholder="Телефон*" autocomplete="tel">
-
-                    <label for="email">Электронная почта:</label>
-                    <input type="email" id="email" name="email" required placeholder="Email*" autocomplete="email">
-
-                    <label for="comment">Комментарий:</label>
-                    <textarea id="comment" name="comment" rows="4"></textarea>
-
-                    <button id="add" type="submit">Отправить</button>
+            <h3>Ваши данные:</h3>
+            <div class="form-container">
+                <form>
+                    <label>Имя:</label>
+                    <br><input type="text" id="firstName" name="name"></br>
+                    <label>Фамилия:</label>
+                    <br><input type="text" id="lastName" name="lastname"></br>
+                    <label>Телефон:</label>
+                    <br><input type="tel" id="phone" name="phone"></br>
+                    <label>Электронная почта:</label>
+                    <br><input type="email" id="email" name="email"></br>
+                    <label>Комментарий:</label>
+                    <br><textarea id="comment" name="comment"></textarea></br>
                 </form>
             </div>
+            <div class="form-container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button id="add" name="send">Отправить</button>
+                    </div>
+                </div>
+            </div>
         </div>
-
-    <script src="../js/script_button_text_box.js"></script> <!-- Подключение JavaScript файла -->
-    <script src="../js/script_add_booking.js"></script>
+    </div>
+</div>
 </body>
 </html>
