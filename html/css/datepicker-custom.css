@@ -1,0 +1,35 @@
+/* Основной фон календаря */
+.ui-datepicker {
+    background: #0c0c0c;
+    border: 1px solid #999;
+}
+
+/* Цвет заголовка календаря (месяц) */
+.ui-datepicker-header {
+    background: #1a1a1a;
+    color: #ffffff;
+    border: 1px solid #444; /* Обводка ячейки */
+}
+
+.ui-datepicker-calendar .ui-state-default {
+    background: #222222; /* Цвет фона */
+    color: #ffffff; /* Цвет текста */
+    border: 1px solid #444; /* Обводка ячейки */
+}
+
+/* Цвет текущей даты */
+.ui-datepicker-calendar .ui-state-highlight {
+    background: #00ac11; /* Цвет фона */
+    color: #ffffff; /* Цвет текста */
+}
+
+/* Цвет выбранной даты */
+.ui-datepicker-calendar .ui-state-active {
+    background: #6f00b4; /* Цвет фона */
+    color: #ffffff; /* Цвет текста */
+}
+
+/* Цвет дней, которые не входят в текущий месяц */
+.ui-datepicker-calendar .ui-state-disabled {
+    color: #888; /* Цвет текста */
+}

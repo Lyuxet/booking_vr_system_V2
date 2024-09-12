@@ -1,0 +1,233 @@
+html {
+  background-color: #0c0c0c;
+  min-height: 100%; 
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 { 
+font-family: Akzidenz-Grotesk Pro; 
+font-weight: 800;
+font-size: 47px;
+text-align: center;
+color: #00dd16;
+}
+
+h2 {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 33px;
+  text-align: center;
+  color: #fff;
+  margin-right: 12px;
+}
+
+h3 {
+font-family: var(--font-family);
+font-weight: 400;
+font-size: 33px;
+text-align: center;
+color: #fff;
+margin-bottom: 0px;
+margin-top: 24px;
+}
+
+p1 {
+  font-weight: 400;
+  font-size: 33px;
+  text-align: center;
+  color: #fff;
+}
+p2 {
+  font-weight: 400;
+  font-size: 33px;
+  color: #fff;
+}
+p3 {
+font-family: var(--font-family);
+font-weight: 400;
+font-size: 19px;
+color: #fff;
+}
+input {
+  color: #fff;
+  border: 1px solid #fff;
+  border-radius: 24px;
+  width: 720px;
+  height: 33px;
+  background: #0c0c0c;
+  text-align: center;
+}
+
+
+.booking-button {
+  border-radius: 24px;
+  width: 256px;
+  height: 151px;
+  background: #00ac11;
+  transition: all 0.35s ease;
+  border: 2px solid transparent;
+}
+
+.booking-button .player-input {
+  width: 100%;
+  text-align: center;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  padding: 8px;
+  background-color: black;
+  color: white;
+}
+
+.booking-button.disabled .player-input {
+  background-color: #1b1a1a;
+  border: 1px solid #ccc;
+  cursor: not-allowed;
+}
+
+.booking-button{
+  color: white;
+  font-size: 19px;
+}
+
+.booking-button.selected {
+  background-color: #a707dc;
+}
+
+.booking-button:not(.disabled):hover {
+  color: #a707dc;
+  border-color: #a707dc;
+}
+
+.booking-button.selected:hover {
+  color: white;
+}
+
+.booking-button .line {
+  border-bottom: 3px solid #fff;
+  width: 100%;
+  margin: 5px 0;
+}
+
+.booking-button:not(.disabled):hover .line {
+  border-bottom: 3px solid #a707dc;
+}
+
+.booking-button.selected:hover .line {
+  border-bottom: 3px solid #fff;
+}
+
+.booking-button.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  background-color: #1b1a1a;
+}
+
+
+
+
+
+label {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 19px;
+  text-align: center;
+  color: #fff;
+  display: grid;
+  margin-bottom: -8px;
+  margin-top: 8px;
+}
+
+.form-container {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  text-align: center;
+}
+
+.cont {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  text-align: center;
+}
+
+button[name=send] {
+  padding: 8px 316px;
+  background: #00ac11;
+  border-radius: 24px;
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 19px;
+  text-align: center;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  border: 2px solid transparent;
+  transition: all 0.35s ease;
+
+}
+
+button[name=send]:hover{
+  background-color: #a707dc;
+  border-color: #a707dc;
+}
+
+
+.date-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: -16px;
+}
+
+input[name="comment"] {
+  width: 720px;
+  height: 162px;
+  border: 1px solid #fff;
+  border-radius: 24px;
+  background: #0c0c0c;
+}
+
+.date-container input {
+  width: 90px;
+  height: 33px;
+  text-align: center;
+}
+
+textarea[name="comment"] {
+  width: 720px;
+  height: 162px;
+  color: #fff; 
+  background: #0c0c0c; 
+  border: 1px solid #fff;
+  border-radius: 24px;
+  padding: 8px; 
+  box-sizing: border-box; 
+  margin-bottom: 32px;
+  resize: none;
+}
+
+.ui-datepicker {
+  z-index: 1000;
+  position: absolute;
+}
+
+.booking-button {
+  z-index: 1;
+  position: relative;
+}
+
+.booking-row {
+  display: flex;
+  gap: 16px;
+  margin: 16px 16px;
+}
+
+.booking-button.selected {
+  background-color: #a707dc;
+}
