@@ -55,6 +55,7 @@ static void add(const httplib::Request& req, httplib::Response& res, ConnectionP
             Booking_data booking = {placegame, typegame, namegame, date, times[i], playerCount[i], price[i], comment};
             arena.AddDataByInsertAndUpdate(client, booking);
             arena.Open_arena();
+
         }
 
         
@@ -74,26 +75,28 @@ static void get(const httplib::Request& req, httplib::Response& res, ConnectionP
         
         // Пример получения параметров
         auto itDate = queryParams.find("date");
-        if (itDate != queryParams.end()) {
-            std::string date = itDate->second;
-             std::cout << date << std::endl;
-        } else {
-            throw std::runtime_error("Missing parameter: firstname");
-        }
-
         auto itNameGame = queryParams.find("namegame");
-        if (itNameGame != queryParams.end()) {
-            std::string namegame = itNameGame->second;
+        auto itPlaceGame = queryParams.find("placegame");
+        std::string date, namegame, placegame;
+
+        if (itDate != queryParams.end() && itNameGame != queryParams.end() && itPlaceGame != queryParams.end()){
+            date = itDate->second;
+            std::cout << date << std::endl;
+            namegame = itNameGame->second;
             std::cout << namegame << std::endl;
-        } else {
-            throw std::runtime_error("Missing parameter: firstname");
+            placegame = itPlaceGame->second;
+            std::cout << placegame << std::endl;
+        }
+        else {
+            throw std::runtime_error("data isn't correctly");
         }
 
-        // Ваш код обработки данных
-        // Например, получение данных из базы данных по дате и названию игры
-        // Здесь вы можете добавить соответствующий код для обработки GET-запроса
+        AvailabilityData data = {date, namegame, placegame};
+        Arena arena(pool);
+        arena.AddDataByCheckAvailability(data);
+        std::string response = arena.CheckAvailabilityPlace();
 
-        res.set_content("Data retrieved successfully", "text/plain");
+        res.set_content(response, "application/x-www-form-urlencoded");
 
     } catch (const std::exception& e) {
         // Логируем ошибки

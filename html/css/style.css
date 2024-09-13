@@ -67,7 +67,7 @@ input {
   width: 256px;
   height: 151px;
   background: #00ac11;
-  transition: all 0.35s ease;
+  transition: all 0.4s ease;
   border: 2px solid transparent;
 }
 
@@ -168,7 +168,7 @@ button[name=send] {
   align-items: center;
   text-decoration: none;
   border: 2px solid transparent;
-  transition: all 0.35s ease;
+  transition: all 0.4s ease;
 
 }
 

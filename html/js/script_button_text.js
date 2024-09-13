@@ -90,18 +90,19 @@ document.addEventListener('DOMContentLoaded', function () {
         // Получаем дату и название игры
         var date = document.getElementById('date').value;
         var namegame = 'QUEST'; // Пример значения
+        var placegame = 'ARENA';
+        console.log(namegame);
+        console.log(date);
+        console.log(placegame)
     
         if (!date || !namegame) {
-            console.log(namegame);
-            console.log(date);
-
             console.error('Заполните все поля.');
             return;
         }
     
         // Создаем XMLHttpRequest
         const xhr = new XMLHttpRequest();
-        xhr.open('GET', `http://localhost:8080/getBookingOpenArena?date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
+        xhr.open('GET', `http://localhost:8080/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     
         xhr.onload = function () {
@@ -123,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Инициализация кнопок
     bookingButtons.forEach(button => {
         const playerInput = button.querySelector('.player-input');
-        //updateButtonState(button);
+        updateButtonState(button);
         button.addEventListener('click', handleClick);
         playerInput.setAttribute('maxlength', '2');
         playerInput.addEventListener('input', () => updateSeats(button));

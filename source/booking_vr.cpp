@@ -31,15 +31,18 @@ void Booking::PrintUpdateBooking(){
 }
 
 void Booking::AddDataByInsertAndUpdate(const Client_data& client, const Booking_data& booking) {
-    clients_ = client;
-    booking_ = booking;
+    clients_ = std::move(client);
+    booking_ = std::move(booking);
 }
 void Booking::AddDataByDelete(const Booking_data& booking){
-    booking_ = booking;
+    booking_ = std::move(booking);
 }
 
+void Booking::AddDataByCheckAvailability(const AvailabilityData& data){
+    availability_ = std::move(data);
+}
 void Arena::Open_arena() {
-    ScopeGuard guard(&booking_, &clients_);
+    ScopeGuard guard(booking_, clients_);
     try {
         std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
         ConnectionGuard conn_guard(conn, pool_);
@@ -54,7 +57,7 @@ void Arena::Open_arena() {
 }
 
 void Arena::Close_arena() {
-    ScopeGuard guard(&booking_, &clients_);
+    ScopeGuard guard(booking_, clients_);
     try {
         std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
         ConnectionGuard conn_guard(conn, pool_);
@@ -69,8 +72,26 @@ void Arena::Close_arena() {
     }
 }
 
+std::string Arena::CheckAvailabilityPlace(){
+    ScopeGuard guard(availability_);
+    try
+    {
+        std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
+        ConnectionGuard conn_guard(conn, pool_);
+        std::string response;
+        executeTransactionCheckAvailability(conn, response);
+        return response;
+
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
+}
+
 void Booking::Update(){
-    ScopeGuard guard(&booking_);
+    ScopeGuard guard(booking_);
     try
     {
        std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
@@ -88,7 +109,7 @@ void Booking::Update(){
 }
 
 void Booking::Delete(){
-    ScopeGuard guard(&booking_);
+    ScopeGuard guard(booking_);
     try
     {
        std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
@@ -107,7 +128,7 @@ void Booking::Delete(){
 }
 
 void Cubes::Open_cubes() {
-    ScopeGuard guard(&booking_, &clients_);
+    ScopeGuard guard(booking_, clients_);
     try {
         std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
         ConnectionGuard conn_guard(conn, pool_);
@@ -382,4 +403,88 @@ void Booking::executeTransactionUpdate(std::shared_ptr<sql::Connection> conn){
     }
 
 
+}
+
+std::string Booking::urlEncode(const std::string &value) {
+    std::ostringstream escaped;
+    escaped.fill('0');
+    escaped << std::hex;
+
+    for (char c : value) {
+        // URL-кодирование для спецсимволов
+        if (isalnum(static_cast<unsigned char>(c)) || c == '-' || c == '_' || c == '.' || c == '~') {
+            escaped << c;
+        } else {
+            escaped << '%' << std::setw(2) << static_cast<int>(static_cast<unsigned char>(c));
+        }
+    }
+
+    return escaped.str();
+}
+
+
+void Booking::executeTransactionCheckAvailability(std::shared_ptr<sql::Connection> conn, std::string& response){
+    const int max_retries = 5;
+    const int base_retry_delay_ms = 500;
+
+    for (int attempt = 0; attempt < max_retries; ++attempt) {
+        try {
+            conn->setAutoCommit(false);
+            std::unique_ptr<sql::PreparedStatement> pstmtCheckAvailability(conn->prepareStatement(
+                "SELECT time_game, SUM(players_count) AS total_players, "
+                "(10 - SUM(players_count)) AS available_slots "
+                "FROM gameschedule WHERE place_game = ? AND name_game = ? AND date_game = ? "
+                "GROUP BY time_game"));
+
+            pstmtCheckAvailability->setString(1, availability_.placegame);
+            pstmtCheckAvailability->setString(2, availability_.namegame);
+            pstmtCheckAvailability->setString(3, availability_.date);
+
+            std::unique_ptr<sql::ResultSet> resSet(pstmtCheckAvailability->executeQuery());
+
+            // Создаем JSON объект для хранения результатов
+            nlohmann::json jsonResponse;
+
+            // Перебираем результаты и добавляем их в JSON массив
+            while (resSet->next()) {
+                nlohmann::json gameInfo;
+                gameInfo["time_game"] = resSet->getString("time_game");
+                gameInfo["total_players"] = resSet->getInt("total_players");
+                gameInfo["available_slots"] = resSet->getInt("available_slots");
+
+                // Добавляем в массив
+                jsonResponse.push_back(gameInfo);
+            }
+
+            // Преобразуем JSON в строку
+            response = jsonResponse.dump();
+            conn->commit();  // Завершаем транзакцию
+            return;          // Успешный выход из функции
+
+        }
+        catch (const sql::SQLException& e) {
+            std::cerr << "Attempt " << (attempt + 1) << " - SQLException: " << e.what() << std::endl;
+            std::cerr << "Error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << std::endl;
+
+            if (e.getErrorCode() == 1213) { // Deadlock
+                if (attempt < max_retries - 1) {
+                    int delay = base_retry_delay_ms * (attempt + 1) + rand() % 1000;
+                    std::cerr << "Retrying after " << delay << " ms" << std::endl;
+                    std::this_thread::sleep_for(std::chrono::milliseconds(delay));
+                } else {
+                    conn->rollback();
+                    throw;
+                }
+            } else {
+                conn->rollback();
+                throw;
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "Exception: " << e.what() << std::endl;
+            conn->rollback();
+            throw;
+        }
+        
+
+    }
 }

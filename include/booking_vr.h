@@ -2,6 +2,7 @@
 #include "Connect_to_DB.h"
 #include <memory>
 #include <string>
+#include <nlohmann/json.hpp>
 
 // Структура для хранения данных клиента
 struct Client_data {
@@ -28,6 +29,12 @@ struct Booking_data {
     std::string current_time_game;
 };
 
+struct AvailabilityData{
+    std::string date;
+    std::string namegame;
+    std::string placegame;
+};
+
 // Класс для управления ресурсами соединения
 class ConnectionGuard {
 public:
@@ -48,13 +55,18 @@ private:
 // Класс для управления ресурсами бронирования и клиента
 class ScopeGuard {
 public:
-    // Конструктор для сброса как Booking_data, так и Client_data
-    ScopeGuard(Booking_data* booking, Client_data* clients = nullptr)
-        : booking_(booking), clients_(clients) {}
+    // Конструктор для сброса данных через ссылки
+    ScopeGuard(AvailabilityData& data)
+        : data_(&data), booking_(nullptr), clients_(nullptr) {}
+    ScopeGuard(Booking_data& booking)
+        : data_(nullptr), booking_(&booking), clients_(nullptr) {}
+    ScopeGuard(Client_data& clients)
+        : data_(nullptr), booking_(nullptr), clients_(&clients) {}
+    ScopeGuard(Booking_data& booking, Client_data& clients)
+        : data_(nullptr), booking_(&booking), clients_(&clients) {}
 
     ~ScopeGuard() {
         if (booking_) {
-            // Сброс данных booking
             booking_->comment_game.clear();
             booking_->date_game.clear();
             booking_->name_game.clear();
@@ -64,15 +76,21 @@ public:
         }
 
         if (clients_) {
-            // Сброс данных clients
             clients_->first_name.clear();
             clients_->last_name.clear();
             clients_->phone.clear();
             clients_->email.clear();
         }
+
+        if (data_){
+            data_->date.clear();
+            data_->namegame.clear();
+            data_->placegame.clear();
+        }
     }
 
 private:
+    AvailabilityData* data_;
     Booking_data* booking_;
     Client_data* clients_;
 };
@@ -82,29 +100,33 @@ class Booking {
 public:
     Booking(ConnectionPool& pool) : pool_(pool) {}
     virtual ~Booking() = default;
-
+    void AddDataByCheckAvailability(const AvailabilityData& data);
     void AddDataByInsertAndUpdate(const Client_data& client, const Booking_data& booking);
     void AddDataByDelete(const Booking_data& booking);
     void Update();
     void Delete();
 
 protected:
+    void executeTransactionCheckAvailability(std::shared_ptr<sql::Connection> conn, std::string& response);
     void executeTransactionInsert(std::shared_ptr<sql::Connection> conn);
     void executeTransactionDelete(std::shared_ptr<sql::Connection> conn);
     void executeTransactionUpdate(std::shared_ptr<sql::Connection> conn);
     void PrintInsertBooking();
     void PrintDeleteBooking();
     void PrintUpdateBooking();
+    std::string urlEncode(const std::string &value);
 
     Client_data clients_;
     Booking_data booking_;
     ConnectionPool& pool_;
+    AvailabilityData availability_;
 };
 
 // Класс для управления ареной
 class Arena : public Booking {
 public:
     Arena(ConnectionPool& pool) : Booking(pool) {}
+    std::string CheckAvailabilityPlace();
     void Open_arena();
     void Close_arena();
     
