@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (xhr.status >= 200 && xhr.status < 300) {
                 alert('Бронирование успешно отправлено.');
                 console.log('Response data:', xhr.responseText);
+                location.reload();
             } else {
                 alert(`Ошибка отправки бронирования. Статус: ${xhr.status}`);
             }

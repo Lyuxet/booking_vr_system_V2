@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const seatsCount = button.querySelector('.seats span');
         const maxAvailableSeats = availableSeats !== undefined ? availableSeats : maxPlayers;
         const currentPlayers = parseInt(playerInput.value, 10) || 0;
-
+    
         if (currentPlayers > maxAvailableSeats) {
             playerInput.value = maxAvailableSeats;
         }
@@ -23,38 +23,45 @@ document.addEventListener('DOMContentLoaded', function () {
             playerInput.focus();
             playerInput.select();
         }
-
+    
         seatsCount.textContent = maxAvailableSeats - playerInput.value;
-
+    
         if (playerInput.value === '') {
             button.classList.remove('selected');
         } else {
             button.classList.add('selected');
         }
-
+    
         playerInput.setAttribute('max', maxAvailableSeats);
     }
+    
 
     function updateButtonState(button) {
-        // Получаем текст времени начала из кнопки
         const timeText = button.querySelector('.time').textContent.trim();
         const [startTime] = timeText.split(' - ').map(time => time.trim());
         const [startHours, startMinutes] = startTime.split(':').map(Number);
     
-        // Текущее время
+        // Получаем текущую дату
         const now = new Date();
-        const buttonTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHours, startMinutes);
     
-        // Получаем количество свободных мест
+        // Получаем выбранную дату (например, из input с id='date', где пользователь выбирает дату игры)
+        const selectedDateText = document.getElementById('date').value;
+        const [year, month, day] = selectedDateText.split('.').map(Number);  // Формат даты yy.mm.dd
+    
+        // Создаем объект даты и времени для кнопки
+        const buttonDate = new Date(year, month - 1, day, startHours, startMinutes); // month - 1, потому что месяцы в JS идут с 0
+    
+        // Получаем доступные места
         const seatsCountElement = button.querySelector('.seats span');
         const availableSeats = parseInt(seatsCountElement.textContent, 10);
-    
-        // Проверяем, что время кнопки прошло или свободных мест 0
-        if (buttonTime <= now || availableSeats === 0) {
+        
+        // Если дата игры уже прошла или мест нет, кнопка отключена
+        if (buttonDate <= now || availableSeats <= 0) {
             button.classList.add('disabled');
             button.removeEventListener('click', handleClick);
             button.querySelector('.player-input').disabled = true;
         } else {
+            // Если дата и время еще актуальны, и есть места — кнопка активна
             button.classList.remove('disabled');
             button.addEventListener('click', handleClick);
             button.querySelector('.player-input').disabled = false;
@@ -63,28 +70,21 @@ document.addEventListener('DOMContentLoaded', function () {
     
 
     function handleClick(event) {
-        // Проверяем, что курсор находится на элементе input и кнопка уже выбрана
         if (event.target.closest('.player-input') && this.classList.contains('selected')) return;
-        
-        // Проверяем, содержит ли элемент класс 'disabled'
         if (this.classList.contains('disabled')) return;
-        
-        // Получаем элементы ввода и счетчика мест
+
         const playerInput = this.querySelector('.player-input');
         const maxAvailableSeats = parseInt(playerInput.getAttribute('max'), 10) || maxPlayers;
-        
-        // Переключаем класс 'selected' и устанавливаем значение для playerInput
+
         this.classList.toggle('selected');
         if (this.classList.contains('selected')) {
             playerInput.value = 1;
         } else {
             playerInput.value = '';
         }
-        
-        // Передаем текущую кнопку в функцию updateSeats
+
         updateSeats(this, maxAvailableSeats);
     }
-    
 
     function handleInput(event) {
         const input = event.target;
@@ -93,18 +93,40 @@ document.addEventListener('DOMContentLoaded', function () {
         updateSeats(button, maxAvailableSeats);
     }
 
-    function updateButtonsState(availability) {
+    // Если данные пустые, сделаем все кнопки доступными, если время актуально
+    function makeAllButtonsAvailable() {
         bookingButtons.forEach(button => {
-            const timeText = button.querySelector('.time').textContent.trim();
-            const availableSlotData = availability.find(slot => slot.time_game === timeText);
-
-            if (availableSlotData) {
-                const availableSeats = availableSlotData.available_slots;
-                updateSeats(button, availableSeats);
-                updateButtonState(button); // Обновляем состояние кнопки после получения данных
-            }
+            const seatsCountElement = button.querySelector('.seats span');
+            seatsCountElement.textContent = maxPlayers;
+            updateSeats(button, maxPlayers);
+            updateButtonState(button);
         });
     }
+
+    function updateButtonsState(availability) {
+        // Сначала сбросить состояние всех кнопок
+        bookingButtons.forEach(button => {
+            // Сбросить состояние кнопки и обновить ее внешний вид на основе текущего времени и даты
+            updateSeats(button); // Обновить счетчик мест и состояние
+            updateButtonState(button); // Обновить состояние кнопки (доступность)
+        });
+    
+        // Затем обновить кнопки на основе данных из JSON
+        if (Array.isArray(availability)) {
+            bookingButtons.forEach(button => {
+                const timeText = button.querySelector('.time').textContent.trim();
+                const availableSlotData = availability.find(slot => slot.time_game === timeText);
+                
+                if (availableSlotData) {
+                    const availableSeats = availableSlotData.available_slots;
+                    updateSeats(button, availableSeats);
+                    // После обновления мест, необходимо также обновить состояние кнопки
+                    updateButtonState(button);
+                }
+            });
+        }
+    }
+    
 
     function checkAvailability() {
         var date = document.getElementById('date').value;
@@ -145,12 +167,42 @@ document.addEventListener('DOMContentLoaded', function () {
         const playerInput = button.querySelector('.player-input');
         button.addEventListener('click', handleClick);
         playerInput.setAttribute('maxlength', '2');
-        playerInput.addEventListener('input', handleInput);
 
-        // Сразу обновляем состояние кнопок на основе текущего времени
+        // Запретить ввод нецифровых символов
+        playerInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        // Запретить ввод нецифровых символов с клавиатуры, включая numpad
+        playerInput.addEventListener('keydown', function(event) {
+            // Разрешаем клавиши для цифр (0-9, numpad)
+            const isNumberKey = (event.keyCode >= 48 && event.keyCode <= 57) || // цифры сверху
+                                (event.keyCode >= 96 && event.keyCode <= 105) || // цифры numpad
+                                event.keyCode === 8 || 
+                                event.keyCode === 46; 
+            
+            if (!isNumberKey) {
+                event.preventDefault();
+            }
+        });
+
+        // Запретить вставку нецифровых символов
+        playerInput.addEventListener('paste', function(event) {
+            const pastedData = (event.clipboardData || window.clipboardData).getData('text');
+            if (!/^\d*$/.test(pastedData)) {
+                event.preventDefault();
+            }
+        });
+
+        playerInput.addEventListener('input', handleInput);
         updateButtonState(button);
     });
 
-    // Вызов функции для проверки доступности
+    // Обновление состояния кнопок при выборе новой даты
+    $('#date').on('change', function () {
+        checkAvailability();
+    });
+
+    // Вызов функции для проверки доступности при загрузке страницы
     checkAvailability();
 });
