@@ -12,6 +12,7 @@ void Booking::PrintInsertBooking(){
     std::cout << "Забронировано " << booking_.name_game 
     << " с типом " << booking_.type_game 
     << " на " << booking_.date_game << " " << booking_.time_game
+    << " количество игроков " << booking_.players_count 
     << std::endl;
 }
 
@@ -86,6 +87,7 @@ std::string Arena::CheckAvailabilityPlace(){
     catch(const std::exception& e)
     {
         std::cerr << e.what() << '\n';
+        return "";
     }
     
 }

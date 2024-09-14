@@ -81,11 +81,8 @@ static void get(const httplib::Request& req, httplib::Response& res, ConnectionP
 
         if (itDate != queryParams.end() && itNameGame != queryParams.end() && itPlaceGame != queryParams.end()){
             date = itDate->second;
-            std::cout << date << std::endl;
             namegame = itNameGame->second;
-            std::cout << namegame << std::endl;
             placegame = itPlaceGame->second;
-            std::cout << placegame << std::endl;
         }
         else {
             throw std::runtime_error("data isn't correctly");
