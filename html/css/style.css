@@ -1,5 +1,5 @@
 html {
-  background-color: #0c0c0c;
+  background-image: url(fon.png);
   min-height: 100%; 
   background-size: cover;
   display: flex;
@@ -18,10 +18,11 @@ color: #00dd16;
 h2 {
   font-family: var(--font-family);
   font-weight: 400;
-  font-size: 33px;
+  font-size: 32px;
   text-align: center;
   color: #fff;
   margin-right: 12px;
+  margin-top: 20px;
 }
 
 h3 {
@@ -55,7 +56,7 @@ input {
   color: #fff;
   border: 1px solid #fff;
   border-radius: 24px;
-  width: 720px;
+  width: 576px;
   height: 33px;
   background: #0c0c0c;
   text-align: center;
@@ -136,8 +137,7 @@ label {
   text-align: center;
   color: #fff;
   display: grid;
-  margin-bottom: -8px;
-  margin-top: 8px;
+  margin: 8px;
 }
 
 .form-container {
@@ -155,20 +155,16 @@ label {
 }
 
 button[name=send] {
-  padding: 8px 316px;
+  padding: 8px 242px;
   background: #00ac11;
   border-radius: 24px;
-  font-family: var(--font-family);
   font-weight: 400;
   font-size: 19px;
-  text-align: center;
   color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-decoration: none;
   border: 2px solid transparent;
+  margin-bottom: 32px;
   transition: all 0.4s ease;
+
 
 }
 
@@ -200,7 +196,7 @@ input[name="comment"] {
 }
 
 textarea[name="comment"] {
-  width: 720px;
+  width: 576px;
   height: 162px;
   color: #fff; 
   background: #0c0c0c; 

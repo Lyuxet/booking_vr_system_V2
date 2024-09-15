@@ -57,9 +57,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
         // Если дата игры уже прошла или мест нет, кнопка отключена
         if (buttonDate <= now || availableSeats <= 0) {
+            button.classList.remove('selected');
             button.classList.add('disabled');
             button.removeEventListener('click', handleClick);
             button.querySelector('.player-input').disabled = true;
+            button.querySelector('.player-input').value = '';
+            button.querySelector('.seats span').textContent = 0;
         } else {
             // Если дата и время еще актуальны, и есть места — кнопка активна
             button.classList.remove('disabled');
@@ -206,3 +209,5 @@ document.addEventListener('DOMContentLoaded', function () {
     // Вызов функции для проверки доступности при загрузке страницы
     checkAvailability();
 });
+
+
