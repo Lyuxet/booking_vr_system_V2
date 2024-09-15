@@ -21,6 +21,8 @@ CREATE INDEX idx_game_schedule ON GameSchedule (name_game, date_game, time_game)
 
 -- Создание таблицы ArenaShooterStats
 CREATE TABLE ArenaShooterStats (
+	id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    client_id BIGINT UNSIGNED NOT NULL,
 	place_game VARCHAR(50) NOT NULL,
     type_game VARCHAR(50) NOT NULL,
     name_game VARCHAR(50) DEFAULT 'SHOOTER' NOT NULL,
@@ -31,7 +33,6 @@ CREATE TABLE ArenaShooterStats (
     free_slots INT DEFAULT 10 NOT NULL,
     price INT NOT NULL,
     comment_game VARCHAR(400) DEFAULT 'Резерв' NOT NULL,
-    PRIMARY KEY (name_game, date_game, time_game),  -- Составной ключ
     CONSTRAINT fk_shooter_schedule FOREIGN KEY (name_game, date_game, time_game)
     REFERENCES GameSchedule(name_game, date_game, time_game)
     ON DELETE CASCADE  -- Каскадное удаление для обеспечения целостности данных

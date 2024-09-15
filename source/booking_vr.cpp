@@ -165,6 +165,30 @@ void Booking::executeTransactionInsert(std::shared_ptr<sql::Connection> conn) {
         try {
             conn->setAutoCommit(false);
 
+            std::unique_ptr<sql::PreparedStatement> pstmtCheck(conn->prepareStatement(
+            "SELECT time_game, SUM(players_count) AS total_players, "
+            "CASE "
+            "    WHEN COUNT(DISTINCT name_game) = 1 AND MAX(name_game) = ? THEN (10 - SUM(players_count)) "
+            "    ELSE 0 "
+            "END AS available_slots "
+            "FROM gameschedule "
+            "WHERE place_game = ? AND date_game = ? AND time_game = ? "
+            "GROUP BY time_game"
+        ));
+        pstmtCheck->setString(1, booking_.name_game);
+        pstmtCheck->setString(2, booking_.place_game);  // 'ARENA'
+        pstmtCheck->setString(3, booking_.date_game);   // Дата игры
+        pstmtCheck->setString(4, booking_.time_game);   // Время игры
+
+        std::unique_ptr<sql::ResultSet> res(pstmtCheck->executeQuery());
+
+        if (res->next()) {
+            int available_slots = res->getInt("available_slots");
+            if (available_slots < booking_.players_count) {
+                throw std::runtime_error("Недостаточно свободных мест для бронирования.");
+            }
+        }
+
             // Вставка данных о клиенте
             std::unique_ptr<sql::PreparedStatement> pstmt1(conn->prepareStatement(
                 "INSERT IGNORE INTO Clients (first_name, last_name, phone, email) VALUES (?, ?, ?, ?)"
@@ -433,13 +457,19 @@ void Booking::executeTransactionCheckAvailability(std::shared_ptr<sql::Connectio
         try {
             conn->setAutoCommit(false);
             std::unique_ptr<sql::PreparedStatement> pstmtCheckAvailability(conn->prepareStatement(
-                "SELECT time_game, SUM(players_count) AS total_players, "
-                "(10 - SUM(players_count)) AS available_slots "
-                "FROM gameschedule WHERE place_game = ? AND name_game = ? AND date_game = ? "
-                "GROUP BY time_game"));
+            "SELECT time_game, SUM(players_count) AS total_players, "
+            "CASE "
+            "    WHEN COUNT(DISTINCT name_game) = 1 AND MAX(name_game) = ? THEN (10 - SUM(players_count)) "
+            "    ELSE 0 "
+            "END AS available_slots "
+            "FROM gameschedule "
+            "WHERE place_game = ? AND date_game = ? "
+            "GROUP BY time_game"
+        ));
 
-            pstmtCheckAvailability->setString(1, availability_.placegame);
-            pstmtCheckAvailability->setString(2, availability_.namegame);
+
+            pstmtCheckAvailability->setString(1, availability_.namegame);
+            pstmtCheckAvailability->setString(2, availability_.placegame);
             pstmtCheckAvailability->setString(3, availability_.date);
 
             std::unique_ptr<sql::ResultSet> resSet(pstmtCheckAvailability->executeQuery());

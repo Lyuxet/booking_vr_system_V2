@@ -32,8 +32,8 @@ BEGIN
     -- Проверяем, занято ли это время для текущей игры
     ELSE
         -- Если время свободно, добавляем запись в таблицу расписания
-        INSERT INTO GameSchedule (place_game, type_game, name_game, date_game, time_game, players_count, max_players, free_slots, price, comment_game)
-        VALUES (NEW.place_game, NEW.type_game, NEW.name_game, NEW.date_game, NEW.time_game, NEW.players_count, NEW.max_players, NEW.free_slots, NEW.price, NEW.comment_game);
+        INSERT INTO GameSchedule (client_id, place_game, type_game, name_game, date_game, time_game, players_count, max_players, free_slots, price, comment_game)
+        VALUES (NEW.client_id, NEW.place_game, NEW.type_game, NEW.name_game, NEW.date_game, NEW.time_game, NEW.players_count, NEW.max_players, NEW.free_slots, NEW.price, NEW.comment_game);
     END IF;
 END$$
 
