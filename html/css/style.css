@@ -2,17 +2,17 @@ html {
   background-image: url(fon.png);
   min-height: 100%; 
   background-size: cover;
-  display: flex;
+  display: grid;
   justify-content: center;
   align-items: center;
 }
 
 h1 { 
-font-family: Akzidenz-Grotesk Pro; 
-font-weight: 800;
-font-size: 47px;
-text-align: center;
-color: #00dd16;
+  font-family: Akzidenz-Grotesk Pro; 
+  font-weight: 800;
+  font-size: 47px;
+  text-align: center;
+  color: #00dd16;
 }
 
 h2 {
@@ -26,42 +26,40 @@ h2 {
 }
 
 h3 {
-font-family: var(--font-family);
-font-weight: 400;
-font-size: 33px;
-text-align: center;
-color: #fff;
-margin-bottom: 0px;
-margin-top: 24px;
-}
-
-p1 {
+  font-family: var(--font-family);
   font-weight: 400;
   font-size: 33px;
   text-align: center;
   color: #fff;
+  margin-bottom: 0px;
+  margin-top: 24px;
 }
-p2 {
-  font-weight: 400;
-  font-size: 33px;
-  color: #fff;
-}
-p3 {
-font-family: var(--font-family);
-font-weight: 400;
-font-size: 19px;
-color: #fff;
-}
-input {
+
+input, textarea {
   color: #fff;
   border: 1px solid #fff;
   border-radius: 24px;
-  width: 576px;
-  height: 33px;
+  
   background: #0c0c0c;
+}
+
+input[type="text"], input[type="email"], input[type="tel"], textarea {
   text-align: center;
 }
 
+input {
+  width: 576px;
+  height: 33px;
+}
+
+textarea {
+  width: 576px;
+  height: 88px;
+  padding: 8px; 
+  box-sizing: border-box; 
+  margin-bottom: 32px;
+  resize: none;
+}
 
 .booking-button {
   border-radius: 24px;
@@ -70,12 +68,17 @@ input {
   background: #00ac11;
   transition: all 0.4s ease;
   border: 2px solid transparent;
+  color: white;
+  font-size: 19px;
+  z-index: 1;
+  position: relative;
+  cursor: pointer;
 }
 
 .booking-button .player-input {
   width: 100%;
   text-align: center;
-  border-radius: 10px;
+  border-radius: 8px;
   border: 1px solid #ccc;
   padding: 8px;
   background-color: black;
@@ -86,11 +89,6 @@ input {
   background-color: #1b1a1a;
   border: 1px solid #ccc;
   cursor: not-allowed;
-}
-
-.booking-button{
-  color: white;
-  font-size: 19px;
 }
 
 .booking-button.selected {
@@ -126,10 +124,6 @@ input {
   background-color: #1b1a1a;
 }
 
-
-
-
-
 label {
   font-family: var(--font-family);
   font-weight: 400;
@@ -141,38 +135,13 @@ label {
 }
 
 .form-container {
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  text-align: center;
+  display: flex;             /* Используем flex для позиционирования */
+  flex-direction: column;     /* Располагаем элементы в колонку */
+  align-items: center;        /* Выравниваем элементы по центру по горизонтали */
+  justify-content: center;    /* Выравниваем элементы по центру по вертикали */
+  text-align: center;         /* Текст в элементах выравнивается по центру */
+  width: 100%;                /* Контейнер занимает 100% ширины */
 }
-
-.cont {
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  text-align: center;
-}
-
-button[name=send] {
-  padding: 8px 242px;
-  background: #00ac11;
-  border-radius: 24px;
-  font-weight: 400;
-  font-size: 19px;
-  color: #fff;
-  border: 2px solid transparent;
-  margin-bottom: 32px;
-  transition: all 0.4s ease;
-
-
-}
-
-button[name=send]:hover{
-  background-color: #a707dc;
-  border-color: #a707dc;
-}
-
 
 .date-container {
   display: flex;
@@ -181,31 +150,12 @@ button[name=send]:hover{
   margin-bottom: -16px;
 }
 
-input[name="comment"] {
-  width: 720px;
-  height: 162px;
-  border: 1px solid #fff;
-  border-radius: 24px;
-  background: #0c0c0c;
-}
-
-.date-container input {
-  width: 90px;
-  height: 33px;
-  text-align: center;
-}
-
 textarea[name="comment"] {
-  width: 576px;
-  height: 162px;
   color: #fff; 
   background: #0c0c0c; 
   border: 1px solid #fff;
   border-radius: 24px;
-  padding: 8px; 
-  box-sizing: border-box; 
-  margin-bottom: 32px;
-  resize: none;
+  text-align: left;
 }
 
 .ui-datepicker {
@@ -213,17 +163,154 @@ textarea[name="comment"] {
   position: absolute;
 }
 
-.booking-button {
-  z-index: 1;
-  position: relative;
+.submit-button {
+  padding: 8px 30px;
+  background: #a707dc;
+  border-radius: 16px;
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: calc(1rem + 0.5vw);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  width: 576px;
 }
 
-.booking-row {
-  display: flex;
+.submit-button:hover {
+  background-color: #4901a8;
+}
+
+.booking-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* По умолчанию 4 кнопки в ряд */
   gap: 16px;
-  margin: 16px 16px;
+  justify-content: center; /* Центрируем кнопки по горизонтали */
 }
 
-.booking-button.selected {
-  background-color: #a707dc;
+@media (max-width: 1200px) {
+  .booking-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 кнопки в ряд для экранов менее 1200px */
+  }
+}
+
+@media (max-width: 768px) {
+  .booking-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 кнопки в ряд для экранов менее 1200px */
+  }
+}
+
+
+/* Медиазапросы для адаптации под разные экраны */
+
+/* Для экранов шириной 1200px и менее */
+@media (max-width: 1200px) {
+  .booking-button {
+    width: 100%;
+    height: 100%;
+  }
+  input, textarea[name="comment"], .submit-button {
+    width: 70%;
+  }
+  
+}
+
+/* Для экранов шириной 960px и менее */
+@media (max-width: 960px) {
+  .booking-button {
+    width: 100%;
+    height: 100%;
+  }
+  input, textarea[name="comment"], .submit-button {
+    width: 70%;
+  }
+}
+
+/* Для экранов шириной 768px и менее */
+@media (max-width: 768px) {
+  .booking-button {
+    width: 100%;
+    height: 100%;
+  }
+  input, textarea[name="comment"], .submit-button {
+    width: 70%;
+  }
+  h1 {
+    font-size: 40px;
+  }
+  h2, h3 {
+    font-size: 28px;
+  }
+  
+}
+
+/* Для экранов шириной 576px и менее */
+@media (max-width: 576px) {
+  .booking-button {
+    width: 100%;
+    height: auto;
+  }
+  input, textarea[name="comment"], .submit-button {
+    width: 70%;
+  }
+  
+  h1 {
+    font-size: 36px;
+  }
+  h2, h3 {
+    font-size: 24px;
+  }
+}
+
+/* Для экранов шириной 480px и менее */
+@media (max-width: 480px) {
+  .booking-button {
+    width: 100%;
+    height: auto;
+  }
+  input, textarea[name="comment"], .submit-button {
+    width: 70%;
+  }
+ 
+  h1 {
+    font-size: 32px;
+  }
+  h2, h3 {
+    font-size: 20px;
+  }
+}
+
+/* Для экранов шириной 375px и менее (например, iPhone 12, iPhone X) */
+@media (max-width: 375px) {
+  .booking-button {
+    width: 100%;
+    height: auto;
+  }
+  input, textarea[name="comment"], .submit-button {
+    width: 70%;
+  }
+  h1 {
+    font-size: 30px;
+  }
+  h2, h3 {
+    font-size: 18px;
+  }
+}
+
+/* Для экранов шириной 320px и менее (например, iPhone SE) */
+@media (max-width: 320px) {
+  .booking-button {
+    width: 100%;
+    height: auto;
+  }
+  input, textarea[name="comment"], .submit-button {
+    width: 70%;
+  }
+  
+  h1 {
+    font-size: 28px;
+  }
+  h2, h3 {
+    font-size: 16px;
+  }
 }

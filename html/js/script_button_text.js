@@ -133,8 +133,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function checkAvailability() {
         var date = document.getElementById('date').value;
-        var namegame = 'QUEST';
         var placegame = 'ARENA';
+        // Проверяем URL и задаем значение для namegame в зависимости от пути файла
+        let namegame = ''; // Значение по умолчанию
+
+        const currentURL = window.location.href;
+        if (currentURL.includes('OpenArenaQuest.html')) {
+            namegame = 'QUEST';
+        } else if (currentURL.includes('OpenArenaShooter.html')) {
+            namegame = 'SHOOTER';
+        } else {
+            // Дополнительные условия можно добавить здесь
+        }
 
         if (!date || !namegame) {
             console.error('Заполните все поля.');

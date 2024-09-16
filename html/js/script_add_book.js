@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function () {
     const addButton = document.getElementById('add');
     if (!addButton) {
@@ -37,6 +36,18 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedPrice.push(price);
         });
 
+        // Проверяем URL и задаем значение для namegame в зависимости от пути файла
+        let namegame = ''; // Значение по умолчанию
+
+        const currentURL = window.location.href;
+        if (currentURL.includes('OpenArenaQuest.html')) {
+            namegame = 'QUEST';
+        } else if (currentURL.includes('OpenArenaShooter.html')) {
+            namegame = 'SHOOTER';
+        } else {
+            // Дополнительные условия можно добавить здесь
+        }
+
         // Создаем строку данных для отправки в формате x-www-form-urlencoded
         const postData = 'firstname=' + encodeURIComponent(firstname) +
                          '&lastname=' + encodeURIComponent(lastname) +
@@ -44,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
                          '&email=' + encodeURIComponent(email) +
                          '&placegame=' + encodeURIComponent('ARENA') +
                          '&typegame=' + encodeURIComponent('OPEN') +
-                         '&namegame=' + encodeURIComponent('QUEST') +
+                         '&namegame=' + encodeURIComponent(namegame) +  // Используем динамическое значение namegame
                          '&date=' + encodeURIComponent(date) +
                          '&times=' + encodeURIComponent(selectedTimes.join(',')) +
                          '&playerCount=' + encodeURIComponent(selectedPlayersCount.join(',')) +
