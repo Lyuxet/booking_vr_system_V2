@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
         priceDisplay.classList.remove('show'); // Убираем класс для анимации скрытия
         setTimeout(() => {
             priceDisplay.style.display = 'none'; // Полностью скрываем элемент после анимации
-        }, 500); // Время анимации соответствует transition (0.5s)
+        }, 100); // Время анимации соответствует transition (0.5s)
     }
     
 
