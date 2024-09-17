@@ -15,6 +15,10 @@ input, textarea {
   background: #0c0c0c;
 }
 
+input[name="date"]{
+  width: 30%;
+}
+
 input[type="text"], input[type="email"], input[type="tel"], textarea {
   text-align: center;
 }
