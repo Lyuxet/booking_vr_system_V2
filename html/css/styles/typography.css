@@ -1,0 +1,27 @@
+h1 { 
+  font-family: Akzidenz-Grotesk Pro; 
+  font-weight: 800;
+  font-size: 47px;
+  text-align: center;
+  color: #00dd16;
+}
+
+h2 {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 32px;
+  text-align: center;
+  color: #fff;
+  margin-right: 12px;
+  margin-top: 20px;
+}
+
+h3 {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 33px;
+  text-align: center;
+  color: #fff;
+  margin-bottom: 0px;
+  margin-top: 24px;
+}

@@ -4,8 +4,14 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>Квест</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Medieval Journey</title>
+    <link rel="stylesheet" href="css/styles/base.css">
+    <link rel="stylesheet" href="css/styles/typography.css">
+    <link rel="stylesheet" href="css/styles/forms.css">
+    <link rel="stylesheet" href="css/styles/buttons.css">
+    <link rel="stylesheet" href="css/styles/grid.css">
+    <link rel="stylesheet" href="css/styles/animations.css">
+    <link rel="stylesheet" href="css/styles/responsive.css">
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="fonts/stylesheet.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -21,10 +27,16 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
+                <div class="price-display" style="display: none;">
+                    <span>Сумма: </span>
+                    <span id="displayAmount"></span>
+                    <span> ₽</span>
+                </div>
                 <h1>Medieval-Journey</h1>
                 <div class="date-container">
                     <h2>Выберите дату:</h2>
                     <input type="text" id="date" name="date">
+                    <script src="js/datepicker.js"></script>
                 </div>
                 <div class="booking-container">
                     <!-- Кнопки размещены в grid-контейнере -->
@@ -32,85 +44,74 @@
                             <button id="button11" class="booking-button">
                                 <div class="time">11:15 - 12:00</div>
                                 <div class="line"></div>
-                                <div class="price">1200 ₽</div>
+                                <div class="price" data-price="1200">1200 ₽</div>
                                 <div class="players"><input type="text" id="playerInput11" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
                                 <div class="seats">Свободно: <span id="seatsCount11">10</span> мест</div>
                             </button>
                             <button id="button12" class="booking-button">
                                 <div class="time">12:15 - 13:00</div>
                                 <div class="line"></div>
-                                <div class="price">1200 ₽</div>
-                                <div class="players"><input type="text" id="playerInput12" placeholder="Кол-мест" value="" class="player-input" /></div>
+                                <div class="price" data-price="1200">1200 ₽</div>                                <div class="players"><input type="text" id="playerInput12" placeholder="Кол-мест" value="" class="player-input" /></div>
                                 <div class="seats">Свободно: <span id="seatsCount12">10</span> мест</div>
                             </button>
                             <button id="button13" class="booking-button">
                                 <div class="time">13:15 - 14:00</div>
                                 <div class="line"></div>
-                                <div class="price">1200 ₽</div>
-                                <div class="players"><input type="text" id="playerInput13" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
+                                <div class="price" data-price="1200">1200 ₽</div>                                <div class="players"><input type="text" id="playerInput13" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
                                 <div class="seats">Свободно: <span id="seatsCount13">10</span> мест</div>
                             </button>
                             <button id="button14" class="booking-button">
                                 <div class="time">14:15 - 15:00</div>
                                 <div class="line"></div>
-                                <div class="price">1400 ₽</div>
-                                <div class="players"><input type="text" id="playerInput14" placeholder="Кол-мест" value="" class="player-input" /></div>
+                                <div class="price" data-price="1400">1400 ₽</div>                                <div class="players"><input type="text" id="playerInput14" placeholder="Кол-мест" value="" class="player-input" /></div>
                                 <div class="seats">Свободно: <span id="seatsCount14">10</span> мест</div>
                             </button>
                             <button id="button15" class="booking-button">
                                 <div class="time">15:15 - 16:00</div>
                                 <div class="line"></div>
-                                <div class="price">1400 ₽</div>
-                                <div class="players"><input type="text" id="playerInput15" placeholder="Кол-мест" value="" class="player-input" /></div>
+                                <div class="price" data-price="1400">1400 ₽</div>                                <div class="players"><input type="text" id="playerInput15" placeholder="Кол-мест" value="" class="player-input" /></div>
                                 <div class="seats">Свободно: <span id="seatsCount15">10</span> мест</div>
                             </button>
                             <button id="button16" class="booking-button">
                                 <div class="time">16:15 - 17:00</div>
                                 <div class="line"></div>
-                                <div class="price">1400 ₽</div>
-                                <div class="players"><input type="text" id="playerInput16" placeholder="Кол-мест" value="" class="player-input" /></div>
+                                <div class="price" data-price="1400">1400 ₽</div>                                <div class="players"><input type="text" id="playerInput16" placeholder="Кол-мест" value="" class="player-input" /></div>
                                 <div class="seats">Свободно: <span id="seatsCount16">10</span> мест</div>
                             </button>
                             <button id="button17" class="booking-button">
                                 <div class="time">17:15 - 18:00</div>
                                 <div class="line"></div>
-                                <div class="price">1400 ₽</div>
-                                <div class="players"><input type="text" id="playerInput17" placeholder="Кол-мест" value="" class="player-input" /></div>
+                                <div class="price" data-price="1400">1400 ₽</div>                                <div class="players"><input type="text" id="playerInput17" placeholder="Кол-мест" value="" class="player-input" /></div>
                                 <div class="seats">Свободно: <span id="seatsCount17">10</span> мест</div>
                             </button>
                             <button id="button18" class="booking-button">
                                 <div class="time">18:15 - 19:00</div>
                                 <div class="line"></div>
-                                <div class="price">1400 ₽</div>
-                                <div class="players"><input type="text" id="playerInput18" placeholder="Кол-мест" value="" class="player-input" /></div>
+                                <div class="price" data-price="1600">1600 ₽</div>                                <div class="players"><input type="text" id="playerInput18" placeholder="Кол-мест" value="" class="player-input" /></div>
                                 <div class="seats">Свободно: <span id="seatsCount18">10</span> мест</div>
                             </button>
                             <button id="button19" class="booking-button">
                                 <div class="time">19:15 - 20:00</div>
                                 <div class="line"></div>
-                                <div class="price">1400 ₽</div>
-                                <div class="players"><input type="text" id="playerInput19" placeholder="Кол-мест" value="" class="player-input" /></div>
+                                <div class="price" data-price="1600">1600 ₽</div>                                <div class="players"><input type="text" id="playerInput19" placeholder="Кол-мест" value="" class="player-input" /></div>
                                 <div class="seats">Свободно: <span id="seatsCount19">10</span> мест</div>
                             </button>
                             <button id="button20" class="booking-button">
                                 <div class="time">20:15 - 21:00</div>
                                 <div class="line"></div>
-                                <div class="price">1600 ₽</div>
-                                <div class="players"><input type="text" id="playerInput20" placeholder="Кол-мест" value="" class="player-input" /></div>
+                                <div class="price" data-price="1600">1600 ₽</div>                                <div class="players"><input type="text" id="playerInput20" placeholder="Кол-мест" value="" class="player-input" /></div>
                                 <div class="seats">Свободно: <span id="seatsCount20">10</span> мест</div>
                             </button>
                             <button id="button21" class="booking-button">
                                 <div class="time">21:15 - 22:00</div>
                                 <div class="line"></div>
-                                <div class="price">1600 ₽</div>
-                                <div class="players"><input type="text" id="playerInput21" placeholder="Кол-мест" value="" class="player-input" min="1" max="10" /></div>
+                                <div class="price" data-price="1600">1600 ₽</div>                                <div class="players"><input type="text" id="playerInput21" placeholder="Кол-мест" value="" class="player-input" min="1" max="10" /></div>
                                 <div class="seats">Свободно: <span id="seatsCount21">10</span> мест</div>
                             </button>
                             <button id="button22" class="booking-button">
                                 <div class="time">22:15 - 23:00</div>
                                 <div class="line"></div>
-                                <div class="price">1600 ₽</div>
-                                <div class="players"><input type="text" id="playerInput22" placeholder="Кол-мест" value="" class="player-input" /></div>
+                                <div class="price" data-price="1600">1600 ₽</div>                                <div class="players"><input type="text" id="playerInput22" placeholder="Кол-мест" value="" class="player-input" /></div>
                                 <div class="seats">Свободно: <span id="seatsCount22">10</span> мест</div>
                             </button>
                         </div>
@@ -133,8 +134,6 @@
             </div>
         </div>
     </div>
-
-    <script src="js/script.js"></script>
 </body>
 
 </html>

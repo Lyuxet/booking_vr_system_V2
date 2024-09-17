@@ -1,0 +1,59 @@
+html {
+  background-image: url(../fon.png);
+  min-height: 100%; 
+  background-size: cover;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+  
+input, textarea {
+  color: #fff;
+  border: 1px solid #fff;
+  border-radius: 24px;
+  
+  background: #0c0c0c;
+}
+
+input[type="text"], input[type="email"], input[type="tel"], textarea {
+  text-align: center;
+}
+
+input {
+  width: 576px;
+  height: 33px;
+}
+
+textarea {
+  width: 576px;
+  height: 88px;
+  padding: 8px; 
+  box-sizing: border-box; 
+  margin-bottom: 32px;
+  resize: none;
+}
+  
+label {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 19px;
+  text-align: center;
+  color: #fff;
+  display: grid;
+  margin: 8px;
+}
+  
+
+textarea[name="comment"] {
+  color: #fff; 
+  background: #0c0c0c; 
+  border: 1px solid #fff;
+  border-radius: 24px;
+  text-align: left;
+}
+  
+.ui-datepicker {
+  z-index: 1000;
+  position: absolute;
+}
+  

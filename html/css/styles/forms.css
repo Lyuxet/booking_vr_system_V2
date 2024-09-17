@@ -1,0 +1,16 @@
+.form-container {
+  display: flex;             /* Используем flex для позиционирования */
+  flex-direction: column;     /* Располагаем элементы в колонку */
+  align-items: center;        /* Выравниваем элементы по центру по горизонтали */
+  justify-content: center;    /* Выравниваем элементы по центру по вертикали */
+  text-align: center;         /* Текст в элементах выравнивается по центру */
+  width: 100%;                /* Контейнер занимает 100% ширины */
+}
+
+.date-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: -16px;
+}
+  

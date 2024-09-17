@@ -70,30 +70,83 @@ document.addEventListener('DOMContentLoaded', function () {
             button.querySelector('.player-input').disabled = false;
         }
     }
+
+    function calculateTotalPrice() {
+        let totalPrice = 0;
+    
+        // Проходим по всем выбранным кнопкам
+        document.querySelectorAll('.booking-button.selected').forEach(button => {
+            const playerInput = button.querySelector('.player-input');
+            const playerCount = parseInt(playerInput.value, 10) || 0;
+            const pricePerPlayer = parseInt(button.querySelector('.price').textContent);
+    
+            // Добавляем к общей стоимости
+            totalPrice += playerCount * pricePerPlayer;
+        });
+    
+        // Обновляем содержимое таблички
+        const displayAmountElement = document.getElementById('displayAmount');
+        if (displayAmountElement) {
+            displayAmountElement.textContent = totalPrice;
+        }
+
+        // Проверяем, выбрана ли хотя бы одна кнопка
+        const anyButtonSelected = document.querySelectorAll('button.selected').length > 0;
+
+        const priceDisplayElement = document.querySelector('.price-display');
+        if (priceDisplayElement) {
+            // Показываем или скрываем табличку в зависимости от состояния кнопок
+            if (anyButtonSelected) {
+                showPriceDisplay();
+            } else {
+                hidePriceDisplay();
+            }
+        }
+    }
+    function showPriceDisplay() {
+        const priceDisplay = document.querySelector('.price-display');
+        priceDisplay.style.display = 'inline-flex'; // Показываем элемент
+        setTimeout(() => {
+            priceDisplay.classList.add('show'); // Активируем анимацию появления
+        }, 5); // Небольшая задержка для срабатывания transition
+    }
+    
+    function hidePriceDisplay() {
+        const priceDisplay = document.querySelector('.price-display');
+        priceDisplay.classList.remove('show'); // Убираем класс для анимации скрытия
+        setTimeout(() => {
+            priceDisplay.style.display = 'none'; // Полностью скрываем элемент после анимации
+        }, 500); // Время анимации соответствует transition (0.5s)
+    }
     
 
     function handleClick(event) {
+        // Проверяем, что клик был не по полю player-input и кнопка не disabled
         if (event.target.closest('.player-input') && this.classList.contains('selected')) return;
         if (this.classList.contains('disabled')) return;
-
+    
         const playerInput = this.querySelector('.player-input');
         const maxAvailableSeats = parseInt(playerInput.getAttribute('max'), 10) || maxPlayers;
-
+    
         this.classList.toggle('selected');
         if (this.classList.contains('selected')) {
             playerInput.value = 1;
         } else {
             playerInput.value = '';
         }
-
+    
         updateSeats(this, maxAvailableSeats);
+    
+        calculateTotalPrice();
     }
+    
 
     function handleInput(event) {
         const input = event.target;
         const button = input.closest('.booking-button');
         const maxAvailableSeats = parseInt(input.getAttribute('max'), 10) || maxPlayers;
         updateSeats(button, maxAvailableSeats);
+        calculateTotalPrice();
     }
 
     // Если данные пустые, сделаем все кнопки доступными, если время актуально
@@ -219,5 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Вызов функции для проверки доступности при загрузке страницы
     checkAvailability();
 });
+
+
 
 

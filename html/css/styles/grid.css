@@ -1,0 +1,18 @@
+.booking-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* По умолчанию 4 кнопки в ряд */
+  gap: 16px;
+  justify-content: center; /* Центрируем кнопки по горизонтали */
+}
+
+@media (max-width: 1200px) {
+  .booking-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 кнопки в ряд для экранов менее 1200px */
+  }
+}
+
+@media (max-width: 768px) {
+  .booking-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 кнопки в ряд для экранов менее 1200px */
+  }
+}
