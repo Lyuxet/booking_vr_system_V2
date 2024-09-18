@@ -200,17 +200,25 @@ void Booking::executeTransactionInsert(std::shared_ptr<sql::Connection> conn) {
             pstmt1->execute();
 
             // Вставка данных о бронировании
-            std::string queryInsert = "INSERT INTO " + tableName + " (client_id, date_game, time_game, players_count, comment_game, type_game, price, place_game) "
-                                      "VALUES ((SELECT id FROM Clients WHERE phone = ? LIMIT 1),?, ?, ?, ?, ?, ?, ?)";
+            std::string queryInsert = "INSERT INTO " + tableName + 
+                " (client_id, date_game, time_game, name_game, players_count, comment_game, type_game, price, place_game) "
+                "VALUES ((SELECT id FROM Clients WHERE phone = ? LIMIT 1), ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            // Подготовка оператора SQL с использованием подготовленного выражения
             std::unique_ptr<sql::PreparedStatement> pstmt2(conn->prepareStatement(queryInsert));
-            pstmt2->setString(1, clients_.phone);
-            pstmt2->setString(2, booking_.date_game);
-            pstmt2->setString(3, booking_.time_game);
-            pstmt2->setInt(4, booking_.players_count);
-            pstmt2->setString(5, booking_.comment_game);
-            pstmt2->setString(6, booking_.type_game);
-            pstmt2->setInt(7, booking_.price);
-            pstmt2->setString(8, booking_.place_game);
+
+            // Установка значений для подготовленного выражения
+            pstmt2->setString(1, clients_.phone);               // Установка телефона клиента для подзапроса
+            pstmt2->setString(2, booking_.date_game);           // Дата игры
+            pstmt2->setString(3, booking_.time_game);           // Время игры
+            pstmt2->setString(4, booking_.name_game);           // Название игры
+            pstmt2->setInt(5, booking_.players_count);          // Количество игроков
+            pstmt2->setString(6, booking_.comment_game);        // Комментарий
+            pstmt2->setString(7, booking_.type_game);           // Тип игры
+            pstmt2->setInt(8, booking_.price);                  // Цена
+            pstmt2->setString(9, booking_.place_game);          // Место игры
+
+            // Выполнение запроса
             pstmt2->execute();
 
         

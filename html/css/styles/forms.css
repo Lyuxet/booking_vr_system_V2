@@ -12,18 +12,46 @@
   justify-content: center;
   align-items: center;
   margin-bottom: -16px;
-  margin: 8px
+  margin: 8px;
 }
-  
 
 .navigation {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
 }
 
-.nav-left, .nav-right {
-  text-decoration: none;
-  font-size: 24px;
-  color: #00dd16;
+.icon {
+  background: #00ac11;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0px;           /* Уменьшаем отступы */
+  height: 40px;           /* Уменьшаем высоту */
+  width: 40px;            /* Уменьшаем ширину */
 }
+
+.icon-1 .right-arrow{
+  border-style: solid;
+  margin-left: -5px;
+  border-color: #FFF;
+  border-width: 0 4px 4px 0;  /* Уменьшаем ширину стрелки */
+  padding: 5px;               /* Уменьшаем padding для стрелки */
+}
+.icon-2 .left-arrow {
+  border-style: solid;
+  margin-left: 5px;
+  border-color: #FFF;
+  border-width: 0 4px 4px 0;  /* Уменьшаем ширину стрелки */
+  padding: 5px;               /* Уменьшаем padding для стрелки */
+}
+
+.icon-2 .left-arrow {
+  transform: rotate(135deg);  /* Указываем угол поворота для стрелки влево */
+}
+
+.icon-1 .right-arrow {
+  transform: rotate(-45deg);  /* Указываем угол поворота для стрелки вправо */
+}
+

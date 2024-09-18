@@ -47,6 +47,16 @@
     width: 100%;
     height: auto;
   }
+
+
+  .loading-btn{
+    width: 70%;
+  }
+  loading-btn:active {
+    width: 70%;
+    transform: scale(0.9); /* Уменьшение кнопки при нажатии */
+    border-radius: 50%;   /* Сделать кнопку круглой при нажатии */
+  }
   input, textarea[name="comment"], .submit-button {
     width: 70%;
   }
@@ -65,6 +75,15 @@
     width: 100%;
     height: auto;
   }
+
+  .loading-btn{
+    width: 70%;
+  }
+  loading-btn:active {
+    width: 70%;
+    transform: scale(0.9); /* Уменьшение кнопки при нажатии */
+    border-radius: 50%;   /* Сделать кнопку круглой при нажатии */
+  }
   input, textarea[name="comment"], .submit-button {
     width: 70%;
   }
@@ -82,6 +101,14 @@
   .booking-button {
     width: 100%;
     height: auto;
+  }
+  .loading-btn{
+    width: 70%;
+  }
+  loading-btn:active {
+    width: 70%;
+    transform: scale(0.9); /* Уменьшение кнопки при нажатии */
+    width: 10%;   /* Сделать кнопку круглой при нажатии */
   }
   input, textarea[name="comment"], .submit-button {
     width: 70%;

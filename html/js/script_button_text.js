@@ -188,16 +188,9 @@ document.addEventListener('DOMContentLoaded', function () {
         var date = document.getElementById('date').value;
         var placegame = 'ARENA';
         // Проверяем URL и задаем значение для namegame в зависимости от пути файла
-        let namegame = ''; // Значение по умолчанию
-
-        const currentURL = window.location.href;
-        if (currentURL.includes('OpenArenaQuest.html')) {
-            namegame = 'QUEST';
-        } else if (currentURL.includes('OpenArenaShooter.html')) {
-            namegame = 'SHOOTER';
-        } else {
-            // Дополнительные условия можно добавить здесь
-        }
+        // Извлекаем название игры
+        const gameTitleElement = document.querySelector('.navigation h1');
+        const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : '';
 
         if (!date || !namegame) {
             console.error('Заполните все поля.');
@@ -272,7 +265,3 @@ document.addEventListener('DOMContentLoaded', function () {
     // Вызов функции для проверки доступности при загрузке страницы
     checkAvailability();
 });
-
-
-
-
