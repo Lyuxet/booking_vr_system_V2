@@ -151,9 +151,9 @@ void Booking::executeTransactionInsert(std::shared_ptr<sql::Connection> conn) {
     std::string tableName;
 
     // Определение таблицы в зависимости от типа игры
-    if (booking_.name_game == "SHOOTER") {
+    if (booking_.name_game == "Combat Squad") {
         tableName = "ArenaShooterStats";
-    } else if (booking_.name_game == "QUEST") {
+    } else if (booking_.name_game == "Medieval Journey") {
         tableName = "ArenaQuestStats";
     } else if (booking_.name_game == "CUBES") {
         tableName = "Cubes";

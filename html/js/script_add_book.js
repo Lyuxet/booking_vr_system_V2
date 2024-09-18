@@ -36,17 +36,9 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedPrice.push(price);
         });
 
-        // Проверяем URL и задаем значение для namegame в зависимости от пути файла
-        let namegame = ''; // Значение по умолчанию
-
-        const currentURL = window.location.href;
-        if (currentURL.includes('OpenArenaQuest.html')) {
-            namegame = 'QUEST';
-        } else if (currentURL.includes('OpenArenaShooter.html')) {
-            namegame = 'SHOOTER';
-        } else {
-            // Дополнительные условия можно добавить здесь
-        }
+        // Извлекаем название игры
+        const gameTitleElement = document.querySelector('.navigation h1');
+        const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : '';
 
         // Создаем строку данных для отправки в формате x-www-form-urlencoded
         const postData = 'firstname=' + encodeURIComponent(firstname) +
