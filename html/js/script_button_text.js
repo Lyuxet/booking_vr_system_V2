@@ -159,12 +159,19 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function updateButtonsState(availability) {
-        // Сначала сбросить состояние всех кнопок
+    window.updateButtonsState = function(availability) {
+    
         bookingButtons.forEach(button => {
-            // Сбросить состояние кнопки и обновить ее внешний вид на основе текущего времени и даты
-            updateSeats(button); // Обновить счетчик мест и состояние
-            updateButtonState(button); // Обновить состояние кнопки (доступность)
+            // Очистить поле ввода и снять выбор с кнопки
+            const playerInput = button.querySelector('.player-input');
+            if (playerInput) {
+                playerInput.value = ''; // Очистить значение input
+            }
+            button.classList.remove('selected'); // Снять класс selected
+    
+            // Обновить состояние кнопки
+            updateSeats(button); 
+            updateButtonState(button); 
         });
     
         // Затем обновить кнопки на основе данных из JSON
@@ -181,7 +188,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
         }
-    }
+    };
+    
     
 
     function checkAvailability() {
@@ -205,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (xhr.status >= 200 && xhr.status < 300) {
                 try {
                     const availability = JSON.parse(xhr.responseText);
-                    updateButtonsState(availability);
+                    window.updateButtonsState(availability);
                 } catch (error) {
                     console.error('Ошибка при обработке ответа:', error);
                 }

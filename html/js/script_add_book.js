@@ -29,8 +29,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const time = button.querySelector('.time').textContent;
             selectedTimes.push(time);
 
-            const priceButton = parseInt(button.querySelector('.price').textContent);
-            const playersCount = parseInt(button.querySelector('.player-input').value);
+            const priceButton = parseInt(button.querySelector('.price').textContent, 10);
+            const playersCount = parseInt(button.querySelector('.player-input').value, 10);
             selectedPlayersCount.push(playersCount);
             const price = priceButton * playersCount;
             selectedPrice.push(price);
@@ -41,18 +41,18 @@ document.addEventListener('DOMContentLoaded', function () {
         const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : '';
 
         // Создаем строку данных для отправки в формате x-www-form-urlencoded
-        const postData = 'firstname=' + encodeURIComponent(firstname) +
-                         '&lastname=' + encodeURIComponent(lastname) +
-                         '&phone=' + encodeURIComponent(phone) +
-                         '&email=' + encodeURIComponent(email) +
-                         '&placegame=' + encodeURIComponent('ARENA') +
-                         '&typegame=' + encodeURIComponent('OPEN') +
-                         '&namegame=' + encodeURIComponent(namegame) +  // Используем динамическое значение namegame
-                         '&date=' + encodeURIComponent(date) +
-                         '&times=' + encodeURIComponent(selectedTimes.join(',')) +
-                         '&playerCount=' + encodeURIComponent(selectedPlayersCount.join(',')) +
-                         '&price=' + encodeURIComponent(selectedPrice.join(',')) +
-                         '&comment=' + encodeURIComponent(comment);
+        const postData = `firstname=${encodeURIComponent(firstname)}` +
+                         `&lastname=${encodeURIComponent(lastname)}` +
+                         `&phone=${encodeURIComponent(phone)}` +
+                         `&email=${encodeURIComponent(email)}` +
+                         `&placegame=${encodeURIComponent('ARENA')}` +
+                         `&typegame=${encodeURIComponent('OPEN')}` +
+                         `&namegame=${encodeURIComponent(namegame)}` +  // Используем динамическое значение namegame
+                         `&date=${encodeURIComponent(date)}` +
+                         `&times=${encodeURIComponent(selectedTimes.join(','))}` +
+                         `&playerCount=${encodeURIComponent(selectedPlayersCount.join(','))}` +
+                         `&price=${encodeURIComponent(selectedPrice.join(','))}` +
+                         `&comment=${encodeURIComponent(comment)}`;
 
         console.log('Sending data:', postData);
 
@@ -66,7 +66,10 @@ document.addEventListener('DOMContentLoaded', function () {
             if (xhr.status >= 200 && xhr.status < 300) {
                 alert('Бронирование успешно отправлено.');
                 console.log('Response data:', xhr.responseText);
-                location.reload();
+                
+                // Вызов функции обновления после добавления
+                updateBookingContainer();
+                
             } else {
                 alert(`Ошибка отправки бронирования. Статус: ${xhr.status}`);
             }
@@ -81,3 +84,42 @@ document.addEventListener('DOMContentLoaded', function () {
         xhr.send(postData);
     });
 });
+
+// Функция обновления контейнера бронирования
+function updateBookingContainer() {
+    // Получаем данные о доступных слотах
+    const date = document.getElementById('date').value;
+    const placegame = 'ARENA';
+
+    // Извлекаем название игры
+    const gameTitleElement = document.querySelector('.navigation h1');
+    const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : '';
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', `http://localhost:8080/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+    xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+                const availability = JSON.parse(xhr.responseText);
+                if (typeof window.updateButtonsState === 'function') {
+                    window.updateButtonsState(availability);
+                    console.log(availability);
+                } else {
+                    console.error('Функция updateButtonsState не найдена');
+                }
+            } catch (error) {
+                console.error('Ошибка при обработке ответа:', error);
+            }
+        } else {
+            console.error('Ошибка запроса доступности. Статус:', xhr.status);
+        }
+    };
+
+    xhr.onerror = function () {
+        console.error('Ошибка сети.');
+    };
+
+    xhr.send();
+}
