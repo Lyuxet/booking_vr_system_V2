@@ -5,12 +5,47 @@ document.addEventListener('DOMContentLoaded', function () {
         minDate: 0
     }).datepicker("setDate", today);
 
+
+    // Праздничные дни (укажите даты в формате 'yyyy.mm.dd')
+    const holidays = [
+        '2024.01.01', // Новый год
+        '2024.01.07', // Рождество
+        '2024.05.01', // День труда
+        // Добавьте другие праздники
+    ];
+
+     // Проверка на выходной или праздничный день
+     function isWeekendOrHoliday(date) {
+        const dayOfWeek = date.getDay(); // 0: воскресенье, 6: суббота
+        const formattedDate = date.toISOString().split('T')[0].replace(/-/g, '.'); // Преобразование даты в 'yyyy.mm.dd'
+
+        return dayOfWeek === 0 || dayOfWeek === 6 || holidays.includes(formattedDate);
+    }
+
+    // Определяем тип игры
+    const isCloseType = document.querySelector('.booking-container-close') !== null;
+    // Обновление цены в зависимости от даты
+    function updatePrices(date) {
+        const isSpecialDay = isWeekendOrHoliday(date);
+        bookingButtons.forEach(button => {
+            const priceElement = button.querySelector('.price'); // Получаем элемент цены
+            let basePrice = priceElement.dataset.price; // Получаем базовую цену из data-атрибута
+    
+            // Устанавливаем цену в зависимости от условий
+            basePrice = isSpecialDay ? (isCloseType ? 15000 : 1600) : basePrice;
+            
+    
+            // Обновляем текстовое содержимое элемента с учётом символа ₽
+            priceElement.textContent = `${basePrice} ₽`;
+        });
+    }
+    
+
     const bookingButtons = document.querySelectorAll('.booking-button');
     const maxPlayers = 10;
     const minPlayers = 1;
 
-    // Определяем тип игры
-    const isCloseType = document.querySelector('.booking-container-close') !== null;
+    
 
     function updateSeats(button, availableSeats) {
         const seatsCount = button.querySelector('.seats span');
@@ -313,11 +348,15 @@ document.addEventListener('DOMContentLoaded', function () {
         updateButtonState(button);
     });
 
-    // Обновление состояния кнопок при выборе новой даты
+    // Обновляем цены и состояния кнопок при изменении даты
     $('#date').on('change', function () {
-        checkAvailability();
+        const selectedDate = $('#date').datepicker('getDate');
+        updatePrices(selectedDate); // Обновление цены
+        checkAvailability(); // Проверка доступности мест
     });
 
-    // Вызов функции для проверки доступности при загрузке страницы
+    // Проверка доступности при загрузке страницы
     checkAvailability();
+    const initialDate = $('#date').datepicker('getDate');
+    updatePrices(initialDate); // Обновление цены для начальной даты
 });
