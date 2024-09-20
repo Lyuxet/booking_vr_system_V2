@@ -62,6 +62,8 @@ static void add(const httplib::Request& req, httplib::Response& res, ConnectionP
     } catch (const std::exception& e) {
         // Логируем ошибки
         std::cerr << "Error: " << e.what() << std::endl;
+        res.status = 500;
+        res.set_content(std::string(e.what()), "text/plain");
 
         
     }
@@ -99,7 +101,7 @@ static void get(const httplib::Request& req, httplib::Response& res, ConnectionP
         // Логируем ошибки
         std::cerr << "Error: " << e.what() << std::endl;
         res.status = 500;
-        res.set_content("Internal Server Error: " + std::string(e.what()), "text/plain");
+        res.set_content(std::string(e.what()), "text/plain");
     }
 }
 

@@ -9,32 +9,54 @@ document.addEventListener('DOMContentLoaded', function () {
     const maxPlayers = 10;
     const minPlayers = 1;
 
+    // Определяем тип игры
+    const isCloseType = document.querySelector('.booking-container-close') !== null;
+
     function updateSeats(button, availableSeats) {
-        const playerInput = button.querySelector('.player-input');
         const seatsCount = button.querySelector('.seats span');
-        const maxAvailableSeats = availableSeats !== undefined ? availableSeats : maxPlayers;
-        const currentPlayers = parseInt(playerInput.value, 10) || 0;
-    
-        if (currentPlayers > maxAvailableSeats) {
-            playerInput.value = maxAvailableSeats;
+        if (isCloseType) {
+            // Проверяем доступные места и блокируем кнопку, если меньше 10 свободных мест
+            if (availableSeats < 10) {
+                button.classList.add('disabled');
+                seatsCount.textContent = 0;
+                return; // Прекращаем выполнение функции
+            } else {
+                button.classList.remove('disabled');
+                if (button.classList.contains('selected')){
+                    seatsCount.textContent = 0;
+                }
+                else{
+                    seatsCount.textContent = 10;
+                }
+
+            }
         }
-        if (currentPlayers < minPlayers && playerInput.value !== '') {
-            playerInput.value = minPlayers;
-            playerInput.focus();
-            playerInput.select();
+        else{
+            const playerInput = button.querySelector('.player-input');
+            
+            const maxAvailableSeats = availableSeats !== undefined ? availableSeats : maxPlayers;
+            const currentPlayers = parseInt(playerInput.value, 10) || 0;
+        
+            if (currentPlayers > maxAvailableSeats) {
+                playerInput.value = maxAvailableSeats;
+            }
+            if (currentPlayers < minPlayers && playerInput.value !== '') {
+                playerInput.value = minPlayers;
+                playerInput.focus();
+                playerInput.select();
+            }
+        
+            seatsCount.textContent = maxAvailableSeats - playerInput.value;
+        
+            if (playerInput.value === '') {
+                button.classList.remove('selected');
+            } else {
+                button.classList.add('selected');
+            }
+        
+            playerInput.setAttribute('max', maxAvailableSeats);
         }
-    
-        seatsCount.textContent = maxAvailableSeats - playerInput.value;
-    
-        if (playerInput.value === '') {
-            button.classList.remove('selected');
-        } else {
-            button.classList.add('selected');
-        }
-    
-        playerInput.setAttribute('max', maxAvailableSeats);
     }
-    
 
     function updateButtonState(button) {
         const timeText = button.querySelector('.time').textContent.trim();
@@ -60,46 +82,60 @@ document.addEventListener('DOMContentLoaded', function () {
             button.classList.remove('selected');
             button.classList.add('disabled');
             button.removeEventListener('click', handleClick);
-            button.querySelector('.player-input').disabled = true;
-            button.querySelector('.player-input').value = '';
+            if (!isCloseType){
+                button.querySelector('.player-input').disabled = true;
+                button.querySelector('.player-input').value = '';
+            }
             button.querySelector('.seats span').textContent = 0;
         } else {
             // Если дата и время еще актуальны, и есть места — кнопка активна
             button.classList.remove('disabled');
             button.addEventListener('click', handleClick);
-            button.querySelector('.player-input').disabled = false;
+            if (!isCloseType){
+                button.querySelector('.player-input').disabled = false;
+
+            }
         }
     }
 
     function calculateTotalPrice() {
         let totalPrice = 0;
     
-        // Проходим по всем выбранным кнопкам
-        document.querySelectorAll('.booking-button.selected').forEach(button => {
-            const playerInput = button.querySelector('.player-input');
-            const playerCount = parseInt(playerInput.value, 10) || 0;
-            const pricePerPlayer = parseInt(button.querySelector('.price').textContent);
+        if (isCloseType) {
+
+            document.querySelectorAll('.booking-button.selected').forEach(button => {
+                const fixedPricePerSelection = parseInt(button.querySelector('.price').textContent);
+                totalPrice += fixedPricePerSelection;
+            });
     
-            // Добавляем к общей стоимости
-            totalPrice += playerCount * pricePerPlayer;
-        });
+            
+        } else {
+            document.querySelectorAll('.booking-button.selected').forEach(button => {
+                const playerInput = button.querySelector('.player-input');
+                const playerCount = parseInt(playerInput.value, 10) || 0;
+                const pricePerPlayer = parseInt(button.querySelector('.price').textContent);
+    
+                // Добавляем к общей стоимости
+                totalPrice += playerCount * pricePerPlayer;
+            });
+        }
     
         // Обновляем содержимое таблички
         const displayAmountElement = document.getElementById('displayAmount');
         if (displayAmountElement) {
             displayAmountElement.textContent = totalPrice;
         }
-
+    
         // Проверяем, выбрана ли хотя бы одна кнопка
-        const anyButtonSelected = document.querySelectorAll('button.selected').length > 0;
-
+        const anyButtonSelected = document.querySelectorAll('.booking-button.selected').length > 0;
+    
         const priceDisplayElement = document.querySelector('.price-display');
         if (priceDisplayElement) {
             // Показываем или скрываем табличку в зависимости от состояния кнопок
             if (anyButtonSelected) {
                 showPriceDisplay();
             } else {
-                hidePriceDisplay();
+                window.hidePriceDisplay();
             }
         }
     }
@@ -111,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 5); // Небольшая задержка для срабатывания transition
     }
     
-    function hidePriceDisplay() {
+    window.hidePriceDisplay = function(){
         const priceDisplay = document.querySelector('.price-display');
         priceDisplay.classList.remove('show'); // Убираем класс для анимации скрытия
         setTimeout(() => {
@@ -121,21 +157,27 @@ document.addEventListener('DOMContentLoaded', function () {
     
 
     function handleClick(event) {
-        // Проверяем, что клик был не по полю player-input и кнопка не disabled
-        if (event.target.closest('.player-input') && this.classList.contains('selected')) return;
+       
         if (this.classList.contains('disabled')) return;
     
-        const playerInput = this.querySelector('.player-input');
-        const maxAvailableSeats = parseInt(playerInput.getAttribute('max'), 10) || maxPlayers;
-    
-        this.classList.toggle('selected');
-        if (this.classList.contains('selected')) {
-            playerInput.value = 1;
+        if (isCloseType) {
+            // Для CLOSE типа игры, не использовать поле ввода
+            this.classList.toggle('selected');
+            updateSeats(this, maxPlayers); // Используем максимальное количество мест
         } else {
-            playerInput.value = '';
-        }
+            if (event.target.closest('.player-input') && this.classList.contains('selected')) return;
+            const playerInput = this.querySelector('.player-input');
+            const maxAvailableSeats = parseInt(playerInput.getAttribute('max'), 10) || maxPlayers;
     
-        updateSeats(this, maxAvailableSeats);
+            this.classList.toggle('selected');
+            if (this.classList.contains('selected')) {
+                playerInput.value = 1;
+            } else {
+                playerInput.value = '';
+            }
+    
+            updateSeats(this, maxAvailableSeats);
+        }
     
         calculateTotalPrice();
     }
@@ -170,7 +212,9 @@ document.addEventListener('DOMContentLoaded', function () {
             button.classList.remove('selected'); // Снять класс selected
     
             // Обновить состояние кнопки
-            updateSeats(button); 
+            
+            updateSeats(button);
+            
             updateButtonState(button); 
         });
     
@@ -231,8 +275,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Инициализация кнопок
     bookingButtons.forEach(button => {
-        const playerInput = button.querySelector('.player-input');
         button.addEventListener('click', handleClick);
+        if (!isCloseType){
+            const playerInput = button.querySelector('.player-input');
+       
         playerInput.setAttribute('maxlength', '2');
 
         // Запретить ввод нецифровых символов
@@ -262,6 +308,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         playerInput.addEventListener('input', handleInput);
+        }
+        
         updateButtonState(button);
     });
 
