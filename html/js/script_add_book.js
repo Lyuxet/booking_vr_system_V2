@@ -1,4 +1,8 @@
+import { updateButtonsState } from "./buttons.js";
+import { hidePriceDisplay } from "./priceDisplay.js";
+
 document.addEventListener('DOMContentLoaded', function () {
+
     const addButton = document.getElementById('add');
     if (!addButton) {
         console.error('Кнопка "Добавить" не найдена');
@@ -82,7 +86,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (xhr.status >= 200 && xhr.status < 300) {
                 alert('Бронирование успешно отправлено.');
                 console.log('Response data:', xhr.responseText);
-                
                 // Вызов функции обновления после добавления
                 updateBookingContainer();
                 
@@ -108,6 +111,8 @@ function updateBookingContainer() {
     // Получаем данные о доступных слотах
     const date = document.getElementById('date').value;
     const placegame = 'ARENA';
+    const bookingButtons = document.querySelectorAll('.booking-button');
+
 
     // Извлекаем название игры
     const gameTitleElement = document.querySelector('.navigation h1');
@@ -121,10 +126,9 @@ function updateBookingContainer() {
         if (xhr.status >= 200 && xhr.status < 300) {
             try {
                 const availability = JSON.parse(xhr.responseText);
-                if (typeof window.updateButtonsState === 'function') {
-                    window.updateButtonsState(availability);
-                    window.hidePriceDisplay();  
-                    console.log(availability);
+                if (typeof updateButtonsState === 'function') {
+                    updateButtonsState(availability, bookingButtons);
+                    hidePriceDisplay(); 
                 } else {
                     console.error('Функция updateButtonsState не найдена');
                 }

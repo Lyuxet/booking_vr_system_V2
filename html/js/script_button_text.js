@@ -226,15 +226,7 @@ document.addEventListener('DOMContentLoaded', function () {
         calculateTotalPrice();
     }
 
-    // Если данные пустые, сделаем все кнопки доступными, если время актуально
-    function makeAllButtonsAvailable() {
-        bookingButtons.forEach(button => {
-            const seatsCountElement = button.querySelector('.seats span');
-            seatsCountElement.textContent = maxPlayers;
-            updateSeats(button, maxPlayers);
-            updateButtonState(button);
-        });
-    }
+    
 
     window.updateButtonsState = function(availability) {
     

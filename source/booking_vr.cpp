@@ -62,8 +62,6 @@ void Arena::Close_arena() {
     try {
         std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
         ConnectionGuard conn_guard(conn, pool_);
-        booking_.type_game = "CLOSE";
-        booking_.players_count = 10;
         executeTransactionInsert(conn);
         std::lock_guard<std::mutex> lock(mtxtest);
         PrintInsertBooking();

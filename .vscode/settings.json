@@ -77,5 +77,6 @@
         "future": "cpp",
         "ranges": "cpp",
         "valarray": "cpp"
-    }
+    },
+    "liveServer.settings.port": 5501
 }

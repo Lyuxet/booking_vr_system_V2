@@ -16,8 +16,8 @@
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="fonts/stylesheet.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="js/script_button_text.js"></script>
-    <script src="js/script_add_book.js"></script>
+    <script type="module" src="./js/main.js"></script>
+    <script type="module" src="js/script_add_book.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="css/datepicker-custom.css">
@@ -52,8 +52,8 @@
                 </div>
                 <div class="date-container">
                     <h2>Выберите дату:</h2>
-                    <input type="text" id="date" name="date">
-                    <script src="js/datepicker.js"></script>
+                    <input type="text" id="date" name="date" readonly>
+                    <script src="js/localization_calendar.js"></script>
                 </div>
                 <div class="booking-container-open">
                     <!-- Кнопки размещены в grid-контейнере -->
@@ -82,7 +82,7 @@
                             <button id="button14" class="booking-button">
                                 <div class="time">14:15 - 15:00</div>
                                 <div class="line"></div>
-                                <div class="price" data-price="1400">1400 ₽</div>                               
+                                <div class="price" data-price="1400">1400 ₽</div>                                
                                 <div class="players"><input type="text" id="playerInput14" placeholder="Кол-мест" value="" class="player-input" /></div>
                                 <div class="seats">Свободно: <span id="seatsCount14">10</span></div>
                             </button>

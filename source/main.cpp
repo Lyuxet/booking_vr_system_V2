@@ -51,12 +51,21 @@ static void add(const httplib::Request& req, httplib::Response& res, ConnectionP
         // Обработка данных
         Client_data client = {firstname, lastname, phone, email};
         Arena arena(pool);
-        for (size_t i = 0; i < times.size(); ++i) {
-            Booking_data booking = {placegame, typegame, namegame, date, times[i], playerCount[i], price[i], comment};
-            arena.AddDataByInsertAndUpdate(client, booking);
-            arena.Open_arena();
-
+        if (formData.at("typegame") == "OPEN"){
+            for (size_t i = 0; i < times.size(); ++i) {
+                Booking_data booking = {placegame, typegame, namegame, date, times[i], playerCount[i], price[i], comment};
+                arena.AddDataByInsertAndUpdate(client, booking);
+                arena.Open_arena();
+            }
         }
+        else if (formData.at("typegame") == "CLOSE"){
+            for (size_t i = 0; i < times.size(); ++i) {
+                Booking_data booking = {placegame, typegame, namegame, date, times[i], playerCount[i], price[i], comment};
+                arena.AddDataByInsertAndUpdate(client, booking);
+                arena.Close_arena();
+            }
+        }
+        
 
         
     } catch (const std::exception& e) {
