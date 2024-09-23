@@ -76,7 +76,7 @@ export function updateButtonState(button, isCloseType) {
         button.classList.remove('selected');
         button.classList.add('disabled');
         button.removeEventListener('click', handleClick);
-        if (!isCloseType){
+        if (isCloseType === false){
             button.querySelector('.player-input').disabled = true;
             button.querySelector('.player-input').value = '';
         }

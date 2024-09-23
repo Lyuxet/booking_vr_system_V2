@@ -19,6 +19,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const email = document.getElementById('email').value;
         const date = document.getElementById('date').value;
         const comment = document.getElementById('comment').value;
+        if (!firstname || !phone || !email) {
+            event.preventDefault(); // предотвращает отправку формы
+            alert("Пожалуйста, заполните все обязательные поля.");
+            return;
+        }
     
         if (selectedButtons.length === 0) {
             alert('Пожалуйста, выберите хотя бы одно время бронирования.');

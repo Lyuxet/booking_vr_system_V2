@@ -6,18 +6,17 @@ export function SetDate(){
     }).datepicker("setDate", today);
 }
 
-// Праздничные дни (укажите даты в формате 'yyyy.mm.dd')
-const holidays = [
-    '2024.01.01', // Новый год
-    '2024.01.07', // Рождество
-    '2024.05.01', // День труда
-    // Добавьте другие праздники
-];
-
  // Проверка на выходной или праздничный день
 export function isWeekendOrHoliday(date) {
     const dayOfWeek = date.getDay(); // 0: воскресенье, 6: суббота
-    const formattedDate = date.toISOString().split('T')[0].replace(/-/g, '.'); // Преобразование даты в 'yyyy.mm.dd'
+    const formattedDate = `${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`; // Преобразование даты в 'mm.dd'
 
     return dayOfWeek === 0 || dayOfWeek === 6 || holidays.includes(formattedDate);
 }
+
+const holidays = [
+    '01.01', // Новый год
+    '01.07', // Рождество
+    '05.01', // День труда
+    // Добавьте другие праздники
+];

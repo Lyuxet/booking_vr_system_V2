@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Инициализация кнопок
     bookingButtons.forEach(button => {
         button.addEventListener('click', handleClick);
-        if (!isCloseType){
+        if (isCloseType === false){
             const playerInput = button.querySelector('.player-input');
        
             playerInput.setAttribute('maxlength', '2');
