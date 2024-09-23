@@ -5,8 +5,9 @@ import { checkAvailability } from "./availability.js";
 import { handleClick } from "./buttons.js";
 import { handleInput } from "./buttons.js";
 
-
 document.addEventListener('DOMContentLoaded', function () {
+    
+   
     console.log("test0"); 
     SetDate();
     console.log("test1");

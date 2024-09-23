@@ -85,7 +85,7 @@ export function updateButtonState(button, isCloseType) {
         // Если дата и время еще актуальны, и есть места — кнопка активна
         button.classList.remove('disabled');
         button.addEventListener('click', handleClick);
-        if (!isCloseType){
+        if (isCloseType === false){
             button.querySelector('.player-input').disabled = false;
 
         }

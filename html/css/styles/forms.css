@@ -7,6 +7,13 @@
   width: 100%;                /* Контейнер занимает 100% ширины */
 }
 
+.links-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px; /* Отступ сверху */
+  flex-wrap: wrap; /* Позволяет кнопкам переноситься на следующую строку */
+}
+
 .date-container {
   display: flex;
   justify-content: center;

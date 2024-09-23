@@ -7,6 +7,12 @@ html {
   justify-content: center;
   align-items: center;
 }
+
+.links label {
+  font-size: 28px; /* Укажите нужный размер шрифта */
+  font-weight: bold; /* (Опционально) Сделать шрифт жирным */
+}
+
   
 input, textarea {
   color: #fff;

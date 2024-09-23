@@ -60,7 +60,42 @@
   opacity: 0.5;
   background-color: #1b1a1a;
 }
+.links {
+  flex: 1; /* Занимает равную ширину */
+  margin: 40px; /* Отступ между ссылками */
+  padding: 15px; /* Отступ внутри ссылки */
+  text-decoration: none; /* Убираем подчеркивание */
+  color: white; /* Цвет текста */
+  border-radius: 36px;
+  height: auto; /* Позволяем высоте изменяться */
+  display: flex;
+  flex-direction: column; /* Вертикальное выравнивание содержимого */
+  align-items: center; /* Центрирование содержимого по горизонтали */
+  text-align: center; /* Центрирование текста */
+  background-color: #4CAF50; /* Цвет фона по умолчанию */
+  transition: background-color 0.3s; /* Плавный переход цвета */
+  overflow: hidden; /* Скрыть переполнение */
+}
 
+.links:hover {
+  background-color: #45a049; /* Цвет при наведении */
+}
+
+.divider {
+  height: 3px; /* Высота полосы */
+  background-color: #fff; /* Цвет полосы */
+  margin: 10px 0; /* Отступ сверху и снизу для полосы */
+  width: 100%; /* Полоса на всю ширину ссылки */
+}
+
+.description {
+  margin-top: 10px; /* Отступ сверху для описания */
+  font-size: 20px; /* Устанавливаем размер шрифта в vw */
+  color: #f0f0f0; /* Цвет текста описания */
+  text-align: left; /* Выровнять описание по левому краю */
+  width: 100%; /* Ширина описания на всю ширину ссылки */
+  padding-left: 10px; /* Отступ слева для описания */
+}
 
   .submit-button {
     padding: 8px 30px;

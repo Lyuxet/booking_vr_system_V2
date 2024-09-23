@@ -114,11 +114,6 @@ static void get(const httplib::Request& req, httplib::Response& res, ConnectionP
     }
 }
 
-
-
-void add_cors_headers(httplib::Response& res) {
-}
-
 int main() {
     ConnectionPool pool(10, "db_config.conf");
     pool.Init_pool();
