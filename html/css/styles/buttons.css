@@ -99,7 +99,7 @@
     padding: 8px 30px;
     background: #a707dc;
     border-radius: 16px;
-    font-family: var(--font-family);
+    font-family: var(--font-family);  
     font-weight: 400;
     font-size: calc(1rem + 0.5vw);
     color: #fff;
@@ -107,10 +107,12 @@
     cursor: pointer;
     transition: all 0.4s ease;
     width: 576px;
+    box-shadow: 0 0 20px #a707dc, 0 0 40px #a707dc, 0 0 60px #a707dc;
+    transition: box-shadow 0.3s;
   }
   
   .submit-button:hover {
-    background-color: #4901a8;
+    box-shadow: 0 0 40px #a707dc, 0 0 80px #a707dc, 0 0 120px #a707dc;
   }
   
   
