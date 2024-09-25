@@ -13,6 +13,9 @@
     <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\parseInpudData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\requests_handler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\Lyuxet\projects\booking_vr\CmakeLists.txt" />

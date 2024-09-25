@@ -62,18 +62,16 @@
 }
 .links {
   flex: 1; /* Занимает равную ширину */
-  margin: 40px; /* Отступ между ссылками */
-  padding: 15px; /* Отступ внутри ссылки */
+  margin: 64px; /* Отступ между ссылками */
+  padding: 24px; /* Отступ внутри ссылки */
   text-decoration: none; /* Убираем подчеркивание */
   color: white; /* Цвет текста */
-  border-radius: 36px;
+  border-radius: 32px;
   height: auto; /* Позволяем высоте изменяться */
   display: flex;
   flex-direction: column; /* Вертикальное выравнивание содержимого */
   align-items: center; /* Центрирование содержимого по горизонтали */
   text-align: center; /* Центрирование текста */
-  background-color: #4CAF50; /* Цвет фона по умолчанию */
-  transition: background-color 0.3s; /* Плавный переход цвета */
   overflow: hidden; /* Скрыть переполнение */
 }
 

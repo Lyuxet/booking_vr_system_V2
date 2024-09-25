@@ -10,7 +10,7 @@
 .links-container {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px; /* Отступ сверху */
+  margin-top: 24px; /* Отступ сверху */
   flex-wrap: wrap; /* Позволяет кнопкам переноситься на следующую строку */
 }
 
