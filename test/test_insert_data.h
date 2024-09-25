@@ -30,10 +30,10 @@ std::string add_hours_to_time(const std::string& time_str, int hours_to_add) {
 void WorkerThreadInsert(ConnectionPool& pool, int thread_index) {
     try {
         // Создаем данные клиента и бронирования
-        Client_data client = {"Иван", "Иванов", "+79161234560", "ivanov@example.ru"};
+        vr::Client_data client = {"Иван", "Иванов", "+79161234560", "ivanov@example.ru"};
 
         // Бронирование с уникальным временем
-        Booking_data booking = {"ARENA","OPEN", "QUEST", "2024-08-30", "13:00:00", 1, 1200, "Комментарий к игре"};
+        vr::Booking_data booking = {"ARENA","OPEN", "QUEST", "2024-08-30", "13:00:00", 1, 1200, "Комментарий к игре"};
         
         // Изменяем время на основе индекса потока
         std::string new_time = add_hours_to_time(booking.time_game, thread_index);
@@ -45,7 +45,7 @@ void WorkerThreadInsert(ConnectionPool& pool, int thread_index) {
         
 
         // Создаем объект Arena и добавляем данные
-        Arena arena(pool);  // Передаем пул соединений в объект Arena
+        vr::Arena arena(pool);  // Передаем пул соединений в объект Arena
         arena.AddDataByInsertAndUpdate(client, booking);
         arena.Open_arena();
 

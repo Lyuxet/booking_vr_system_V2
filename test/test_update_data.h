@@ -12,12 +12,12 @@ std::mutex mtxUpdate; // Мьютекс для синхронизации дос
 void WorkerThreadUpdate(ConnectionPool& pool, int thread_index) {
     try {
         // Создаем данные клиента и бронирования
-        Client_data client = {"Иван", "Иванов", "+79161234560", "ivanov@example.ru"};
+        vr::Client_data client = {"Иван", "Иванов", "+79161234560", "ivanov@example.ru"};
 
         client.current_phone = client.phone;
         
         // Бронирование с уникальным временем
-        Booking_data booking = {"ARENA","OPEN", "QUEST", "2024-08-30", "13:00:00", 1, 2400, "Комментарий к игре"};
+        vr::Booking_data booking = {"ARENA","OPEN", "QUEST", "2024-08-30", "13:00:00", 1, 2400, "Комментарий к игре"};
 
         booking.current_time_game = booking.time_game;
         booking.current_date_game = booking.date_game;
@@ -31,7 +31,7 @@ void WorkerThreadUpdate(ConnectionPool& pool, int thread_index) {
         booking.players_count = new_players_count;
 
         // Создаем объект Arena и добавляем данные
-        Arena arena(pool);  // Передаем пул соединений в объект Arena
+        vr::Arena arena(pool);  // Передаем пул соединений в объект Arena
         arena.AddDataByInsertAndUpdate(client, booking);
         arena.Update();
 

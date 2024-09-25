@@ -14,8 +14,6 @@ namespace vr{
         std::string phone;
         std::string email;
         std::string current_phone;
-        
-
     };
 
     // Структура для хранения данных бронирования
@@ -103,6 +101,7 @@ namespace vr{
     public:
         Booking(ConnectionPool& pool) : pool_(pool) {}
         virtual ~Booking() = default;
+
         void AddDataByCheckAvailability(const AvailabilityData& data);
         void AddDataByInsertAndUpdate(const Client_data& client, const Booking_data& booking);
         void AddDataByDelete(const Booking_data& booking);
@@ -117,13 +116,43 @@ namespace vr{
         void PrintInsertBooking();
         void PrintDeleteBooking();
         void PrintUpdateBooking();
-        std::string urlEncode(const std::string &value);
-
+    
         Client_data clients_;
         Booking_data booking_;
         ConnectionPool& pool_;
         AvailabilityData availability_;
+
+        // Добавление метода для выполнения транзакции с повтором
+        template <typename Func>
+        void executeTransactionWithRetry(std::shared_ptr<sql::Connection> conn, Func&& func) {
+            const int max_retries = 5;
+            const int base_retry_delay_ms = 500;
+
+            for (int attempt = 0; attempt < max_retries; ++attempt) {
+                try {
+                    conn->setAutoCommit(false);
+                    func(conn);
+                    conn->commit();
+                    return;
+                } 
+                catch (const sql::SQLException& e) {
+                    handleSQLException(e, attempt, max_retries, base_retry_delay_ms, conn);
+                } 
+                catch (const std::exception& e) {
+                    handleStdException(e, conn);
+                }
+            }
+        }
+
+    private:
+        std::string urlEncode(const std::string &value);
+        bool checkAvailableSlots(std::shared_ptr<sql::Connection> conn);
+        void insertClient(std::shared_ptr<sql::Connection> conn);
+        void handleSQLException(const sql::SQLException& e, int attempt, int max_retries, int base_retry_delay_ms, std::shared_ptr<sql::Connection> conn);
+        void handleStdException(const std::exception& e, std::shared_ptr<sql::Connection> conn);
     };
+
+
 
     // Класс для управления ареной
     class Arena : public Booking {
@@ -132,6 +161,8 @@ namespace vr{
         std::string CheckAvailabilityPlace();
         void Open_arena();
         void Close_arena();
+    private:
+        void ProcessArenaTransaction(const std::string& operationName);
         
     };
 

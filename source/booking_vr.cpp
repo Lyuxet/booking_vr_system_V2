@@ -45,33 +45,29 @@ namespace vr{
     void Booking::AddDataByCheckAvailability(const AvailabilityData& data){
         availability_ = std::move(data);
     }
-    void Arena::Open_arena() {
+
+    void Arena::ProcessArenaTransaction(const std::string& operationName) {
         ScopeGuard guard(booking_, clients_);
         try {
             std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
             ConnectionGuard conn_guard(conn, pool_);
+            
             executeTransactionInsert(conn);
+
             std::lock_guard<std::mutex> lock(mtxtest);
             PrintInsertBooking();
         } catch (const std::exception& e) {
             std::lock_guard<std::mutex> lock(mtxtest);
-            std::cerr << "Open arena Exception: " << e.what() << std::endl;
+            std::cerr << operationName << " Exception: " << e.what() << std::endl;
             throw;
         }
     }
+    void Arena::Open_arena() {
+        ProcessArenaTransaction("Open_Arena");
+    }
 
     void Arena::Close_arena() {
-        ScopeGuard guard(booking_, clients_);
-        try {
-            std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
-            ConnectionGuard conn_guard(conn, pool_);
-            executeTransactionInsert(conn);
-            std::lock_guard<std::mutex> lock(mtxtest);
-            PrintInsertBooking();
-        } catch (const std::exception& e) {
-            std::cerr << "Close arena Exception: " << e.what() << std::endl;
-            throw;
-        }
+        ProcessArenaTransaction("Close_Arena");
     }
 
     std::string Arena::CheckAvailabilityPlace(){
@@ -146,27 +142,33 @@ namespace vr{
         }
     }
 
-    void Booking::executeTransactionInsert(std::shared_ptr<sql::Connection> conn) {
-        const int max_retries = 5;
-        const int base_retry_delay_ms = 500;
-        std::string tableName;
+    void Booking::handleSQLException(const sql::SQLException& e, int attempt, int max_retries, int base_retry_delay_ms, std::shared_ptr<sql::Connection> conn) {
+        std::cerr << "Attempt " << (attempt + 1) << " - SQLException: " << e.what() << std::endl;
+        std::cerr << "Error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << std::endl;
 
-        // Определение таблицы в зависимости от типа игры
-        if (booking_.name_game == "Combat Squad") {
-            tableName = "ArenaShooterStats";
-        } else if (booking_.name_game == "Medieval Journey") {
-            tableName = "ArenaQuestStats";
-        } else if (booking_.name_game == "CUBES") {
-            tableName = "Cubes";
+        if (e.getErrorCode() == 1213) { // Deadlock
+            if (attempt < max_retries - 1) {
+                int delay = base_retry_delay_ms * (attempt + 1) + rand() % 1000;
+                std::cerr << "Retrying after " << delay << " ms" << std::endl;
+                std::this_thread::sleep_for(std::chrono::milliseconds(delay));
+            } else {
+                conn->rollback();
+                throw;
+            }
         } else {
-            throw std::runtime_error("Unknown game type.");
+            conn->rollback();
+            throw;
         }
+    }
 
-        for (int attempt = 0; attempt < max_retries; ++attempt) {
-            try {
-                conn->setAutoCommit(false);
+    void Booking::handleStdException(const std::exception& e, std::shared_ptr<sql::Connection> conn) {
+        std::cerr << "Exception: " << e.what() << std::endl;
+        conn->rollback();
+        throw;
+    }
 
-                std::unique_ptr<sql::PreparedStatement> pstmtCheck(conn->prepareStatement(
+    bool Booking::checkAvailableSlots(std::shared_ptr<sql::Connection> conn) {
+        std::unique_ptr<sql::PreparedStatement> pstmtCheck(conn->prepareStatement(
                 "SELECT time_game, SUM(players_count) AS total_players, "
                 "CASE "
                 "    WHEN COUNT(DISTINCT name_game) = 1 AND MAX(name_game) = ? THEN (10 - SUM(players_count)) "
@@ -176,78 +178,76 @@ namespace vr{
                 "WHERE place_game = ? AND date_game = ? AND time_game = ? "
                 "GROUP BY time_game"
             ));
-            pstmtCheck->setString(1, booking_.name_game);
-            pstmtCheck->setString(2, booking_.place_game);  // 'ARENA'
-            pstmtCheck->setString(3, booking_.date_game);   // Дата игры
-            pstmtCheck->setString(4, booking_.time_game);   // Время игры
+        pstmtCheck->setString(1, booking_.name_game);
+        pstmtCheck->setString(2, booking_.place_game);  // 'ARENA'
+        pstmtCheck->setString(3, booking_.date_game);   // Дата игры
+        pstmtCheck->setString(4, booking_.time_game);   // Время игры
 
-            std::unique_ptr<sql::ResultSet> res(pstmtCheck->executeQuery());
+        std::unique_ptr<sql::ResultSet> res(pstmtCheck->executeQuery());
 
-            if (res->next()) {
-                int available_slots = res->getInt("available_slots");
-                if (available_slots < booking_.players_count) {
-                    throw std::runtime_error("Недостаточно свободных мест для бронирования.");
-                }
-            }
-
-                // Вставка данных о клиенте
-                std::unique_ptr<sql::PreparedStatement> pstmt1(conn->prepareStatement(
-                    "INSERT IGNORE INTO Clients (first_name, last_name, phone, email) VALUES (?, ?, ?, ?)"
-                    ));
-                pstmt1->setString(1, clients_.first_name);
-                pstmt1->setString(2, clients_.last_name);
-                pstmt1->setString(3, clients_.phone);
-                pstmt1->setString(4, clients_.email);
-                pstmt1->execute();
-
-                // Вставка данных о бронировании
-                std::string queryInsert = "INSERT INTO " + tableName + 
-                    " (client_id, date_game, time_game, name_game, players_count, comment_game, type_game, price, place_game) "
-                    "VALUES ((SELECT id FROM Clients WHERE phone = ? LIMIT 1), ?, ?, ?, ?, ?, ?, ?, ?)";
-
-                // Подготовка оператора SQL с использованием подготовленного выражения
-                std::unique_ptr<sql::PreparedStatement> pstmt2(conn->prepareStatement(queryInsert));
-
-                // Установка значений для подготовленного выражения
-                pstmt2->setString(1, clients_.phone);               // Установка телефона клиента для подзапроса
-                pstmt2->setString(2, booking_.date_game);           // Дата игры
-                pstmt2->setString(3, booking_.time_game);           // Время игры
-                pstmt2->setString(4, booking_.name_game);           // Название игры
-                pstmt2->setInt(5, booking_.players_count);          // Количество игроков
-                pstmt2->setString(6, booking_.comment_game);        // Комментарий
-                pstmt2->setString(7, booking_.type_game);           // Тип игры
-                pstmt2->setInt(8, booking_.price);                  // Цена
-                pstmt2->setString(9, booking_.place_game);          // Место игры
-
-                // Выполнение запроса
-                pstmt2->execute();
-
-            
-                conn->commit();
-                return;
-            } catch (const sql::SQLException& e) {
-                std::cerr << "Attempt " << (attempt + 1) << " - SQLException: " << e.what() << std::endl;
-                std::cerr << "Error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << std::endl;
-
-                if (e.getErrorCode() == 1213) { // Deadlock
-                    if (attempt < max_retries - 1) {
-                        int delay = base_retry_delay_ms * (attempt + 1) + rand() % 1000;
-                        std::cerr << "Retrying after " << delay << " ms" << std::endl;
-                        std::this_thread::sleep_for(std::chrono::milliseconds(delay));
-                    } else {
-                        conn->rollback();
-                        throw;
-                    }
-                } else {
-                    conn->rollback();
-                    throw;
-                }
-            } catch (const std::exception& e) {
-                std::cerr << "Exception: " << e.what() << std::endl;
-                conn->rollback();
-                throw;
+        if (res->next()) {
+            int available_slots = res->getInt("available_slots");
+            if (available_slots < booking_.players_count) {
+                throw std::runtime_error("Недостаточно свободных мест для бронирования.");
             }
         }
+        return true;
+    }
+
+    void Booking::insertClient(std::shared_ptr<sql::Connection> conn) {
+        std::unique_ptr<sql::PreparedStatement> pstmt(conn->prepareStatement(
+            "INSERT IGNORE INTO Clients (first_name, last_name, phone, email) VALUES (?, ?, ?, ?)"
+        ));
+        pstmt->setString(1, clients_.first_name);
+        pstmt->setString(2, clients_.last_name);
+        pstmt->setString(3, clients_.phone);
+        pstmt->setString(4, clients_.email);
+        pstmt->execute();
+    }
+
+
+
+    void Booking::executeTransactionInsert(std::shared_ptr<sql::Connection> conn) {
+        executeTransactionWithRetry(conn, [&](std::shared_ptr<sql::Connection> conn) {
+            // Определение таблицы в зависимости от типа игры
+            std::string tableName;
+            if (booking_.name_game == "Combat Squad") {
+                tableName = "ArenaShooterStats";
+            } else if (booking_.name_game == "Medieval Journey") {
+                tableName = "ArenaQuestStats";
+            } else if (booking_.name_game == "CUBES") {
+                tableName = "Cubes";
+            } else {
+                throw std::runtime_error("Unknown game type.");
+            }
+
+            // Проверка наличия доступных мест
+            if (!checkAvailableSlots(conn)) {
+                throw std::runtime_error("Недостаточно свободных мест для бронирования.");
+            }
+
+            // Добавление клиента
+            insertClient(conn);
+
+            // Вставка данных о бронировании
+            std::string queryInsert = "INSERT INTO " + tableName + 
+                " (client_id, date_game, time_game, name_game, players_count, comment_game, type_game, price, place_game) "
+                "VALUES ((SELECT id FROM Clients WHERE phone = ? LIMIT 1), ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            std::unique_ptr<sql::PreparedStatement> pstmt2(conn->prepareStatement(queryInsert));
+
+            pstmt2->setString(1, clients_.phone);
+            pstmt2->setString(2, booking_.date_game);
+            pstmt2->setString(3, booking_.time_game);
+            pstmt2->setString(4, booking_.name_game);
+            pstmt2->setInt(5, booking_.players_count);
+            pstmt2->setString(6, booking_.comment_game);
+            pstmt2->setString(7, booking_.type_game);
+            pstmt2->setInt(8, booking_.price);
+            pstmt2->setString(9, booking_.place_game);
+
+            pstmt2->execute();
+        });
     }
 
 
@@ -504,26 +504,10 @@ namespace vr{
 
             }
             catch (const sql::SQLException& e) {
-                std::cerr << "Attempt " << (attempt + 1) << " - SQLException: " << e.what() << std::endl;
-                std::cerr << "Error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << std::endl;
-
-                if (e.getErrorCode() == 1213) { // Deadlock
-                    if (attempt < max_retries - 1) {
-                        int delay = base_retry_delay_ms * (attempt + 1) + rand() % 1000;
-                        std::cerr << "Retrying after " << delay << " ms" << std::endl;
-                        std::this_thread::sleep_for(std::chrono::milliseconds(delay));
-                    } else {
-                        conn->rollback();
-                        throw;
-                    }
-                } else {
-                    conn->rollback();
-                    throw;
-                }
-            } catch (const std::exception& e) {
-                std::cerr << "Exception: " << e.what() << std::endl;
-                conn->rollback();
-                throw;
+                handleSQLException(e, attempt, max_retries, base_retry_delay_ms, conn);
+            } 
+            catch (const std::exception& e) {
+                handleStdException(e, conn);
             }
             
 
