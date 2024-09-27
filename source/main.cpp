@@ -1,8 +1,5 @@
 #include "Connect_to_DB.h"
 #include "booking_vr.h"
-#include "test_insert_data.h"
-#include "test_delete_data.h"
-#include "test_update_data.h"
 #include "requests_handler.h"
 
 #include <iostream>
@@ -28,12 +25,19 @@ int main() {
         vr::CubesBookingInsert(req, res, pool);
     });
 
+    server.Get("/getBookingCubes", [&pool](const httplib::Request& req, httplib::Response& res) {
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        vr::Availability(req, res, pool);  // Ваша функция для обработки GET-запросов
+    });
+
     // Обрабатываем GET-запросы с CORS-заголовками
     server.Get("/getBookingOpenArena", [&pool](const httplib::Request& req, httplib::Response& res) {
         res.set_header("Access-Control-Allow-Origin", "*");
         res.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         res.set_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        vr::AvailabilityArena(req, res, pool);  // Ваша функция для обработки GET-запросов
+        vr::Availability(req, res, pool);  // Ваша функция для обработки GET-запросов
     });
 
 

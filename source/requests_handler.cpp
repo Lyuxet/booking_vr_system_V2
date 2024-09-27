@@ -68,7 +68,7 @@ namespace vr{
         }
     }
 
-    void AvailabilityArena(const httplib::Request& req, httplib::Response& res, ConnectionPool& pool){
+    void Availability(const httplib::Request& req, httplib::Response& res, ConnectionPool& pool){
         try {
             // Парсим параметры из строки запроса
             auto queryParams = req.params;
@@ -89,9 +89,17 @@ namespace vr{
             }
 
             AvailabilityData data = {date, namegame, placegame};
-            Arena arena(pool);
-            arena.AddDataByCheckAvailability(data);
-            std::string response = arena.CheckAvailabilityPlace();
+            std::string response;
+            if (placegame == "ARENA"){
+                Arena arena(pool);
+                arena.AddDataByCheckAvailability(data);
+                response = arena.CheckAvailabilityPlace();
+            }
+            else if(placegame == "CUBES"){
+                Cubes cubes(pool);
+                cubes.AddDataByCheckAvailability(data);
+                response = cubes.CheckAvailabilityPlace();
+            }
 
             res.set_content(response, "application/x-www-form-urlencoded");
 
@@ -161,7 +169,6 @@ namespace vr{
 
 
     }
-
 
 
 

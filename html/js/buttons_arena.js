@@ -95,7 +95,7 @@ export function handleInputArena(event) {
     const input = event.target;
     const button = input.closest('.booking-button');
     const maxAvailableSeats = parseInt(input.getAttribute('max'), 10) || maxPlayersArena;
-    updateSeats(button, maxAvailableSeats);
+    updateSeatsArena(button, maxAvailableSeats);
     calculateTotalPrice();
 }
 

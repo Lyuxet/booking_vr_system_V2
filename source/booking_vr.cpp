@@ -77,7 +77,26 @@ namespace vr{
             std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
             ConnectionGuard conn_guard(conn, pool_);
             std::string response;
-            executeTransactionCheckAvailability(conn, response);
+            executeTransactionCheckAvailabilityArena(conn, response);
+            return response;
+
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+            return "";
+        }
+        
+    }
+
+    std::string Cubes::CheckAvailabilityPlace(){
+        ScopeGuard guard(availability_);
+        try
+        {
+            std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
+            ConnectionGuard conn_guard(conn, pool_);
+            std::string response;
+            executeTransactionCheckAvailabilityCubes(conn, response);
             return response;
 
         }
@@ -458,7 +477,7 @@ namespace vr{
     }
 
 
-    void Booking::executeTransactionCheckAvailability(std::shared_ptr<sql::Connection> conn, std::string& response){
+    void Booking::executeTransactionCheckAvailabilityArena(std::shared_ptr<sql::Connection> conn, std::string& response){
         const int max_retries = 5;
         const int base_retry_delay_ms = 500;
 
@@ -472,6 +491,62 @@ namespace vr{
                 "    ELSE 0 "
                 "END AS available_slots "
                 "FROM gameschedule "
+                "WHERE place_game = ? AND date_game = ? "
+                "GROUP BY time_game"
+            ));
+
+
+                pstmtCheckAvailability->setString(1, availability_.namegame);
+                pstmtCheckAvailability->setString(2, availability_.placegame);
+                pstmtCheckAvailability->setString(3, availability_.date);
+
+                std::unique_ptr<sql::ResultSet> resSet(pstmtCheckAvailability->executeQuery());
+
+                // Создаем JSON объект для хранения результатов
+                nlohmann::json jsonResponse;
+
+                // Перебираем результаты и добавляем их в JSON массив
+                while (resSet->next()) {
+                    nlohmann::json gameInfo;
+                    gameInfo["time_game"] = resSet->getString("time_game");
+                    gameInfo["total_players"] = resSet->getInt("total_players");
+                    gameInfo["available_slots"] = resSet->getInt("available_slots");
+
+                    // Добавляем в массив
+                    jsonResponse.push_back(gameInfo);
+                }
+
+                // Преобразуем JSON в строку
+                response = jsonResponse.dump();
+                conn->commit();  // Завершаем транзакцию
+                return;          // Успешный выход из функции
+
+            }
+            catch (const sql::SQLException& e) {
+                handleSQLException(e, attempt, max_retries, base_retry_delay_ms, conn);
+            } 
+            catch (const std::exception& e) {
+                handleStdException(e, conn);
+            }
+            
+
+        }
+    }
+
+    void Booking::executeTransactionCheckAvailabilityCubes(std::shared_ptr<sql::Connection> conn, std::string& response){
+        const int max_retries = 5;
+        const int base_retry_delay_ms = 500;
+
+        for (int attempt = 0; attempt < max_retries; ++attempt) {
+            try {
+                conn->setAutoCommit(false);
+                std::unique_ptr<sql::PreparedStatement> pstmtCheckAvailability(conn->prepareStatement(
+                "SELECT time_game, SUM(players_count) AS total_players, "
+                "CASE "
+                "    WHEN COUNT(DISTINCT name_game) = 1 AND MAX(name_game) = ? THEN (4 - SUM(players_count)) "
+                "    ELSE 0 "
+                "END AS available_slots "
+                "FROM cubes "
                 "WHERE place_game = ? AND date_game = ? "
                 "GROUP BY time_game"
             ));

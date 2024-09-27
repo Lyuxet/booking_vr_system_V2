@@ -109,7 +109,8 @@ namespace vr{
         void Delete();
 
     protected:
-        void executeTransactionCheckAvailability(std::shared_ptr<sql::Connection> conn, std::string& response);
+        void executeTransactionCheckAvailabilityArena(std::shared_ptr<sql::Connection> conn, std::string& response);
+        void executeTransactionCheckAvailabilityCubes(std::shared_ptr<sql::Connection> conn, std::string& response);
         void executeTransactionInsert(std::shared_ptr<sql::Connection> conn);
         void executeTransactionDelete(std::shared_ptr<sql::Connection> conn);
         void executeTransactionUpdate(std::shared_ptr<sql::Connection> conn);
@@ -170,6 +171,7 @@ namespace vr{
     class Cubes : public Booking {
     public:
         Cubes(ConnectionPool& pool) : Booking(pool) {}
+        std::string CheckAvailabilityPlace();
         void Open_cubes();
     };
 

@@ -3,7 +3,8 @@
 
 namespace vr{
     void ArenaBookingInsert(const httplib::Request& req, httplib::Response& res, ConnectionPool& pool);
-    void AvailabilityArena(const httplib::Request& req, httplib::Response& res, ConnectionPool& pool);
+    void Availability(const httplib::Request& req, httplib::Response& res, ConnectionPool& pool);
     void CubesBookingInsert(const httplib::Request& req, httplib::Response& res, ConnectionPool& pool);
+
 
 }
