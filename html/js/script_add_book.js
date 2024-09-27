@@ -1,4 +1,4 @@
-import { updateButtonsState } from "./buttons.js";
+import { updateButtonsStateArena } from "./buttons_arena.js";
 import { hidePriceDisplay } from "./priceDisplay.js";
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -131,8 +131,8 @@ function updateBookingContainer() {
         if (xhr.status >= 200 && xhr.status < 300) {
             try {
                 const availability = JSON.parse(xhr.responseText);
-                if (typeof updateButtonsState === 'function') {
-                    updateButtonsState(availability, bookingButtons);
+                if (typeof updateButtonsStateArena === 'function') {
+                    updateButtonsStateArena(availability, bookingButtons);
                     hidePriceDisplay(); 
                 } else {
                     console.error('Функция updateButtonsState не найдена');

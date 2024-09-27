@@ -58,7 +58,10 @@ CREATE TABLE ArenaQuestStats (
 );
 
 CREATE TABLE Cubes(
+	id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    client_id BIGINT UNSIGNED NOT NULL,
 	place_game VARCHAR(50) DEFAULT 'CUBES' NOT NULL,
+	type_game VARCHAR(50) DEFAULT 'CUBES' NOT NULL,
     name_game VARCHAR(50) DEFAULT 'CUBES' NOT NULL,
     date_game DATE NOT NULL,
     time_game varchar(20) NOT NULL,
@@ -67,12 +70,9 @@ CREATE TABLE Cubes(
     free_slots INT DEFAULT 4 NOT NULL,
     price INT NOT NULL,
 	comment_game VARCHAR(400) DEFAULT 'Резерв' NOT NULL,
-    PRIMARY KEY (name_game, date_game, time_game),  -- Составной ключ
     CONSTRAINT fk_cubes_schedule FOREIGN KEY (name_game, date_game, time_game)
     REFERENCES GameSchedule(name_game, date_game, time_game)
     ON DELETE CASCADE  -- Каскадное удаление для обеспечения целостности данных
-
-
 );
 
 -- Созадние таблицы для персольных данных клиентов

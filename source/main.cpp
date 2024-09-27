@@ -18,7 +18,14 @@ int main() {
         res.set_header("Access-Control-Allow-Origin", "*");
         res.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         res.set_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        vr::add_booking(req, res, pool);  // Ваша функция для обработки данных
+        vr::ArenaBookingInsert(req, res, pool);  // Ваша функция для обработки данных
+    });
+
+    server.Post("/addBookingCubes", [&pool](const httplib::Request& req, httplib::Response& res){
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        vr::CubesBookingInsert(req, res, pool);
     });
 
     // Обрабатываем GET-запросы с CORS-заголовками
@@ -26,8 +33,10 @@ int main() {
         res.set_header("Access-Control-Allow-Origin", "*");
         res.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         res.set_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        vr::get_availability(req, res, pool);  // Ваша функция для обработки GET-запросов
+        vr::AvailabilityArena(req, res, pool);  // Ваша функция для обработки GET-запросов
     });
+
+
 
     // Обрабатываем preflight-запросы методом OPTIONS
     server.Options("/*", [](const httplib::Request& req, httplib::Response& res) {

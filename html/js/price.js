@@ -4,7 +4,7 @@ import { isWeekendOrHoliday } from "./date.js";
 
 const isCloseType = document.querySelector('.booking-container-close') !== null;
 
-export function updatePrices(date, bookingButtons) {
+export function updatePricesArena(date, bookingButtons) {
     const isSpecialDay = isWeekendOrHoliday(date);
     bookingButtons.forEach(button => {
         const priceElement = button.querySelector('.price'); // Получаем элемент цены
