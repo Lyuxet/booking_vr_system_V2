@@ -35,13 +35,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : '';
     
         // Определяем тип игры по наличию контейнера
-        const isOpenType = document.querySelector('.booking-container-open') !== null;
+        const isCloseType = document.querySelector('.booking-container-close') !== null;
     
         let selectedTimes = [];
         let selectedPlayersCount = [];
         let selectedPrice = [];
     
-        if (isOpenType) {
+        if (!isCloseType) {
             // Для типа OPEN
             selectedButtons.forEach(function (button) {
                 const time = button.querySelector('.time').textContent;
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
                          `&phone=${encodeURIComponent(phone)}` +
                          `&email=${encodeURIComponent(email)}` +
                          `&placegame=${encodeURIComponent('ARENA')}` +
-                         `&typegame=${encodeURIComponent(isOpenType ? 'OPEN' : 'CLOSE')}` +  // Используем тип игры
+                         `&typegame=${encodeURIComponent(isCloseType ? 'CLOSE' : 'OPEN')}` +  // Используем тип игры
                          `&namegame=${encodeURIComponent(namegame)}` +
                          `&date=${encodeURIComponent(date)}` +
                          `&times=${encodeURIComponent(selectedTimes.join(','))}` +
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
         // Создаем запрос через XMLHttpRequest
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:8080/addBookingOpenArena', true);
+        xhr.open('POST', 'http://91.218.94.121/api/addBookingOpenArena', true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     
         // Обрабатываем ответ от сервера
@@ -92,11 +92,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('Бронирование успешно отправлено.');
                 console.log('Response data:', xhr.responseText);
                 // Вызов функции обновления после добавления
-                updateBookingContainer();
+                updateBookingContainer(isCloseType);
                 
             } else {
                 alert(`Ошибка отправки бронирования: ${ xhr.responseText}`);
-                updateBookingContainer();
+                updateBookingContainer(isCloseType);
             }
         };
     
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // Функция обновления контейнера бронирования
-function updateBookingContainer() {
+function updateBookingContainer(isCloseType) {
     // Получаем данные о доступных слотах
     const date = document.getElementById('date').value;
     const placegame = 'ARENA';
@@ -124,7 +124,7 @@ function updateBookingContainer() {
     const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : '';
 
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `http://localhost:8080/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
+    xhr.open('GET', `http://91.218.94.121/api/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
     xhr.onload = function () {
@@ -132,7 +132,7 @@ function updateBookingContainer() {
             try {
                 const availability = JSON.parse(xhr.responseText);
                 if (typeof updateButtonsStateArena === 'function') {
-                    updateButtonsStateArena(availability, bookingButtons);
+                    updateButtonsStateArena(availability, bookingButtons, isCloseType);
                     hidePriceDisplay(); 
                 } else {
                     console.error('Функция updateButtonsState не найдена');

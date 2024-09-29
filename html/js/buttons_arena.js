@@ -1,12 +1,11 @@
 import { calculateTotalPrice } from "./price.js";
 
-const isCloseType = document.querySelector('.booking-container-close') !== null;
-
 const maxPlayersArena = 10;
 const minPlayers = 1;
 
-function updateSeatsArena(button, availableSeats) {
+function updateSeatsArena(button, availableSeats, isCloseType) {
     const seatsCount = button.querySelector('.seats span');
+    
     if (isCloseType) {
         // Проверяем доступные места и блокируем кнопку, если меньше 10 свободных мест
         if (availableSeats < maxPlayersArena) {
@@ -15,21 +14,13 @@ function updateSeatsArena(button, availableSeats) {
             return; // Прекращаем выполнение функции
         } else {
             button.classList.remove('disabled');
-            if (button.classList.contains('selected')){
-                seatsCount.textContent = 0;
-            }
-            else{
-                seatsCount.textContent = maxPlayersArena;
-            }
-
+            seatsCount.textContent = button.classList.contains('selected') ? 0 : maxPlayersArena;
         }
-    }
-    else{
+    } else {
         const playerInput = button.querySelector('.player-input');
-        
         const maxAvailableSeats = availableSeats !== undefined ? availableSeats : maxPlayersArena;
         const currentPlayers = parseInt(playerInput.value, 10) || 0;
-    
+
         if (currentPlayers > maxAvailableSeats) {
             playerInput.value = maxAvailableSeats;
         }
@@ -38,15 +29,10 @@ function updateSeatsArena(button, availableSeats) {
             playerInput.focus();
             playerInput.select();
         }
-    
+
         seatsCount.textContent = maxAvailableSeats - playerInput.value;
-    
-        if (playerInput.value === '') {
-            button.classList.remove('selected');
-        } else {
-            button.classList.add('selected');
-        }
-    
+
+        button.classList.toggle('selected', playerInput.value !== '');
         playerInput.setAttribute('max', maxAvailableSeats);
     }
 }
@@ -74,19 +60,18 @@ export function updateButtonStateArena(button, isCloseType) {
     if (buttonDate <= now || availableSeats <= 0) {
         button.classList.remove('selected');
         button.classList.add('disabled');
-        button.removeEventListener('click', handleClickArena);
-        if (isCloseType === false){
+        button.removeEventListener('click', handleClickArena); // Удаляем слушатель, чтобы избежать утечек памяти
+        if (!isCloseType){
             button.querySelector('.player-input').disabled = true;
             button.querySelector('.player-input').value = '';
         }
-        button.querySelector('.seats span').textContent = 0;
+        seatsCountElement.textContent = 0;
     } else {
         // Если дата и время еще актуальны, и есть места — кнопка активна
         button.classList.remove('disabled');
-        button.addEventListener('click', handleClickArena);
-        if (isCloseType === false){
+        button.addEventListener('click', handleClickArena.bind(button, isCloseType)); // Привязываем контекст кнопки
+        if (!isCloseType){
             button.querySelector('.player-input').disabled = false;
-
         }
     }
 }
@@ -99,52 +84,52 @@ export function handleInputArena(event) {
     calculateTotalPrice();
 }
 
+export function handleClickArena(event, isCloseType) {
+    const button = event.currentTarget; // Используем event.currentTarget вместо this
 
-export function handleClickArena(event) {
-       
-    if (this.classList.contains('disabled')) return;
+    // Проверяем, отключена ли кнопка
+    if (button.classList.contains('disabled')) return;
 
+    // Проверяем, был ли клик по полю ввода
+    const playerInput = button.querySelector('.player-input'); // Получаем поле ввода
+    if (event.target === playerInput && button.classList.contains('selected')) return;
+
+    // Проверяем, является ли тип закрытым
     if (isCloseType) {
-        // Для CLOSE типа игры, не использовать поле ввода
-        this.classList.toggle('selected');
-        updateSeatsArena(this, maxPlayersArena); // Используем максимальное количество мест
+        // Если тип "CLOSE", просто переключаем состояние кнопки
+        button.classList.toggle('selected');
+        updateSeatsArena(button, maxPlayersArena, isCloseType); // Используем максимальное количество мест
     } else {
-        if (event.target.closest('.player-input') && this.classList.contains('selected')) return;
-        const playerInput = this.querySelector('.player-input');
-        const maxAvailableSeats = parseInt(playerInput.getAttribute('max'), 10) || maxPlayersArena;
-
-        this.classList.toggle('selected');
-        if (this.classList.contains('selected')) {
+        button.classList.toggle('selected');
+        if (button.classList.contains('selected')) {
             playerInput.value = 1;
         } else {
             playerInput.value = '';
         }
 
-        updateSeatsArena(this, maxAvailableSeats);
+        const maxAvailableSeats = parseInt(playerInput.getAttribute('max'), 10) || maxPlayersArena;
+        updateSeatsArena(button, maxAvailableSeats); // Обновляем состояние мест
     }
 
-    calculateTotalPrice();
+    calculateTotalPrice(); // Обновляем общую цену
 }
 
 
- export function updateButtonsStateArena(availability, bookingButtons) {
-    
+
+
+
+export function updateButtonsStateArena(availability, bookingButtons, isCloseType) {
     bookingButtons.forEach(button => {
-        // Очистить поле ввода и снять выбор с кнопки
         const playerInput = button.querySelector('.player-input');
         if (playerInput) {
-            playerInput.value = ''; // Очистить значение input
+            playerInput.value = ''; 
         }
-        button.classList.remove('selected'); // Снять класс selected
+        button.classList.remove('selected'); 
 
-        // Обновить состояние кнопки
-        
-        updateSeatsArena(button);
-        
-        updateButtonStateArena(button); 
+        updateSeatsArena(button, maxPlayersArena, isCloseType);
+        updateButtonStateArena(button, isCloseType); 
     });
 
-    // Затем обновить кнопки на основе данных из JSON
     if (Array.isArray(availability)) {
         bookingButtons.forEach(button => {
             const timeText = button.querySelector('.time').textContent.trim();
@@ -152,10 +137,9 @@ export function handleClickArena(event) {
             
             if (availableSlotData) {
                 const availableSeats = availableSlotData.available_slots;
-                updateSeatsArena(button, availableSeats);
-                // После обновления мест, необходимо также обновить состояние кнопки
-                updateButtonStateArena(button);
+                updateSeatsArena(button, availableSeats, isCloseType);
+                updateButtonStateArena(button, isCloseType);
             }
         });
     }
-};
+}
