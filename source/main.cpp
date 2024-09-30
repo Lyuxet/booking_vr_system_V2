@@ -51,6 +51,6 @@ int main() {
         res.status = 204;  // Статус "No Content"
     });
 
-    std::cout << "Starting server on port 8080..." << std::endl; 
-    server.listen("0.0.0.0", 8080);  // Запускаем сервер
+    std::cout << "Starting server on port 8081..." << std::endl; 
+    server.listen("0.0.0.0", 8081);  // Запускаем сервер
 }

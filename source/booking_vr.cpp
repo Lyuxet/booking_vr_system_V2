@@ -17,15 +17,17 @@ namespace vr{
             return;
         }
 
-        std::cout << "=== Список бронирований для вставки ===" << std::endl;
+        std::cout << "=============== Забронированно ===============" << std::endl;
+        std::cout << "Игра:            " << bookings_[0].name_game << std::endl;
+        std::cout << "Тип:             " <<  bookings_[0].type_game << std::endl;
+
         for (const auto& booking : bookings_) {
-            std::cout << "Игра:            " << booking.name_game << std::endl;
-            std::cout << "Тип:             " << booking.type_game << std::endl;
-            std::cout << "Дата и время:    " << booking.date_game << " " << booking.time_game << std::endl;
-            std::cout << "Количество игроков: " << booking.players_count << std::endl;
-            std::cout << "-------------------------------" << std::endl;
+            std::cout << "Дата и время:    " << booking.date_game << " " << booking.time_game << "         ";
+            std::cout << "Количество игроков:   " <<  booking.players_count << std::endl;
         }
-        std::cout << "=== Конец списка ===" << std::endl;
+       
+        std::cout << "----------------------------------------------" << std::endl;
+        std::cout << "================ Конец списка ================" << std::endl;
     }
 
     void Booking::PrintDeleteBooking() {
@@ -35,13 +37,14 @@ namespace vr{
         }
 
         std::cout << "=== Список удаленных бронирований ===" << std::endl;
+        std::cout << "Игра:            " <<  bookings_[0].name_game << std::endl;
+        std::cout << "Тип:             " <<  bookings_[0].type_game << std::endl;
         for (const auto& booking : bookings_) {
-            std::cout << "Игра:            " << booking.name_game << std::endl;
-            std::cout << "Тип:             " << booking.type_game << std::endl;
-            std::cout << "Дата и время:    " << booking.date_game << " " << booking.time_game << std::endl;
-            std::cout << "-------------------------------" << std::endl;
+            std::cout << "Дата и время:    " <<  bookings_[0].date_game << " " <<  bookings_[0].time_game << std::endl;
         }
         std::cout << "=== Конец списка ===" << std::endl;
+        std::cout << "-------------------------------" << std::endl;
+
     }
 
     void Booking::PrintUpdateBooking() {
@@ -220,8 +223,11 @@ namespace vr{
         throw;
     }
 
-    bool Booking::checkAvailableSlots(std::shared_ptr<sql::Connection> conn, const Booking_data& booking) {
-        std::unique_ptr<sql::PreparedStatement> pstmtCheck(conn->prepareStatement(
+   bool Booking::checkAvailableSlots(std::shared_ptr<sql::Connection> conn, const Booking_data& booking) {
+        std::unique_ptr<sql::PreparedStatement> pstmtCheck;
+
+        if (booking.place_game == "ARENA") {
+            pstmtCheck.reset(conn->prepareStatement(
                 "SELECT time_game, SUM(players_count) AS total_players, "
                 "CASE "
                 "    WHEN COUNT(DISTINCT name_game) = 1 AND MAX(name_game) = ? THEN (10 - SUM(players_count)) "
@@ -231,10 +237,30 @@ namespace vr{
                 "WHERE place_game = ? AND date_game = ? AND time_game = ? "
                 "GROUP BY time_game"
             ));
-        pstmtCheck->setString(1, booking.name_game);
-        pstmtCheck->setString(2, booking.place_game);  // 'ARENA'
-        pstmtCheck->setString(3, booking.date_game);   // Дата игры
-        pstmtCheck->setString(4, booking.time_game);   // Время игры
+            pstmtCheck->setString(1, booking.name_game);
+            pstmtCheck->setString(2, booking.place_game);  // 'ARENA'
+            pstmtCheck->setString(3, booking.date_game);   // Дата игры
+            pstmtCheck->setString(4, booking.time_game);   // Время игры
+        } 
+        else if (booking.place_game == "CUBES") {
+            pstmtCheck.reset(conn->prepareStatement(
+                "SELECT time_game, SUM(players_count) AS total_players, "
+                "CASE "
+                "    WHEN COUNT(DISTINCT name_game) = 1 AND MAX(name_game) = ? THEN (4 - SUM(players_count)) "
+                "    ELSE 0 "
+                "END AS available_slots "
+                "FROM Cubes "
+                "WHERE place_game = ? AND date_game = ? AND time_game = ? "
+                "GROUP BY time_game"
+            ));
+            pstmtCheck->setString(1, booking.name_game);
+            pstmtCheck->setString(2, booking.place_game);  // 'CUBES'
+            pstmtCheck->setString(3, booking.date_game);   // Дата игры
+            pstmtCheck->setString(4, booking.time_game);   // Время игры
+        } 
+        else {
+            throw std::runtime_error("Неизвестная площадка игры.");
+        }
 
         std::unique_ptr<sql::ResultSet> res(pstmtCheck->executeQuery());
 
@@ -246,6 +272,7 @@ namespace vr{
         }
         return true;
     }
+
 
     void Booking::insertClient(std::shared_ptr<sql::Connection> conn) {
         std::unique_ptr<sql::PreparedStatement> pstmt(conn->prepareStatement(
@@ -588,7 +615,7 @@ namespace vr{
                 "    WHEN COUNT(DISTINCT name_game) = 1 AND MAX(name_game) = ? THEN (4 - SUM(players_count)) "
                 "    ELSE 0 "
                 "END AS available_slots "
-                "FROM cubes "
+                "FROM Cubes "
                 "WHERE place_game = ? AND date_game = ? "
                 "GROUP BY time_game"
             ));

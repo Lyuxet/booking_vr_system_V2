@@ -110,7 +110,7 @@ namespace vr{
 
 
     void CubesBookingInsert(const httplib::Request& req, httplib::Response& res, ConnectionPool& pool) {
-        try {
+       try {
             // Проверяем заголовок Content-Type
             if (req.get_header_value("Content-Type") != "application/x-www-form-urlencoded") {
                 throw std::runtime_error("Content-Type must be application/x-www-form-urlencoded");
@@ -120,14 +120,14 @@ namespace vr{
             auto formData = parse_form_data(req.body);
 
             // Получаем значения из данных
-            std::string firstname = std::move(formData.at("firstname"));
-            std::string lastname = std::move(formData.at("lastname"));
-            std::string phone = std::move(formData.at("phone"));
-            std::string email = std::move(formData.at("email"));
-            std::string placegame = std::move(formData.at("placegame"));
-            std::string typegame = std::move(formData.at("typegame"));
-            std::string namegame = std::move(formData.at("namegame"));
-            std::string date = std::move(formData.at("date"));
+            std::string firstname = formData.at("firstname");
+            std::string lastname = formData.at("lastname");
+            std::string phone = formData.at("phone");
+            std::string email = formData.at("email");
+            std::string placegame = formData.at("placegame");
+            std::string typegame = formData.at("typegame");
+            std::string namegame = formData.at("namegame");
+            std::string date = formData.at("date");
 
             // Получаем массивы
             std::vector<std::string> times = split_string(formData.at("times"), ',');
@@ -140,30 +140,21 @@ namespace vr{
             }
 
             // Получаем комментарий
-            std::string comment = std::move(formData.at("comment"));
+            std::string comment = formData.at("comment");
 
             // Обработка данных
-            Client_data client = {std::move(firstname), std::move(lastname), std::move(phone), std::move(email)};
+            Client_data client = {firstname, lastname, phone, email};
             Cubes cubes(pool);
 
             // Формируем массив данных для вставки
             std::vector<Booking_data> bookings;
-            bookings.reserve(times.size()); // Резервируем память для массива, чтобы избежать лишних аллокаций
             for (size_t i = 0; i < times.size(); ++i) {
-                bookings.emplace_back(Booking_data{
-                    std::move(placegame),
-                    std::move(typegame),
-                    std::move(namegame),
-                    std::move(date),
-                    std::move(times[i]),
-                    playerCount[i],
-                    price[i],
-                    std::move(comment)
-                });
+                bookings.push_back({placegame, typegame, namegame, date, times[i], playerCount[i], price[i], comment});
             }
 
             // Вставка данных
-            cubes.AddDataByInsertAndUpdate(std::move(client), std::move(bookings));
+            cubes.AddDataByInsertAndUpdate(client, bookings);
+
             cubes.Open_cubes();
 
         } catch (const std::exception& e) {
