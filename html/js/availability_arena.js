@@ -1,6 +1,6 @@
 import { updateButtonsStateArena } from "./buttons_arena.js";
 
-export function checkAvailabilityArena(bookingButtons, isCloseType) {
+export function checkAvailabilityArena(bookingButtons) {
     var date = document.getElementById('date').value;
     var placegame = 'ARENA';
     // Проверяем URL и задаем значение для namegame в зависимости от пути файла
@@ -22,7 +22,7 @@ export function checkAvailabilityArena(bookingButtons, isCloseType) {
             try {
                 const availability = JSON.parse(xhr.responseText);
 
-                updateButtonsStateArena(availability, bookingButtons, isCloseType);
+                updateButtonsStateArena(availability, bookingButtons);
             } catch (error) {
                 console.error('Ошибка при обработке ответа:', error);
             }

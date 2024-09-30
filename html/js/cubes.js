@@ -4,7 +4,7 @@ import { checkAvailability } from "./availability_cubes.js";
 import { handleClickCubes } from "./buttons_cubes.js";
 import { handleInputCubes } from "./buttons_cubes.js";
 import {button_cubes} from "./button_data.js";
-
+import { hidePriceDisplay } from "./priceDisplay.js";
 
 document.addEventListener('DOMContentLoaded', function () {
      
@@ -53,13 +53,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         playerInput.addEventListener('input', handleInputCubes);
         
-        
-        updateButtonStateCubes(button);
     });
 
     // Обновляем цены и состояния кнопок при изменении даты
     $('#date').on('change', function () {
-        const selectedDate = $('#date').datepicker('getDate');  
+        const selectedDate = $('#date').datepicker('getDate'); 
+        hidePriceDisplay(); 
         checkAvailability(bookingButtons); // Проверка доступности мест
     });
 

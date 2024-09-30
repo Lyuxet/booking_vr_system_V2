@@ -4,6 +4,7 @@ import { SetDate } from "./date.js";
 import { checkAvailabilityArena } from "./availability_arena.js";
 import { handleClickArena, handleInputArena } from "./buttons_arena.js";
 import { button_data_open_arena, button_data_close_arena } from "./button_data.js";
+import { hidePriceDisplay } from "./priceDisplay.js";
 
 document.addEventListener('DOMContentLoaded', function () {
     SetDate();
@@ -12,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Инициализация кнопок
     bookingButtons.forEach(button => {
-        button.addEventListener('click', event => handleClickArena(event, isCloseType));
+        button.addEventListener('click', handleClickArena);
         const buttonId = button.id; // Получаем id кнопки (например, 'button11')
         const playerInput = button.querySelector('.player-input');
 
@@ -61,18 +62,18 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        updateButtonStateArena(button, isCloseType);
     });
 
     // Обновляем цены и состояния кнопок при изменении даты
     $('#date').on('change', function () {
         const selectedDate = $('#date').datepicker('getDate');
         updatePricesArena(selectedDate, bookingButtons); // Обновление цены
-        checkAvailabilityArena(bookingButtons, isCloseType); // Проверка доступности мест
+        hidePriceDisplay();
+        checkAvailabilityArena(bookingButtons); // Проверка доступности мест
     });
 
     // Проверка доступности при загрузке страницы
-    checkAvailabilityArena(bookingButtons, isCloseType);
+    checkAvailabilityArena(bookingButtons);
     const initialDate = $('#date').datepicker('getDate');
     updatePricesArena(initialDate, bookingButtons); // Обновление цены для начальной даты
 });

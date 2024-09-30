@@ -92,11 +92,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('Бронирование успешно отправлено.');
                 console.log('Response data:', xhr.responseText);
                 // Вызов функции обновления после добавления
-                updateBookingContainer(isCloseType);
+                updateBookingContainer();
                 
             } else {
                 alert(`Ошибка отправки бронирования: ${ xhr.responseText}`);
-                updateBookingContainer(isCloseType);
+                updateBookingContainer();
             }
         };
     
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // Функция обновления контейнера бронирования
-function updateBookingContainer(isCloseType) {
+function updateBookingContainer() {
     // Получаем данные о доступных слотах
     const date = document.getElementById('date').value;
     const placegame = 'ARENA';
@@ -132,7 +132,7 @@ function updateBookingContainer(isCloseType) {
             try {
                 const availability = JSON.parse(xhr.responseText);
                 if (typeof updateButtonsStateArena === 'function') {
-                    updateButtonsStateArena(availability, bookingButtons, isCloseType);
+                    updateButtonsStateArena(availability, bookingButtons);
                     hidePriceDisplay(); 
                 } else {
                     console.error('Функция updateButtonsState не найдена');
