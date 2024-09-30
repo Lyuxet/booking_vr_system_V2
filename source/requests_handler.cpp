@@ -5,9 +5,8 @@
 
 namespace vr{
     
-    void ArenaBookingInsert(const httplib::Request& req, httplib::Response& res, ConnectionPool& pool){
+    void ArenaBookingInsert(const httplib::Request& req, httplib::Response& res, ConnectionPool& pool) {
         try {
-        
             // Проверяем заголовок Content-Type
             if (req.get_header_value("Content-Type") != "application/x-www-form-urlencoded") {
                 throw std::runtime_error("Content-Type must be application/x-www-form-urlencoded");
@@ -16,7 +15,6 @@ namespace vr{
             // Парсим данные из строки запроса
             auto formData = parse_form_data(req.body);
 
-        
             // Получаем значения из данных
             std::string firstname = formData.at("firstname");
             std::string lastname = formData.at("lastname");
@@ -26,7 +24,6 @@ namespace vr{
             std::string typegame = formData.at("typegame");
             std::string namegame = formData.at("namegame");
             std::string date = formData.at("date");
-            
 
             // Получаем массивы
             std::vector<std::string> times = split_string(formData.at("times"), ',');
@@ -44,30 +41,30 @@ namespace vr{
             // Обработка данных
             Client_data client = {firstname, lastname, phone, email};
             Arena arena(pool);
-            if (formData.at("typegame") == "OPEN"){
-                for (size_t i = 0; i < times.size(); ++i) {
-                    Booking_data booking = {placegame, typegame, namegame, date, times[i], playerCount[i], price[i], comment};
-                    arena.AddDataByInsertAndUpdate(client, booking);
-                    arena.Open_arena();
-                }
+
+            // Формируем массив данных для вставки
+            std::vector<Booking_data> bookings;
+            for (size_t i = 0; i < times.size(); ++i) {
+                bookings.push_back({placegame, typegame, namegame, date, times[i], playerCount[i], price[i], comment});
             }
-            else if (formData.at("typegame") == "CLOSE"){
-                for (size_t i = 0; i < times.size(); ++i) {
-                    Booking_data booking = {placegame, typegame, namegame, date, times[i], playerCount[i], price[i], comment};
-                    arena.AddDataByInsertAndUpdate(client, booking);
-                    arena.Close_arena();
-                }
+
+            // Вставка данных
+            arena.AddDataByInsertAndUpdate(client, bookings);
+
+            // Открываем или закрываем арену в зависимости от типа игры
+            if (typegame == "OPEN") {
+                arena.Open_arena();
+            } else if (typegame == "CLOSE") {
+                arena.Close_arena();
             }
+
         } catch (const std::exception& e) {
             // Логируем ошибки
             std::cerr << "Error: " << e.what() << std::endl;
             res.status = 500;
             res.set_content(std::string(e.what()), "text/plain");
-
-            
         }
     }
-
     void Availability(const httplib::Request& req, httplib::Response& res, ConnectionPool& pool){
         try {
             // Парсим параметры из строки запроса
@@ -112,9 +109,8 @@ namespace vr{
     }   
 
 
-    void CubesBookingInsert(const httplib::Request& req, httplib::Response& res, ConnectionPool& pool){
+    void CubesBookingInsert(const httplib::Request& req, httplib::Response& res, ConnectionPool& pool) {
         try {
-        
             // Проверяем заголовок Content-Type
             if (req.get_header_value("Content-Type") != "application/x-www-form-urlencoded") {
                 throw std::runtime_error("Content-Type must be application/x-www-form-urlencoded");
@@ -123,17 +119,15 @@ namespace vr{
             // Парсим данные из строки запроса
             auto formData = parse_form_data(req.body);
 
-        
             // Получаем значения из данных
-            std::string firstname = formData.at("firstname");
-            std::string lastname = formData.at("lastname");
-            std::string phone = formData.at("phone");
-            std::string email = formData.at("email");
-            std::string placegame = formData.at("placegame");
-            std::string typegame = formData.at("typegame");
-            std::string namegame = formData.at("namegame");
-            std::string date = formData.at("date");
-            
+            std::string firstname = std::move(formData.at("firstname"));
+            std::string lastname = std::move(formData.at("lastname"));
+            std::string phone = std::move(formData.at("phone"));
+            std::string email = std::move(formData.at("email"));
+            std::string placegame = std::move(formData.at("placegame"));
+            std::string typegame = std::move(formData.at("typegame"));
+            std::string namegame = std::move(formData.at("namegame"));
+            std::string date = std::move(formData.at("date"));
 
             // Получаем массивы
             std::vector<std::string> times = split_string(formData.at("times"), ',');
@@ -146,29 +140,40 @@ namespace vr{
             }
 
             // Получаем комментарий
-            std::string comment = formData.at("comment");
+            std::string comment = std::move(formData.at("comment"));
 
             // Обработка данных
-            Client_data client = {firstname, lastname, phone, email};
+            Client_data client = {std::move(firstname), std::move(lastname), std::move(phone), std::move(email)};
             Cubes cubes(pool);
-            if (formData.at("placegame") == "CUBES"){
-                for (size_t i = 0; i < times.size(); ++i) {
-                    Booking_data booking = {placegame, typegame, namegame, date, times[i], playerCount[i], price[i], comment};
-                    cubes.AddDataByInsertAndUpdate(client, booking);
-                    cubes.Open_cubes();
-                }
+
+            // Формируем массив данных для вставки
+            std::vector<Booking_data> bookings;
+            bookings.reserve(times.size()); // Резервируем память для массива, чтобы избежать лишних аллокаций
+            for (size_t i = 0; i < times.size(); ++i) {
+                bookings.emplace_back(Booking_data{
+                    std::move(placegame),
+                    std::move(typegame),
+                    std::move(namegame),
+                    std::move(date),
+                    std::move(times[i]),
+                    playerCount[i],
+                    price[i],
+                    std::move(comment)
+                });
             }
+
+            // Вставка данных
+            cubes.AddDataByInsertAndUpdate(std::move(client), std::move(bookings));
+            cubes.Open_cubes();
+
         } catch (const std::exception& e) {
             // Логируем ошибки
             std::cerr << "Error: " << e.what() << std::endl;
             res.status = 500;
             res.set_content(std::string(e.what()), "text/plain");
-
-            
         }
-
-
     }
+
 
 
 

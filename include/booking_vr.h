@@ -55,46 +55,55 @@ namespace vr{
 
     // Класс для управления ресурсами бронирования и клиента
     class ScopeGuard {
-    public:
-        // Конструктор для сброса данных через ссылки
-        ScopeGuard(AvailabilityData& data)
-            : data_(&data), booking_(nullptr), clients_(nullptr) {}
-        ScopeGuard(Booking_data& booking)
-            : data_(nullptr), booking_(&booking), clients_(nullptr) {}
-        ScopeGuard(Client_data& clients)
-            : data_(nullptr), booking_(nullptr), clients_(&clients) {}
-        ScopeGuard(Booking_data& booking, Client_data& clients)
-            : data_(nullptr), booking_(&booking), clients_(&clients) {}
+public:
+    // Конструктор для сброса данных через ссылки
+    ScopeGuard(AvailabilityData& data)
+        : data_(&data), bookings_(nullptr), clients_(nullptr) {}
+    
+    ScopeGuard(std::vector<Booking_data>& bookings)
+        : data_(nullptr), bookings_(&bookings), clients_(nullptr) {}
 
-        ~ScopeGuard() {
-            if (booking_) {
-                booking_->comment_game.clear();
-                booking_->date_game.clear();
-                booking_->name_game.clear();
-                booking_->players_count = 0;
-                booking_->time_game.clear();
-                booking_->type_game.clear();
-            }
+    ScopeGuard(Client_data& clients)
+        : data_(nullptr), bookings_(nullptr), clients_(&clients) {}
 
-            if (clients_) {
-                clients_->first_name.clear();
-                clients_->last_name.clear();
-                clients_->phone.clear();
-                clients_->email.clear();
-            }
+    ScopeGuard(std::vector<Booking_data>& bookings, Client_data& clients)
+        : data_(nullptr), bookings_(&bookings), clients_(&clients) {}
 
-            if (data_){
-                data_->date.clear();
-                data_->namegame.clear();
-                data_->placegame.clear();
+    ~ScopeGuard() {
+        if (bookings_) {
+            // Очистка каждого элемента вектора
+            for (auto& booking : *bookings_) {
+                booking.comment_game.clear();
+                booking.date_game.clear();
+                booking.name_game.clear();
+                booking.players_count = 0;
+                booking.time_game.clear();
+                booking.type_game.clear();
+                booking.place_game.clear();
+                booking.price = 0;
             }
+            bookings_->clear(); // Также очищаем сам вектор
         }
 
-    private:
-        AvailabilityData* data_;
-        Booking_data* booking_;
-        Client_data* clients_;
-    };
+        if (clients_) {
+            clients_->first_name.clear();
+            clients_->last_name.clear();
+            clients_->phone.clear();
+            clients_->email.clear();
+        }
+
+        if (data_) {
+            data_->date.clear();
+            data_->namegame.clear();
+            data_->placegame.clear();
+        }
+    }
+
+private:
+    AvailabilityData* data_;
+    std::vector<Booking_data>* bookings_;
+    Client_data* clients_;
+};
 
     // Базовый класс для управления бронированиями
     class Booking {
@@ -103,23 +112,23 @@ namespace vr{
         virtual ~Booking() = default;
 
         void AddDataByCheckAvailability(const AvailabilityData& data);
-        void AddDataByInsertAndUpdate(const Client_data& client, const Booking_data& booking);
-        void AddDataByDelete(const Booking_data& booking);
-        void Update();
-        void Delete();
+        void AddDataByInsertAndUpdate(const Client_data& client, const std::vector<Booking_data>& bookings);
+        void AddDataByDelete(const std::vector<Booking_data>& booking);
+        //void Update();
+        //void Delete();
 
     protected:
         void executeTransactionCheckAvailabilityArena(std::shared_ptr<sql::Connection> conn, std::string& response);
         void executeTransactionCheckAvailabilityCubes(std::shared_ptr<sql::Connection> conn, std::string& response);
         void executeTransactionInsert(std::shared_ptr<sql::Connection> conn);
-        void executeTransactionDelete(std::shared_ptr<sql::Connection> conn);
-        void executeTransactionUpdate(std::shared_ptr<sql::Connection> conn);
+        //void executeTransactionDelete(std::shared_ptr<sql::Connection> conn);
+        //void executeTransactionUpdate(std::shared_ptr<sql::Connection> conn);
         void PrintInsertBooking();
         void PrintDeleteBooking();
         void PrintUpdateBooking();
     
         Client_data clients_;
-        Booking_data booking_;
+        std::vector<Booking_data> bookings_;
         ConnectionPool& pool_;
         AvailabilityData availability_;
 
@@ -147,7 +156,7 @@ namespace vr{
 
     private:
         std::string urlEncode(const std::string &value);
-        bool checkAvailableSlots(std::shared_ptr<sql::Connection> conn);
+        bool checkAvailableSlots(std::shared_ptr<sql::Connection> conn, const Booking_data& booking);
         void insertClient(std::shared_ptr<sql::Connection> conn);
         void handleSQLException(const sql::SQLException& e, int attempt, int max_retries, int base_retry_delay_ms, std::shared_ptr<sql::Connection> conn);
         void handleStdException(const std::exception& e, std::shared_ptr<sql::Connection> conn);

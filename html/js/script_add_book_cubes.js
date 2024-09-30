@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
         // Создаем запрос через XMLHttpRequest
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://91.218.94.121/api/addBookingCubes', true);
+        xhr.open('POST', 'http://localhost:8080/addBookingCubes', true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     
         // Обрабатываем ответ от сервера
@@ -108,7 +108,7 @@ function updateBookingContainer() {
     const namegame = 'CUBES';
 
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `http://91.218.94.121/api/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
+    xhr.open('GET', `http://localhost:8080/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
     xhr.onload = function () {

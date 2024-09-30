@@ -11,35 +11,67 @@ std::mutex mtxtest;
 
 namespace vr{
     
-    void Booking::PrintInsertBooking(){
-        std::cout << "Забронировано " << booking_.name_game 
-        << " с типом " << booking_.type_game 
-        << " на " << booking_.date_game << " " << booking_.time_game
-        << " количество игроков " << booking_.players_count 
-        << std::endl;
+   void Booking::PrintInsertBooking() {
+        if (bookings_.empty()) {
+            std::cout << "Нет бронирований для вставки." << std::endl;
+            return;
+        }
+
+        std::cout << "=== Список бронирований для вставки ===" << std::endl;
+        for (const auto& booking : bookings_) {
+            std::cout << "Игра:            " << booking.name_game << std::endl;
+            std::cout << "Тип:             " << booking.type_game << std::endl;
+            std::cout << "Дата и время:    " << booking.date_game << " " << booking.time_game << std::endl;
+            std::cout << "Количество игроков: " << booking.players_count << std::endl;
+            std::cout << "-------------------------------" << std::endl;
+        }
+        std::cout << "=== Конец списка ===" << std::endl;
     }
 
-    void Booking::PrintDeleteBooking(){
-        std::cout << "Удалено бронирование " << booking_.name_game 
-        << " с типом " << booking_.type_game 
-        << " на " << booking_.date_game << " " << booking_.time_game
-        << std::endl;
+    void Booking::PrintDeleteBooking() {
+        if (bookings_.empty()) {
+            std::cout << "Нет бронирований для удаления." << std::endl;
+            return;
+        }
+
+        std::cout << "=== Список удаленных бронирований ===" << std::endl;
+        for (const auto& booking : bookings_) {
+            std::cout << "Игра:            " << booking.name_game << std::endl;
+            std::cout << "Тип:             " << booking.type_game << std::endl;
+            std::cout << "Дата и время:    " << booking.date_game << " " << booking.time_game << std::endl;
+            std::cout << "-------------------------------" << std::endl;
+        }
+        std::cout << "=== Конец списка ===" << std::endl;
     }
 
-    void Booking::PrintUpdateBooking(){
-        std::cout << "Обновленно " << booking_.name_game 
-        << " с типом " << booking_.type_game 
-        << " с " << booking_.current_date_game << " " << booking_.current_time_game
-        << " на " << booking_.date_game << " " << booking_.current_time_game
-        << std::endl;
+    void Booking::PrintUpdateBooking() {
+        if (bookings_.empty()) {
+            std::cout << "Нет бронирований для обновления." << std::endl;
+            return;
+        }
+
+        std::cout << "=== Список обновленных бронирований ===" << std::endl;
+        for (const auto& booking : bookings_) {
+            std::cout << "Обновлено бронирование:" << std::endl;
+            std::cout << "Игра:            " << booking.name_game << std::endl;
+            std::cout << "Тип:             " << booking.type_game << std::endl;
+            std::cout << "С:               " << booking.current_date_game << " " << booking.current_time_game << std::endl;
+            std::cout << "На:              " << booking.date_game << " " << booking.time_game << std::endl;
+            std::cout << "-------------------------------" << std::endl;
+        }
+        std::cout << "=== Конец списка ===" << std::endl;
     }
 
-    void Booking::AddDataByInsertAndUpdate(const Client_data& client, const Booking_data& booking) {
+
+
+
+
+    void Booking::AddDataByInsertAndUpdate(const Client_data& client, const std::vector<Booking_data>& bookings) {
         clients_ = std::move(client);
-        booking_ = std::move(booking);
+        bookings_ = std::move(bookings);
     }
-    void Booking::AddDataByDelete(const Booking_data& booking){
-        booking_ = std::move(booking);
+    void Booking::AddDataByDelete(const std::vector<Booking_data>& bookings){
+        bookings_ = std::move(bookings);
     }
 
     void Booking::AddDataByCheckAvailability(const AvailabilityData& data){
@@ -47,7 +79,9 @@ namespace vr{
     }
 
     void Arena::ProcessArenaTransaction(const std::string& operationName) {
-        ScopeGuard guard(booking_, clients_);
+        
+        ScopeGuard guard(bookings_, clients_);
+        
         try {
             std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
             ConnectionGuard conn_guard(conn, pool_);
@@ -107,7 +141,7 @@ namespace vr{
         }
         
     }
-
+    /*
     void Booking::Update(){
         ScopeGuard guard(booking_);
         try
@@ -144,9 +178,9 @@ namespace vr{
         }
         
     }
-
+    */
     void Cubes::Open_cubes() {
-        ScopeGuard guard(booking_, clients_);
+        ScopeGuard guard(bookings_, clients_);
         try {
             std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
             ConnectionGuard conn_guard(conn, pool_);
@@ -186,7 +220,7 @@ namespace vr{
         throw;
     }
 
-    bool Booking::checkAvailableSlots(std::shared_ptr<sql::Connection> conn) {
+    bool Booking::checkAvailableSlots(std::shared_ptr<sql::Connection> conn, const Booking_data& booking) {
         std::unique_ptr<sql::PreparedStatement> pstmtCheck(conn->prepareStatement(
                 "SELECT time_game, SUM(players_count) AS total_players, "
                 "CASE "
@@ -197,16 +231,16 @@ namespace vr{
                 "WHERE place_game = ? AND date_game = ? AND time_game = ? "
                 "GROUP BY time_game"
             ));
-        pstmtCheck->setString(1, booking_.name_game);
-        pstmtCheck->setString(2, booking_.place_game);  // 'ARENA'
-        pstmtCheck->setString(3, booking_.date_game);   // Дата игры
-        pstmtCheck->setString(4, booking_.time_game);   // Время игры
+        pstmtCheck->setString(1, booking.name_game);
+        pstmtCheck->setString(2, booking.place_game);  // 'ARENA'
+        pstmtCheck->setString(3, booking.date_game);   // Дата игры
+        pstmtCheck->setString(4, booking.time_game);   // Время игры
 
         std::unique_ptr<sql::ResultSet> res(pstmtCheck->executeQuery());
 
         if (res->next()) {
             int available_slots = res->getInt("available_slots");
-            if (available_slots < booking_.players_count) {
+            if (available_slots < booking.players_count) {
                 throw std::runtime_error("Недостаточно свободных мест для бронирования.");
             }
         }
@@ -227,50 +261,57 @@ namespace vr{
 
 
     void Booking::executeTransactionInsert(std::shared_ptr<sql::Connection> conn) {
-        executeTransactionWithRetry(conn, [&](std::shared_ptr<sql::Connection> conn) {
-            // Определение таблицы в зависимости от типа игры
-            std::string tableName;
-            if (booking_.name_game == "Combat Squad") {
-                tableName = "ArenaShooterStats";
-            } else if (booking_.name_game == "Medieval Journey") {
-                tableName = "ArenaQuestStats";
-            } else if (booking_.name_game == "CUBES") {
-                tableName = "Cubes";
-            } else {
-                throw std::runtime_error("Unknown game type.");
-            }
+    executeTransactionWithRetry(conn, [&](std::shared_ptr<sql::Connection> conn) {
+        
+        conn->setAutoCommit(false); // Начинаем транзакцию
 
+        // Определение таблицы в зависимости от типа игры
+        std::string tableName;
+        if (bookings_[0].name_game == "Combat Squad") {
+            tableName = "ArenaShooterStats";
+        } else if (bookings_[0].name_game == "Medieval Journey") {
+            tableName = "ArenaQuestStats";
+        } else if (bookings_[0].name_game == "CUBES") {
+            tableName = "Cubes";
+        } else {
+            throw std::runtime_error("Unknown game type.");
+        }
+
+        // Добавление клиента
+        insertClient(conn);
+
+        // Подготовка запроса на вставку данных о бронировании
+        std::string queryInsert = "INSERT INTO " + tableName +
+            " (client_id, date_game, time_game, name_game, players_count, comment_game, type_game, price, place_game) "
+            "VALUES ((SELECT id FROM Clients WHERE phone = ? LIMIT 1), ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        std::unique_ptr<sql::PreparedStatement> pstmt2(conn->prepareStatement(queryInsert));
+
+            // Вставка всех данных из массива
+        for (const auto& booking : bookings_) {
             // Проверка наличия доступных мест
-            if (!checkAvailableSlots(conn)) {
+            if (!checkAvailableSlots(conn, booking)) {
                 throw std::runtime_error("Недостаточно свободных мест для бронирования.");
             }
 
-            // Добавление клиента
-            insertClient(conn);
-
-            // Вставка данных о бронировании
-            std::string queryInsert = "INSERT INTO " + tableName + 
-                " (client_id, date_game, time_game, name_game, players_count, comment_game, type_game, price, place_game) "
-                "VALUES ((SELECT id FROM Clients WHERE phone = ? LIMIT 1), ?, ?, ?, ?, ?, ?, ?, ?)";
-
-            std::unique_ptr<sql::PreparedStatement> pstmt2(conn->prepareStatement(queryInsert));
-
             pstmt2->setString(1, clients_.phone);
-            pstmt2->setString(2, booking_.date_game);
-            pstmt2->setString(3, booking_.time_game);
-            pstmt2->setString(4, booking_.name_game);
-            pstmt2->setInt(5, booking_.players_count);
-            pstmt2->setString(6, booking_.comment_game);
-            pstmt2->setString(7, booking_.type_game);
-            pstmt2->setInt(8, booking_.price);
-            pstmt2->setString(9, booking_.place_game);
+            pstmt2->setString(2, booking.date_game);
+            pstmt2->setString(3, booking.time_game);
+            pstmt2->setString(4, booking.name_game);
+            pstmt2->setInt(5, booking.players_count);
+            pstmt2->setString(6, booking.comment_game);
+            pstmt2->setString(7, booking.type_game);
+            pstmt2->setInt(8, booking.price);
+            pstmt2->setString(9, booking.place_game);
 
             pstmt2->execute();
-        });
-    }
+        }
+    });
+}
 
 
 
+    /*
     void Booking::executeTransactionDelete(std::shared_ptr<sql::Connection> conn) {
         const int max_retries = 5;
         const int base_retry_delay_ms = 500;
@@ -458,6 +499,7 @@ namespace vr{
 
 
     }
+    */
 
     std::string Booking::urlEncode(const std::string &value) {
         std::ostringstream escaped;
