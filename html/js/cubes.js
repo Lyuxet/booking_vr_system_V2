@@ -11,6 +11,36 @@ document.addEventListener('DOMContentLoaded', function () {
     SetDate();
     const bookingButtons = document.querySelectorAll('.booking-button');
 
+    console.log('Попытка подключения к WebSocket...');
+    const socket = new WebSocket('ws://localhost:8082/ws');
+
+    socket.addEventListener('open', function() {
+        console.log('Соединение установлено');
+    });
+    
+    socket.addEventListener('message', function(event) {
+        console.log('Сообщение получено от сервера:', event.data);
+    });
+    
+    socket.addEventListener('close', function(event) {
+        console.log('Соединение закрыто:', event.code, event.reason);
+    });
+
+    socket.addEventListener('message', function(event) {
+        try {
+            console.log('Сообщение от сервера:', event.data);
+            checkAvailability(bookingButtons);
+            console.log('Обновление произошло');
+        } catch (error) {
+            console.error('Ошибка при обработке сообщения:', error);
+        }
+    });
+
+    socket.addEventListener('error', function(error) {
+        console.error('Ошибка WebSocket:', error);
+    });
+
+
     // Инициализация кнопок
     bookingButtons.forEach(button => {
         button.addEventListener('click', handleClickCubes);

@@ -1,28 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\Vovoc\project\booking_vr\source\Connect_to_DB.cpp">
+    <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\Connect_to_DB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\Vovoc\project\booking_vr\source\booking_vr.cpp">
+    <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\booking_vr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\Vovoc\project\booking_vr\source\main.cpp">
+    <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\Vovoc\project\booking_vr\source\parseInpudData.cpp">
+    <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\parseInpudData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\Vovoc\project\booking_vr\source\requests_handler.cpp">
+    <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\requests_handler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\Vovoc\project\booking_vr\CmakeLists.txt" />
+    <CustomBuild Include="C:\Users\Lyuxet\projects\booking_vr\CmakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{8610143E-C07B-3F0B-8BC0-8409EDB35A25}</UniqueIdentifier>
+      <UniqueIdentifier>{C121FCE1-E313-3EDD-A2D3-8E39A420E785}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

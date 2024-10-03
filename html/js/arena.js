@@ -11,9 +11,56 @@ document.addEventListener('DOMContentLoaded', function () {
     const bookingButtons = document.querySelectorAll('.booking-button');
     const isCloseType = document.querySelector('.booking-container-close') !== null;
 
+    console.log('Попытка подключения к WebSocket...');
+    const socket = new WebSocket('ws://localhost:8082/ws');
+
+    socket.addEventListener('open', function() {
+        console.log('Соединение установлено');
+    });
+    
+    socket.addEventListener('message', function(event) {
+        console.log('Сообщение получено от сервера:', event.data);
+    });
+    
+    socket.addEventListener('close', function(event) {
+        console.log('Соединение закрыто:', event.code, event.reason);
+    });
+
+    socket.addEventListener('message', function(event) {
+        try {
+            console.log('Сообщение от сервера:', event.data);
+            checkAvailabilityArena(bookingButtons);
+            console.log('Обновление произошло');
+        } catch (error) {
+            console.error('Ошибка при обработке сообщения:', error);
+        }
+    });
+
+    socket.addEventListener('error', function(error) {
+        console.error('Ошибка WebSocket:', error);
+    });
+
+    console.log('Инициализация');
+
     // Инициализация кнопок
     bookingButtons.forEach(button => {
-        button.addEventListener('click', handleClickArena);
+        button.addEventListener('click', function() {
+            handleClickArena.call(this); // Используем контекст текущей кнопки
+
+            // Получаем необходимые данные для отправки
+            const buttonId = this.id; // Получаем id кнопки
+            const playerInput = this.querySelector('.player-input');
+            const playerCount = playerInput.value;
+
+            // Отправляем данные на сервер
+            const bookingData = {
+                buttonId: buttonId,
+                players: playerCount,
+            };
+
+            socket.send(JSON.stringify(bookingData)); // Отправляем данные на сервер
+        });
+
         const buttonId = button.id; // Получаем id кнопки (например, 'button11')
         const playerInput = button.querySelector('.player-input');
 

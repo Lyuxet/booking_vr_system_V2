@@ -5,31 +5,33 @@ project(Booking_vr_server)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Указываем пути к заголовочным файлам и библиотекам MySQL Connector и тестам
+# Пути к заголовочным файлам и библиотекам MySQL Connector, Boost, nlohmann/json, и httplib
 set(C_Connector_include_dir "${CMAKE_CURRENT_SOURCE_DIR}/include/MySQL Connector C++ 9.0/include/jdbc")
+set(C_Connector_lib_dir "${CMAKE_CURRENT_SOURCE_DIR}/include/MySQL Connector C++ 9.0/lib64/vs14")
 set(Header_include_dir "${CMAKE_CURRENT_SOURCE_DIR}/include")
 set(Header_test_include_dir "${CMAKE_CURRENT_SOURCE_DIR}/test")
 set(HTTPLIB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/cpp-httplib")
-
-set(C_Connector_lib_dir "${CMAKE_CURRENT_SOURCE_DIR}/include/MySQL Connector C++ 9.0/lib64/vs14")
-
-# Указываем путь к заголовочным файлам nlohmann/json
 set(NLOHMANN_JSON_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/json/include")
 
-# Добавляем пути к директориям с заголовками
+# Пути к Boost
+set(Boost_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/boost_1_86_0")
+set(Boost_LIBRARY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/boost_1_86_0/stage/lib")
+
+# Добавляем пути к директориям с заголовочными файлами
 include_directories(${C_Connector_include_dir})
 include_directories(${Header_include_dir})
 include_directories(${Header_test_include_dir})
 include_directories(${HTTPLIB_INCLUDE_DIR})
 include_directories(${NLOHMANN_JSON_INCLUDE_DIR})
+include_directories(${Boost_INCLUDE_DIR})
 
-# Путь к директории исходников и инициализация переменной SOURCES
+# Путь к исходникам
 file(GLOB SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
 
 # Создаем исполняемый файл
 add_executable(Booking_vr_server ${SOURCES})
 
-# Ищем библиотеку MySQL Connector
+# Ищем библиотеки MySQL Connector
 find_library(C_Connector_LIB NAMES mysqlcppconn PATHS ${C_Connector_lib_dir})
 
 # Проверяем, что библиотека найдена
@@ -37,10 +39,21 @@ if (NOT C_Connector_LIB)
     message(FATAL_ERROR "MySQL Connector C++ library not found!")
 endif()
 
-# Линкуем MySQL Connector с нашим проектом
-target_link_libraries(Booking_vr_server ${C_Connector_LIB})
+# Ищем библиотеки Boost
+find_library(Boost_SYSTEM_LIB NAMES libboost_system-vc143-mt-x64-1_86 PATHS ${Boost_LIBRARY_DIR})
+find_library(Boost_THREAD_LIB NAMES libboost_thread-vc143-mt-x64-1_86 PATHS ${Boost_LIBRARY_DIR})
+find_library(Boost_JSON_LIB NAMES libboost_json-vc143-mt-x64-1_86 PATHS ${Boost_LIBRARY_DIR})
+find_library(Boost_CONTAINER_LIB NAMES libboost_container-vc143-mt-x64-1_86 PATHS ${Boost_LIBRARY_DIR})
 
-# Копируем файл конфигурации в папку с .exe файлом
+# Проверяем, что библиотеки Boost найдены
+if (NOT Boost_SYSTEM_LIB OR NOT Boost_THREAD_LIB OR NOT Boost_JSON_LIB OR NOT Boost_CONTAINER_LIB)
+    message(FATAL_ERROR "Boost libraries (system, thread) not found!")
+endif()
+
+# Линкуем MySQL Connector и Boost с нашим проектом
+target_link_libraries(Booking_vr_server ${C_Connector_LIB} ${Boost_SYSTEM_LIB} ${Boost_THREAD_LIB} ${Boost_JSON_LIB} ${Boost_CONTAINER_LIB})
+
+# Копируем файл конфигурации в папку с .exe файлом после сборки
 add_custom_command(TARGET Booking_vr_server POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_SOURCE_DIR}/db_config.conf"  # Путь к файлу конфигурации

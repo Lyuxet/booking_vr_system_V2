@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     addButton.addEventListener('click', function (event) {
         event.preventDefault(); // Предотвращаем стандартное поведение кнопки
-    
+
         const selectedButtons = document.querySelectorAll('.booking-button.selected');
         const firstname = document.getElementById('firstName').value;
         const lastname = document.getElementById('lastName').value;
@@ -19,57 +19,56 @@ document.addEventListener('DOMContentLoaded', function () {
         const email = document.getElementById('email').value;
         const date = document.getElementById('date').value;
         const comment = document.getElementById('comment').value;
+
         if (!firstname || !phone || !email) {
-            event.preventDefault(); // предотвращает отправку формы
             alert("Пожалуйста, заполните все обязательные поля.");
             return;
         }
-    
+
         if (selectedButtons.length === 0) {
             alert('Пожалуйста, выберите хотя бы одно время бронирования.');
             return;
         }
-    
-        const namegame = 'CUBES'
-    
+
+        const namegame = 'CUBES';
         let selectedTimes = [];
         let selectedPlayersCount = [];
         let selectedPrice = [];
-    
-        
+
         selectedButtons.forEach(function (button) {
             const time = button.querySelector('.time').textContent;
             selectedTimes.push(time);
-    
+
             const priceButton = parseInt(button.querySelector('.price').textContent, 10);
             const playersCount = parseInt(button.querySelector('.player-input').value, 10);
             selectedPlayersCount.push(playersCount);
             const price = priceButton * playersCount;
             selectedPrice.push(price);
         });
-        
-    
-        // Создаем строку данных для отправки в формате x-www-form-urlencoded
-        const postData = `firstname=${encodeURIComponent(firstname)}` +
-                         `&lastname=${encodeURIComponent(lastname)}` +
-                         `&phone=${encodeURIComponent(phone)}` +
-                         `&email=${encodeURIComponent(email)}` +
-                         `&placegame=${encodeURIComponent('CUBES')}` +
-                         `&typegame=${encodeURIComponent('CUBES')}` +  // Используем тип игры
-                         `&namegame=${encodeURIComponent(namegame)}` +
-                         `&date=${encodeURIComponent(date)}` +
-                         `&times=${encodeURIComponent(selectedTimes.join(','))}` +
-                         `&playerCount=${encodeURIComponent(selectedPlayersCount.join(','))}` +
-                         `&price=${encodeURIComponent(selectedPrice.join(','))}` +
-                         `&comment=${encodeURIComponent(comment)}`;
-    
-        console.log('Sending data:', postData);
-    
+
+        // Создаем объект данных для отправки в формате JSON
+        const postData = {
+            firstname: firstname,
+            lastname: lastname,
+            phone: phone,
+            email: email,
+            placegame: 'CUBES',
+            typegame: 'CUBES',
+            namegame: namegame,
+            date: date,
+            times: selectedTimes,
+            playerCount: selectedPlayersCount,
+            price: selectedPrice,
+            comment: comment
+        };
+
+        console.log('Sending data:', JSON.stringify(postData));
+
         // Создаем запрос через XMLHttpRequest
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://91.218.94.121/api/addBookingCubes', true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    
+        xhr.open('POST', 'http://localhost:8081/addBookingCubes', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
         // Обрабатываем ответ от сервера
         xhr.onload = function () {
             if (xhr.status >= 200 && xhr.status < 300) {
@@ -77,22 +76,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log('Response data:', xhr.responseText);
                 // Вызов функции обновления после добавления
                 updateBookingContainer();
-                
+
             } else {
-                alert(`Ошибка отправки бронирования: ${ xhr.responseText}`);
+                alert(`Ошибка отправки бронирования: ${xhr.responseText}`);
                 updateBookingContainer();
             }
         };
-    
+
         xhr.onerror = function () {
             alert('Ошибка сети.');
             console.error('Network Error');
         };
-    
-        // Отправляем данные на сервер
-        xhr.send(postData);
+
+        // Отправляем данные на сервер в формате JSON
+        xhr.send(JSON.stringify(postData));
     });
-    
+
 });
 
 // Функция обновления контейнера бронирования
@@ -102,14 +101,11 @@ function updateBookingContainer() {
     const placegame = 'CUBES';
     const bookingButtons = document.querySelectorAll('.booking-button');
 
-
-    // Извлекаем название игры
-   
     const namegame = 'CUBES';
 
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `http://91.218.94.121/api/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.open('GET', `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
 
     xhr.onload = function () {
         if (xhr.status >= 200 && xhr.status < 300) {
@@ -117,7 +113,7 @@ function updateBookingContainer() {
                 const availability = JSON.parse(xhr.responseText);
                 if (typeof updateButtonsStateCubes === 'function') {
                     updateButtonsStateCubes(availability, bookingButtons);
-                    hidePriceDisplay(); 
+                    hidePriceDisplay();
                 } else {
                     console.error('Функция updateButtonsState не найдена');
                 }

@@ -1,56 +1,303 @@
 #include "Connect_to_DB.h"
 #include "booking_vr.h"
 #include "requests_handler.h"
-
+#include <boost/asio.hpp>
+#include <boost/beast/core.hpp>
+#include <boost/beast/http.hpp>
+#include <boost/beast/websocket.hpp>
+#include <boost/beast/version.hpp>
+#include <boost/json.hpp>
 #include <iostream>
-#include <httplib.h>
+#include <string>
+#include <thread>
+#include <memory>
+#include <set>
 
+namespace beast = boost::beast;       
+namespace http = beast::http;         
+namespace websocket = beast::websocket;
+namespace net = boost::asio;           
+namespace json = boost::json;         
+using tcp = boost::asio::ip::tcp;     
+
+// WebSocket-сессия
+class WebSocketSession : public std::enable_shared_from_this<WebSocketSession> {
+public:
+    explicit WebSocketSession(tcp::socket socket)
+        : ws_(std::move(socket)) {}
+
+    void start() {
+        ws_.async_accept(beast::bind_front_handler(&WebSocketSession::on_accept, shared_from_this()));
+    }
+
+    void send(const std::string& message) {
+        std::cout << "test 3" << std::endl;
+        ws_.async_write(net::buffer(message),
+            beast::bind_front_handler(&WebSocketSession::on_write, shared_from_this()));
+    }
+
+private:
+    void on_accept(beast::error_code ec) {
+        if (ec) {
+            std::cerr << "Ошибка при принятии: " << ec.message() << std::endl; 
+            return; 
+        }
+        // Начинаем ожидать сообщения от клиента
+        do_read();
+    }
+
+    void do_read() {
+        ws_.async_read(buffer_,
+            beast::bind_front_handler(&WebSocketSession::on_read, shared_from_this()));
+    }
+
+    void on_read(beast::error_code ec, std::size_t bytes_transferred) {
+        boost::ignore_unused(bytes_transferred);
+        if (ec) {
+            std::cerr << "Ошибка при чтении: " << ec.message() << std::endl; 
+            return;
+        }
+        // Здесь можно обрабатывать входящие сообщения, если это необходимо
+        // После обработки, снова начинаем ожидать новые сообщения
+        do_read();
+    }
+
+    void on_write(beast::error_code ec, std::size_t) {
+        std::cout << "test 4" << std::endl;
+        if (ec) {
+            std::cerr << "Ошибка при записи: " << ec.message() << std::endl; 
+            return;
+        }
+    }
+
+    websocket::stream<tcp::socket> ws_;
+    beast::flat_buffer buffer_;
+};
+
+// HTTP-сессия
+class HttpSession : public std::enable_shared_from_this<HttpSession> {
+public:
+    HttpSession(tcp::socket socket, ConnectionPool& pool, std::set<std::shared_ptr<WebSocketSession>>& sessions)
+        : socket_(std::move(socket)), pool_(pool), sessions_(sessions) {}
+
+    void start() {
+        do_read();
+    }
+
+private:
+    void do_read() {
+        http::async_read(socket_, buffer_, request_,
+            beast::bind_front_handler(&HttpSession::on_read, shared_from_this()));
+    }
+
+    void on_read(beast::error_code ec, std::size_t bytes_transferred) {
+        boost::ignore_unused(bytes_transferred);
+        if (ec) {
+            std::cerr << "Error on read: " << ec.message() << std::endl; 
+            return;
+        }
+
+        // Обработка CORS preflight
+        if (request_.method() == http::verb::options) {
+            handle_options();
+            return;
+        }
+
+        // Обработка других методов
+        if (request_.method() == http::verb::get && request_.target() == "/ws") {
+            // Если запрос на WebSocket, начинаем соединение
+            handle_websocket_connection();
+        } else if (request_.method() == http::verb::post && request_.target() == "/addBookingOpenArena") {
+            handle_add_booking_open_arena();
+        } else if (request_.method() == http::verb::post && request_.target() == "/addBookingCubes") {
+            handle_add_booking_cubes();
+        } else if (request_.method() == http::verb::get && request_.target().starts_with("/getBookingCubes")) {
+            handle_get_booking_cubes();
+        } else if (request_.method() == http::verb::get && request_.target().starts_with("/getBookingOpenArena")) {
+            handle_get_booking_open_arena();
+        } else {
+            handle_not_found();
+        }
+    }
+
+    void handle_websocket_connection() {
+        auto ws_session = std::make_shared<WebSocketSession>(std::move(socket_));
+        ws_session->start();
+        sessions_.insert(ws_session); // Добавление WebSocket-сессии
+    }
+
+    void handle_options() {
+        response_.result(http::status::no_content);
+        response_.set(http::field::access_control_allow_origin, "*");
+        response_.set(http::field::access_control_allow_methods, "GET, POST, PUT, DELETE, OPTIONS");
+        response_.set(http::field::access_control_allow_headers, "Content-Type, Authorization");
+        do_write();
+    }
+
+    void handle_add_booking_open_arena() {
+        set_cors_headers();
+
+        auto parsed_json = json::parse(request_.body());
+
+        vr::ArenaBookingInsert(parsed_json, response_, pool_);
+        notify_clients("New booking made in open arena!");
+
+        response_.set(http::field::content_type, "application/json");
+        do_write();
+    }
+
+    void handle_add_booking_cubes() {
+        set_cors_headers();
+
+        auto parsed_json = json::parse(request_.body());
+
+        vr::CubesBookingInsert(parsed_json, response_, pool_);
+        std::cout << "test 1" << std::endl;
+        notify_clients("New booking made in cubes!");
+
+        response_.set(http::field::content_type, "application/json");
+        
+        do_write();
+    }
+
+    void notify_clients(const std::string& message) {
+        std::cout << "test 1.5" << std::endl;
+        for (const auto& session : sessions_) {
+            std::cout << "test 2" << std::endl;
+            session->send(message);
+        }
+    }
+
+    void handle_get_booking_cubes() {
+        set_cors_headers();
+
+        vr::Availability(request_, response_, pool_);
+        do_write();
+    }
+
+    void handle_get_booking_open_arena() {
+        set_cors_headers();
+
+        vr::Availability(request_, response_, pool_);
+        do_write();
+    }
+
+    void handle_not_found() {
+        response_.result(http::status::not_found);
+        response_.set(http::field::content_type, "application/json");
+        response_.body() = json::serialize(json::value{
+            {"error", "Not Found"}
+        });
+        response_.prepare_payload();
+        do_write();
+    }
+
+    void set_cors_headers() {
+        response_.set(http::field::access_control_allow_origin, "*");
+        response_.set(http::field::access_control_allow_methods, "GET, POST, PUT, DELETE, OPTIONS");
+        response_.set(http::field::access_control_allow_headers, "Content-Type, Authorization");
+    }
+
+    void do_write() {
+        http::async_write(socket_, response_,
+            beast::bind_front_handler(&HttpSession::on_write, shared_from_this()));
+    }
+
+    void on_write(beast::error_code ec, std::size_t) {
+        if (ec) {
+            std::cerr << "Error on write: " << ec.message() << std::endl; 
+            return;
+        }
+        socket_.shutdown(tcp::socket::shutdown_send, ec);
+    }
+
+    tcp::socket socket_;
+    beast::flat_buffer buffer_;
+    http::request<http::string_body> request_;
+    http::response<http::string_body> response_;
+    ConnectionPool& pool_;
+    std::set<std::shared_ptr<WebSocketSession>>& sessions_; // Набор WebSocket-сессий
+};
+
+// HTTP-сервер
+class HttpServer {
+public:
+    HttpServer(int port, ConnectionPool& pool, std::set<std::shared_ptr<WebSocketSession>>& sessions)
+        : acceptor_(io_context_, tcp::endpoint(tcp::v4(), port)), pool_(pool), sessions_(sessions) {
+        do_accept();
+    }
+
+    void run() {
+        io_context_.run();
+    }
+
+private:
+    void do_accept() {
+        acceptor_.async_accept([this](beast::error_code ec, tcp::socket socket) {
+            if (!ec) {
+                // Создание HTTP-сессии
+                auto session = std::make_shared<HttpSession>(std::move(socket), pool_, sessions_);
+                session->start();
+            } else {
+                std::cerr << "Error on accept: " << ec.message() << std::endl; 
+            }
+            do_accept();
+        });
+    }
+
+    net::io_context io_context_;
+    tcp::acceptor acceptor_;
+    ConnectionPool& pool_;
+    std::set<std::shared_ptr<WebSocketSession>>& sessions_; // Хранение активных WebSocket-сессий
+};
+
+// WebSocket-сервер
+class WebSocketServer {
+public:
+    WebSocketServer(int port, std::set<std::shared_ptr<WebSocketSession>>& sessions)
+        : acceptor_(io_context_, tcp::endpoint(tcp::v4(), port)), sessions_(sessions) {
+        do_accept();
+    }
+
+    void run() {
+        io_context_.run();
+    }
+
+private:
+    void do_accept() {
+        acceptor_.async_accept([this](beast::error_code ec, tcp::socket socket) {
+            if (!ec) {
+                auto ws_session = std::make_shared<WebSocketSession>(std::move(socket));
+                ws_session->start();
+                sessions_.insert(ws_session); // Добавление сессии в набор
+            } else {
+                std::cerr << "Error on accept: " << ec.message() << std::endl; 
+            }
+            do_accept();
+        });
+    }
+
+    net::io_context io_context_;
+    tcp::acceptor acceptor_;
+    std::set<std::shared_ptr<WebSocketSession>>& sessions_; // Хранение активных WebSocket-сессий
+};
+
+// Точка входа
 int main() {
-    ConnectionPool pool(10, "db_config.conf");
-    pool.Init_pool();
-    httplib::Server server;
+    ConnectionPool pool(10, "db_config.conf"); // Инициализация пула соединений с базой данных
+    std::set<std::shared_ptr<WebSocketSession>> sessions; // Набор активных WebSocket-сессий
 
-    // Обрабатываем основной POST-запрос с CORS-заголовками
-    server.Post("/addBookingOpenArena", [&pool](const httplib::Request& req, httplib::Response& res) {
-        res.set_header("Access-Control-Allow-Origin", "*");
-        res.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        res.set_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        vr::ArenaBookingInsert(req, res, pool);  // Ваша функция для обработки данных
-    });
+    // Запуск HTTP сервера на порту 8080
+    HttpServer http_server(8081, pool, sessions);
+    std::thread http_thread([&http_server]() { http_server.run(); });
 
-    server.Post("/addBookingCubes", [&pool](const httplib::Request& req, httplib::Response& res){
-        res.set_header("Access-Control-Allow-Origin", "*");
-        res.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        res.set_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        vr::CubesBookingInsert(req, res, pool);
-    });
+    // Запуск WebSocket сервера на порту 8081
+    WebSocketServer websocket_server(8082, sessions);
+    std::thread websocket_thread([&websocket_server]() { websocket_server.run(); });
 
-    server.Get("/getBookingCubes", [&pool](const httplib::Request& req, httplib::Response& res) {
-        res.set_header("Access-Control-Allow-Origin", "*");
-        res.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        res.set_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        vr::Availability(req, res, pool);  // Ваша функция для обработки GET-запросов
-    });
+    // Ждем завершения потоков
+    http_thread.join();
+    websocket_thread.join();
 
-    // Обрабатываем GET-запросы с CORS-заголовками
-    server.Get("/getBookingOpenArena", [&pool](const httplib::Request& req, httplib::Response& res) {
-        res.set_header("Access-Control-Allow-Origin", "*");
-        res.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        res.set_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        vr::Availability(req, res, pool);  // Ваша функция для обработки GET-запросов
-    });
-
-
-
-    // Обрабатываем preflight-запросы методом OPTIONS
-    server.Options("/*", [](const httplib::Request& req, httplib::Response& res) {
-        res.set_header("Access-Control-Allow-Origin", "*");
-        res.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        res.set_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        res.set_content("", "text/plain");  // Возвращаем пустое тело ответа
-        res.status = 204;  // Статус "No Content"
-    });
-
-    std::cout << "Starting server on port 8081..." << std::endl; 
-    server.listen("0.0.0.0", 8081);  // Запускаем сервер
+    return 0;
 }

@@ -5,30 +5,35 @@
 
 namespace vr{
     
-    void ArenaBookingInsert(const httplib::Request& req, httplib::Response& res, ConnectionPool& pool) {
+    namespace json = boost::json;
+
+    void ArenaBookingInsert(const json::value& jsonData, http::response<http::string_body>& res, ConnectionPool& pool) {
         try {
-            // Проверяем заголовок Content-Type
-            if (req.get_header_value("Content-Type") != "application/x-www-form-urlencoded") {
-                throw std::runtime_error("Content-Type must be application/x-www-form-urlencoded");
+            // Получаем значения из JSON
+            std::string firstname = jsonData.at("firstname").as_string().c_str();
+            std::string lastname = jsonData.at("lastname").as_string().c_str();
+            std::string phone = jsonData.at("phone").as_string().c_str();
+            std::string email = jsonData.at("email").as_string().c_str();
+            std::string placegame = jsonData.at("placegame").as_string().c_str();
+            std::string typegame = jsonData.at("typegame").as_string().c_str();
+            std::string namegame = jsonData.at("namegame").as_string().c_str();
+            std::string date = jsonData.at("date").as_string().c_str();
+
+            // Получаем массивы из JSON
+            std::vector<std::string> times;
+            for (const auto& time : jsonData.at("times").as_array()) {
+                times.push_back(time.as_string().c_str());
             }
 
-            // Парсим данные из строки запроса
-            auto formData = parse_form_data(req.body);
+            std::vector<int> playerCount;
+            for (const auto& count : jsonData.at("playerCount").as_array()) {
+                playerCount.push_back(count.as_int64());
+            }
 
-            // Получаем значения из данных
-            std::string firstname = formData.at("firstname");
-            std::string lastname = formData.at("lastname");
-            std::string phone = formData.at("phone");
-            std::string email = formData.at("email");
-            std::string placegame = formData.at("placegame");
-            std::string typegame = formData.at("typegame");
-            std::string namegame = formData.at("namegame");
-            std::string date = formData.at("date");
-
-            // Получаем массивы
-            std::vector<std::string> times = split_string(formData.at("times"), ',');
-            std::vector<int> playerCount = parse_int_list(formData.at("playerCount"));
-            std::vector<int> price = parse_int_list(formData.at("price"));
+            std::vector<int> price;
+            for (const auto& p : jsonData.at("price").as_array()) {
+                price.push_back(p.as_int64());
+            }
 
             // Проверяем, что массивы имеют одинаковую длину
             if (times.size() != playerCount.size() || times.size() != price.size()) {
@@ -36,9 +41,9 @@ namespace vr{
             }
 
             // Получаем комментарий
-            std::string comment = formData.at("comment");
+            std::string comment = jsonData.at("comment").as_string().c_str();
 
-            // Обработка данных
+            // Обработка данных клиента
             Client_data client = {firstname, lastname, phone, email};
             Arena arena(pool);
 
@@ -58,81 +63,81 @@ namespace vr{
                 arena.Close_arena();
             }
 
+            // Успешный ответ
+            res.result(http::status::ok);
+            res.set(http::field::content_type, "application/json");
+            res.body() = R"({"status": "success", "message": "Booking inserted successfully"})";
+
         } catch (const std::exception& e) {
-            // Логируем ошибки
             std::cerr << "Error: " << e.what() << std::endl;
-            res.status = 500;
-            res.set_content(std::string(e.what()), "text/plain");
+            res.result(http::status::internal_server_error);
+            res.set(http::field::content_type, "application/json");
+            res.body() = R"({"status": "error", "message": ")" + std::string(e.what()) + R"("})";
         }
     }
-    void Availability(const httplib::Request& req, httplib::Response& res, ConnectionPool& pool){
+    void Availability(const http::request<http::string_body>& req, http::response<http::string_body>& res, ConnectionPool& pool) {
         try {
             // Парсим параметры из строки запроса
-            auto queryParams = req.params;
-            
+            auto formData = parse_form_data(req.target());
             // Пример получения параметров
-            auto itDate = queryParams.find("date");
-            auto itNameGame = queryParams.find("namegame");
-            auto itPlaceGame = queryParams.find("placegame");
-            std::string date, namegame, placegame;
-
-            if (itDate != queryParams.end() && itNameGame != queryParams.end() && itPlaceGame != queryParams.end()){
-                date = itDate->second;
-                namegame = itNameGame->second;
-                placegame = itPlaceGame->second;
-            }
-            else {
-                throw std::runtime_error("data isn't correctly");
-            }
+            std::string date = formData.at("date");
+            std::string namegame = formData.at("namegame");
+            std::string placegame = formData.at("placegame");
 
             AvailabilityData data = {date, namegame, placegame};
             std::string response;
-            if (placegame == "ARENA"){
+
+            if (placegame == "ARENA") {
                 Arena arena(pool);
                 arena.AddDataByCheckAvailability(data);
                 response = arena.CheckAvailabilityPlace();
-            }
-            else if(placegame == "CUBES"){
+            } else if (placegame == "CUBES") {
                 Cubes cubes(pool);
                 cubes.AddDataByCheckAvailability(data);
                 response = cubes.CheckAvailabilityPlace();
             }
 
-            res.set_content(response, "application/x-www-form-urlencoded");
+            // Устанавливаем содержимое ответа
+            res.set(http::field::content_type, "application/json"); // Установка заголовка Content-Type
+            res.body() = response; // Установка тела ответа
+            res.result(http::status::ok); // Установите статус ответа на 200 OK
 
         } catch (const std::exception& e) {
             // Логируем ошибки
             std::cerr << "Error: " << e.what() << std::endl;
-            res.status = 500;
-            res.set_content(std::string(e.what()), "text/plain");
+            res.result(http::status::internal_server_error);
+            res.set(http::field::content_type, "text/plain");
+            res.body() = e.what(); // Устанавливаем тело ответа в сообщении об ошибке
         }
-    }   
+    }
 
+    void CubesBookingInsert(const json::value& jsonData, http::response<http::string_body>& res, ConnectionPool& pool) {
+        try {
+            // Получаем значения из JSON
+            std::string firstname = jsonData.at("firstname").as_string().c_str();
+            std::string lastname = jsonData.at("lastname").as_string().c_str();
+            std::string phone = jsonData.at("phone").as_string().c_str();
+            std::string email = jsonData.at("email").as_string().c_str();
+            std::string placegame = jsonData.at("placegame").as_string().c_str();
+            std::string typegame = jsonData.at("typegame").as_string().c_str();
+            std::string namegame = jsonData.at("namegame").as_string().c_str();
+            std::string date = jsonData.at("date").as_string().c_str();
 
-    void CubesBookingInsert(const httplib::Request& req, httplib::Response& res, ConnectionPool& pool) {
-       try {
-            // Проверяем заголовок Content-Type
-            if (req.get_header_value("Content-Type") != "application/x-www-form-urlencoded") {
-                throw std::runtime_error("Content-Type must be application/x-www-form-urlencoded");
+            // Получаем массивы из JSON
+            std::vector<std::string> times;
+            for (const auto& time : jsonData.at("times").as_array()) {
+                times.push_back(time.as_string().c_str());
             }
 
-            // Парсим данные из строки запроса
-            auto formData = parse_form_data(req.body);
+            std::vector<int> playerCount;
+            for (const auto& count : jsonData.at("playerCount").as_array()) {
+                playerCount.push_back(count.as_int64());
+            }
 
-            // Получаем значения из данных
-            std::string firstname = formData.at("firstname");
-            std::string lastname = formData.at("lastname");
-            std::string phone = formData.at("phone");
-            std::string email = formData.at("email");
-            std::string placegame = formData.at("placegame");
-            std::string typegame = formData.at("typegame");
-            std::string namegame = formData.at("namegame");
-            std::string date = formData.at("date");
-
-            // Получаем массивы
-            std::vector<std::string> times = split_string(formData.at("times"), ',');
-            std::vector<int> playerCount = parse_int_list(formData.at("playerCount"));
-            std::vector<int> price = parse_int_list(formData.at("price"));
+            std::vector<int> price;
+            for (const auto& p : jsonData.at("price").as_array()) {
+                price.push_back(p.as_int64());
+            }
 
             // Проверяем, что массивы имеют одинаковую длину
             if (times.size() != playerCount.size() || times.size() != price.size()) {
@@ -140,9 +145,9 @@ namespace vr{
             }
 
             // Получаем комментарий
-            std::string comment = formData.at("comment");
+            std::string comment = jsonData.at("comment").as_string().c_str();
 
-            // Обработка данных
+            // Обработка данных клиента
             Client_data client = {firstname, lastname, phone, email};
             Cubes cubes(pool);
 
@@ -154,16 +159,21 @@ namespace vr{
 
             // Вставка данных
             cubes.AddDataByInsertAndUpdate(client, bookings);
-
             cubes.Open_cubes();
 
+            // Успешный ответ
+            res.result(http::status::ok);
+            res.set(http::field::content_type, "application/json");
+            res.body() = R"({"status": "success", "message": "Booking inserted successfully"})";
+
         } catch (const std::exception& e) {
-            // Логируем ошибки
             std::cerr << "Error: " << e.what() << std::endl;
-            res.status = 500;
-            res.set_content(std::string(e.what()), "text/plain");
+            res.result(http::status::internal_server_error);
+            res.set(http::field::content_type, "application/json");
+            res.body() = R"({"status": "error", "message": ")" + std::string(e.what()) + R"("})";
         }
     }
+
 
 
 

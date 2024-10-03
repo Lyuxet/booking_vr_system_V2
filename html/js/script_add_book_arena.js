@@ -2,7 +2,6 @@ import { updateButtonsStateArena } from "./buttons_arena.js";
 import { hidePriceDisplay } from "./priceDisplay.js";
 
 document.addEventListener('DOMContentLoaded', function () {
-
     const addButton = document.getElementById('add');
     if (!addButton) {
         console.error('Кнопка "Добавить" не найдена');
@@ -19,34 +18,34 @@ document.addEventListener('DOMContentLoaded', function () {
         const email = document.getElementById('email').value;
         const date = document.getElementById('date').value;
         const comment = document.getElementById('comment').value;
+
         if (!firstname || !phone || !email) {
-            event.preventDefault(); // предотвращает отправку формы
             alert("Пожалуйста, заполните все обязательные поля.");
             return;
         }
-    
+
         if (selectedButtons.length === 0) {
             alert('Пожалуйста, выберите хотя бы одно время бронирования.');
             return;
         }
-    
+
         // Извлекаем название игры
         const gameTitleElement = document.querySelector('.navigation h1');
         const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : '';
-    
+
         // Определяем тип игры по наличию контейнера
         const isCloseType = document.querySelector('.booking-container-close') !== null;
-    
+
         let selectedTimes = [];
         let selectedPlayersCount = [];
         let selectedPrice = [];
-    
+
         if (!isCloseType) {
             // Для типа OPEN
             selectedButtons.forEach(function (button) {
                 const time = button.querySelector('.time').textContent;
                 selectedTimes.push(time);
-    
+
                 const priceButton = parseInt(button.querySelector('.price').textContent, 10);
                 const playersCount = parseInt(button.querySelector('.player-input').value, 10);
                 selectedPlayersCount.push(playersCount);
@@ -59,33 +58,35 @@ document.addEventListener('DOMContentLoaded', function () {
                 const time = button.querySelector('.time').textContent;
                 const priceButton = parseInt(button.querySelector('.price').textContent, 10);
                 selectedTimes.push(time);
-    
+
                 selectedPlayersCount.push(10); // Количество игроков всегда 10
                 selectedPrice.push(priceButton); // Фиксированная стоимость
             });
         }
-    
-        // Создаем строку данных для отправки в формате x-www-form-urlencoded
-        const postData = `firstname=${encodeURIComponent(firstname)}` +
-                         `&lastname=${encodeURIComponent(lastname)}` +
-                         `&phone=${encodeURIComponent(phone)}` +
-                         `&email=${encodeURIComponent(email)}` +
-                         `&placegame=${encodeURIComponent('ARENA')}` +
-                         `&typegame=${encodeURIComponent(isCloseType ? 'CLOSE' : 'OPEN')}` +  // Используем тип игры
-                         `&namegame=${encodeURIComponent(namegame)}` +
-                         `&date=${encodeURIComponent(date)}` +
-                         `&times=${encodeURIComponent(selectedTimes.join(','))}` +
-                         `&playerCount=${encodeURIComponent(selectedPlayersCount.join(','))}` +
-                         `&price=${encodeURIComponent(selectedPrice.join(','))}` +
-                         `&comment=${encodeURIComponent(comment)}`;
-    
+
+        // Создаем объект данных для отправки в формате JSON
+        const postData = {
+            firstname,
+            lastname,
+            phone,
+            email,
+            placegame: 'ARENA',
+            typegame: isCloseType ? 'CLOSE' : 'OPEN',
+            namegame,
+            date,
+            times: selectedTimes,
+            playerCount: selectedPlayersCount,
+            price: selectedPrice,
+            comment
+        };
+
         console.log('Sending data:', postData);
-    
+
         // Создаем запрос через XMLHttpRequest
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://91.218.94.121/api/addBookingOpenArena', true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    
+        xhr.open('POST', 'http://localhost:8081/addBookingOpenArena', true);
+        xhr.setRequestHeader('Content-Type', 'application/json'); // Устанавливаем заголовок на JSON
+
         // Обрабатываем ответ от сервера
         xhr.onload = function () {
             if (xhr.status >= 200 && xhr.status < 300) {
@@ -93,22 +94,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log('Response data:', xhr.responseText);
                 // Вызов функции обновления после добавления
                 updateBookingContainer();
-                
             } else {
-                alert(`Ошибка отправки бронирования: ${ xhr.responseText}`);
+                alert(`Ошибка отправки бронирования: ${xhr.responseText}`);
                 updateBookingContainer();
             }
         };
-    
+
         xhr.onerror = function () {
             alert('Ошибка сети.');
             console.error('Network Error');
         };
-    
+
         // Отправляем данные на сервер
-        xhr.send(postData);
+        xhr.send(JSON.stringify(postData)); // Сериализуем объект в JSON
     });
-    
 });
 
 // Функция обновления контейнера бронирования
@@ -118,14 +117,13 @@ function updateBookingContainer() {
     const placegame = 'ARENA';
     const bookingButtons = document.querySelectorAll('.booking-button');
 
-
     // Извлекаем название игры
     const gameTitleElement = document.querySelector('.navigation h1');
     const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : '';
 
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `http://91.218.94.121/api/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.open('GET', `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
+    xhr.setRequestHeader('Content-Type', 'application/json'); // Установите заголовок на JSON, если ваш сервер поддерживает это
 
     xhr.onload = function () {
         if (xhr.status >= 200 && xhr.status < 300) {
