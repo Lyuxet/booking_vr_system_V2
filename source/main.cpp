@@ -23,15 +23,14 @@ using tcp = boost::asio::ip::tcp;
 // WebSocket-сессия
 class WebSocketSession : public std::enable_shared_from_this<WebSocketSession> {
 public:
-    explicit WebSocketSession(tcp::socket socket)
-        : ws_(std::move(socket)) {}
+    explicit WebSocketSession(tcp::socket socket, std::set<std::shared_ptr<WebSocketSession>>& sessions)
+        : ws_(std::move(socket)), sessions_(sessions) {}
 
     void start() {
         ws_.async_accept(beast::bind_front_handler(&WebSocketSession::on_accept, shared_from_this()));
     }
 
     void send(const std::string& message) {
-        std::cout << "test 3" << std::endl;
         ws_.async_write(net::buffer(message),
             beast::bind_front_handler(&WebSocketSession::on_write, shared_from_this()));
     }
@@ -39,10 +38,9 @@ public:
 private:
     void on_accept(beast::error_code ec) {
         if (ec) {
-            std::cerr << "Ошибка при принятии: " << ec.message() << std::endl; 
-            return; 
+            std::cerr << "Ошибка при принятии: " << ec.message() << " (" << ec.value() << ")" << std::endl;
+            return;
         }
-        // Начинаем ожидать сообщения от клиента
         do_read();
     }
 
@@ -53,25 +51,43 @@ private:
 
     void on_read(beast::error_code ec, std::size_t bytes_transferred) {
         boost::ignore_unused(bytes_transferred);
-        if (ec) {
-            std::cerr << "Ошибка при чтении: " << ec.message() << std::endl; 
+        if (ec == websocket::error::closed) {
+            close_session();  // Закрываем и удаляем сессию
+            return;
+        } else if (ec) {
+            std::cerr << "Ошибка при чтении: " << ec.message() << " (" << ec.value() << ")" << std::endl;
+            close_session();  // При ошибке также удаляем сессию
             return;
         }
-        // Здесь можно обрабатывать входящие сообщения, если это необходимо
-        // После обработки, снова начинаем ожидать новые сообщения
         do_read();
     }
 
     void on_write(beast::error_code ec, std::size_t) {
-        std::cout << "test 4" << std::endl;
         if (ec) {
-            std::cerr << "Ошибка при записи: " << ec.message() << std::endl; 
-            return;
+            std::cerr << "Ошибка при записи: " << ec.message() << " (" << ec.value() << ")" << std::endl;
         }
+    }
+
+    void close_session() {
+        std::cout << "Попытка закрыть сессию..." << std::endl;
+
+        if (ws_.is_open()) {
+            beast::error_code ec;
+            ws_.close(websocket::close_code::normal, ec);
+            if (ec) {
+                std::cerr << "Ошибка при закрытии: " << ec.message() << " (" << ec.value() << ")" << std::endl;
+            }
+        } else {
+            std::cout << "Сокет уже закрыт." << std::endl;
+        }
+
+        sessions_.erase(shared_from_this());
+        std::cout << "Сессия закрыта. Осталось активных сессий: " << sessions_.size() << std::endl << std::endl;
     }
 
     websocket::stream<tcp::socket> ws_;
     beast::flat_buffer buffer_;
+    std::set<std::shared_ptr<WebSocketSession>>& sessions_;
 };
 
 // HTTP-сессия
@@ -92,8 +108,8 @@ private:
 
     void on_read(beast::error_code ec, std::size_t bytes_transferred) {
         boost::ignore_unused(bytes_transferred);
-        if (ec) {
-            std::cerr << "Error on read: " << ec.message() << std::endl; 
+       if (ec) {
+            std::cerr << "Error on read: " << ec.message() << " (" << ec.value() << ")" << std::endl;
             return;
         }
 
@@ -121,11 +137,10 @@ private:
     }
 
     void handle_websocket_connection() {
-        auto ws_session = std::make_shared<WebSocketSession>(std::move(socket_));
-        ws_session->start();
-        sessions_.insert(ws_session); // Добавление WebSocket-сессии
-    }
-
+    auto ws_session = std::make_shared<WebSocketSession>(std::move(socket_), sessions_);
+    ws_session->start();
+    sessions_.insert(ws_session); // Добавление WebSocket-сессии
+}
     void handle_options() {
         response_.result(http::status::no_content);
         response_.set(http::field::access_control_allow_origin, "*");
@@ -152,7 +167,6 @@ private:
         auto parsed_json = json::parse(request_.body());
 
         vr::CubesBookingInsert(parsed_json, response_, pool_);
-        std::cout << "test 1" << std::endl;
         notify_clients("New booking made in cubes!");
 
         response_.set(http::field::content_type, "application/json");
@@ -161,9 +175,7 @@ private:
     }
 
     void notify_clients(const std::string& message) {
-        std::cout << "test 1.5" << std::endl;
         for (const auto& session : sessions_) {
-            std::cout << "test 2" << std::endl;
             session->send(message);
         }
     }
@@ -205,7 +217,7 @@ private:
 
     void on_write(beast::error_code ec, std::size_t) {
         if (ec) {
-            std::cerr << "Error on write: " << ec.message() << std::endl; 
+            std::cerr << "Error on write: " << ec.message() << " (" << ec.value() << ")" << std::endl;
             return;
         }
         socket_.shutdown(tcp::socket::shutdown_send, ec);
@@ -267,15 +279,17 @@ private:
     void do_accept() {
         acceptor_.async_accept([this](beast::error_code ec, tcp::socket socket) {
             if (!ec) {
-                auto ws_session = std::make_shared<WebSocketSession>(std::move(socket));
+                auto ws_session = std::make_shared<WebSocketSession>(std::move(socket), sessions_);
                 ws_session->start();
                 sessions_.insert(ws_session); // Добавление сессии в набор
+                std::cout << "Добавлена новая сессия" << std::endl;
+                std::cout << "Количество активных сессий: " << sessions_.size() << std::endl << std::endl;
             } else {
-                std::cerr << "Error on accept: " << ec.message() << std::endl; 
+                std::cerr << "Error on accept: " << ec.message() << std::endl;
             }
             do_accept();
         });
-    }
+    }   
 
     net::io_context io_context_;
     tcp::acceptor acceptor_;

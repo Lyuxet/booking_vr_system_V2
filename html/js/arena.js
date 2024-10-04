@@ -1,4 +1,3 @@
-import { updateButtonStateArena } from "./buttons_arena.js";
 import { updatePricesArena } from "./price.js";
 import { SetDate } from "./date.js";
 import { checkAvailabilityArena } from "./availability_arena.js";
@@ -19,14 +18,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     
     socket.addEventListener('message', function(event) {
-        console.log('Сообщение получено от сервера:', event.data);
-    });
-    
-    socket.addEventListener('close', function(event) {
-        console.log('Соединение закрыто:', event.code, event.reason);
-    });
-
-    socket.addEventListener('message', function(event) {
         try {
             console.log('Сообщение от сервера:', event.data);
             checkAvailabilityArena(bookingButtons);
@@ -36,79 +27,25 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    socket.addEventListener('close', function(event) {
+        console.log('Соединение закрыто:', event.code, event.reason);
+    });
+
     socket.addEventListener('error', function(error) {
         console.error('Ошибка WebSocket:', error);
     });
+
+    window.onbeforeunload = function() {
+        if (socket) {
+            socket.close(); // Закрываем соединение перед уходом со страницы
+        }
+    };
 
     console.log('Инициализация');
 
     // Инициализация кнопок
     bookingButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            handleClickArena.call(this); // Используем контекст текущей кнопки
-
-            // Получаем необходимые данные для отправки
-            const buttonId = this.id; // Получаем id кнопки
-            const playerInput = this.querySelector('.player-input');
-            const playerCount = playerInput.value;
-
-            // Отправляем данные на сервер
-            const bookingData = {
-                buttonId: buttonId,
-                players: playerCount,
-            };
-
-            socket.send(JSON.stringify(bookingData)); // Отправляем данные на сервер
-        });
-
-        const buttonId = button.id; // Получаем id кнопки (например, 'button11')
-        const playerInput = button.querySelector('.player-input');
-
-        if (!isCloseType) {
-            if (button_data_open_arena[buttonId]) {
-                const data = button_data_open_arena[buttonId];
-                button.querySelector('.time').textContent = data.time;
-                button.querySelector('.price').textContent = `${data.price} ₽`;
-                button.querySelector('.price').setAttribute('data-price', data.price);
-            }
-
-            playerInput.setAttribute('maxlength', '2');
-
-            // Запретить ввод нецифровых символов
-            playerInput.addEventListener('input', function() {
-                this.value = this.value.replace(/[^0-9]/g, '');
-            });
-
-            // Запретить ввод нецифровых символов с клавиатуры, включая numpad
-            playerInput.addEventListener('keydown', function(event) {
-                const isNumberKey = (event.keyCode >= 48 && event.keyCode <= 57) || // цифры сверху
-                                    (event.keyCode >= 96 && event.keyCode <= 105) || // цифры numpad
-                                    event.keyCode === 8 || 
-                                    event.keyCode === 46; 
-                
-                if (!isNumberKey) {
-                    event.preventDefault();
-                }
-            });
-
-            // Запретить вставку нецифровых символов
-            playerInput.addEventListener('paste', function(event) {
-                const pastedData = (event.clipboardData || window.clipboardData).getData('text');
-                if (!/^\d*$/.test(pastedData)) {
-                    event.preventDefault();
-                }
-            });
-
-            playerInput.addEventListener('input', handleInputArena);
-        } else {
-            if (button_data_close_arena[buttonId]) {
-                const data = button_data_close_arena[buttonId];
-                button.querySelector('.time').textContent = data.time;
-                button.querySelector('.price').textContent = `${data.price} ₽`;
-                button.querySelector('.price').setAttribute('data-price', data.price);
-            }
-        }
-
+        initializeBookingButton(button, socket, isCloseType);
     });
 
     // Обновляем цены и состояния кнопок при изменении даты
@@ -124,3 +61,67 @@ document.addEventListener('DOMContentLoaded', function () {
     const initialDate = $('#date').datepicker('getDate');
     updatePricesArena(initialDate, bookingButtons); // Обновление цены для начальной даты
 });
+
+function initializeBookingButton(button, socket, isCloseType) {
+    button.addEventListener('click', function() {
+        handleClickArena.call(this); // Используем контекст текущей кнопки
+
+        const buttonId = this.id; // Получаем id кнопки
+        const playerInput = this.querySelector('.player-input');
+        const playerCount = playerInput.value;
+
+        const bookingData = {
+            buttonId: buttonId,
+            players: playerCount,
+        };
+
+        socket.send(JSON.stringify(bookingData)); // Отправляем данные на сервер
+    });
+
+    const buttonId = button.id;
+    const playerInput = button.querySelector('.player-input');
+
+    if (!isCloseType) {
+        if (button_data_open_arena[buttonId]) {
+            const data = button_data_open_arena[buttonId];
+            button.querySelector('.time').textContent = data.time;
+            button.querySelector('.price').textContent = `${data.price} ₽`;
+            button.querySelector('.price').setAttribute('data-price', data.price);
+        }
+
+        playerInput.setAttribute('maxlength', '2');
+        restrictNonNumericInput(playerInput); // Ограничение ввода только цифр
+        playerInput.addEventListener('input', handleInputArena);
+    } else {
+        if (button_data_close_arena[buttonId]) {
+            const data = button_data_close_arena[buttonId];
+            button.querySelector('.time').textContent = data.time;
+            button.querySelector('.price').textContent = `${data.price} ₽`;
+            button.querySelector('.price').setAttribute('data-price', data.price);
+        }
+    }
+}
+
+function restrictNonNumericInput(input) {
+    input.addEventListener('input', function() {
+        this.value = this.value.replace(/[^0-9]/g, ''); // Удаление всех символов кроме цифр
+    });
+
+    input.addEventListener('keydown', function(event) {
+        const isNumberKey = (event.keyCode >= 48 && event.keyCode <= 57) ||  // цифры сверху
+                            (event.keyCode >= 96 && event.keyCode <= 105) || // цифры numpad
+                            event.keyCode === 8 ||  // backspace
+                            event.keyCode === 46;   // delete
+
+        if (!isNumberKey) {
+            event.preventDefault();
+        }
+    });
+
+    input.addEventListener('paste', function(event) {
+        const pastedData = (event.clipboardData || window.clipboardData).getData('text');
+        if (!/^\d*$/.test(pastedData)) {
+            event.preventDefault(); // Блокировка вставки, если содержимое не цифры
+        }
+    });
+}
