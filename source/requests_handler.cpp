@@ -27,12 +27,12 @@ namespace vr{
 
             std::vector<int> playerCount;
             for (const auto& count : jsonData.at("playerCount").as_array()) {
-                playerCount.push_back(count.as_int64());
+                playerCount.push_back(static_cast<int>(count.as_int64()));
             }
 
             std::vector<int> price;
             for (const auto& p : jsonData.at("price").as_array()) {
-                price.push_back(p.as_int64());
+                price.push_back(static_cast<int>(p.as_int64()));
             }
 
             // Проверяем, что массивы имеют одинаковую длину
@@ -131,12 +131,12 @@ namespace vr{
 
             std::vector<int> playerCount;
             for (const auto& count : jsonData.at("playerCount").as_array()) {
-                playerCount.push_back(count.as_int64());
+                playerCount.push_back(static_cast<int>(count.as_int64()));
             }
 
             std::vector<int> price;
             for (const auto& p : jsonData.at("price").as_array()) {
-                price.push_back(p.as_int64());
+                price.push_back(static_cast<int>(p.as_int64()));
             }
 
             // Проверяем, что массивы имеют одинаковую длину

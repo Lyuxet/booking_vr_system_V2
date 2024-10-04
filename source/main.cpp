@@ -304,10 +304,13 @@ int main() {
     // Запуск HTTP сервера на порту 8080
     HttpServer http_server(8081, pool, sessions);
     std::thread http_thread([&http_server]() { http_server.run(); });
-
+    std::cout << "HttpServer на порту 8081 запущен..." << std::endl;
+    
     // Запуск WebSocket сервера на порту 8081
     WebSocketServer websocket_server(8082, sessions);
     std::thread websocket_thread([&websocket_server]() { websocket_server.run(); });
+    std::cout << "WebSocketServer на порту 8081 запущен..." << std::endl << std::endl;
+
 
     // Ждем завершения потоков
     http_thread.join();

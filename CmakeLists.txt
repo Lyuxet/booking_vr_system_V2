@@ -10,7 +10,6 @@ set(C_Connector_include_dir "${CMAKE_CURRENT_SOURCE_DIR}/include/MySQL Connector
 set(C_Connector_lib_dir "${CMAKE_CURRENT_SOURCE_DIR}/include/MySQL Connector C++ 9.0/lib64/vs14")
 set(Header_include_dir "${CMAKE_CURRENT_SOURCE_DIR}/include")
 set(Header_test_include_dir "${CMAKE_CURRENT_SOURCE_DIR}/test")
-set(HTTPLIB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/cpp-httplib")
 set(NLOHMANN_JSON_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/json/include")
 
 # Пути к Boost
@@ -21,7 +20,6 @@ set(Boost_LIBRARY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/boost_1_86_0/stage/li
 include_directories(${C_Connector_include_dir})
 include_directories(${Header_include_dir})
 include_directories(${Header_test_include_dir})
-include_directories(${HTTPLIB_INCLUDE_DIR})
 include_directories(${NLOHMANN_JSON_INCLUDE_DIR})
 include_directories(${Boost_INCLUDE_DIR})
 
