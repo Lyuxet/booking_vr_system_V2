@@ -42,6 +42,7 @@ private:
     std::mutex mutex_;
     std::condition_variable condVar_;
     size_t poolSize_;
+    bool isConnectionActive(std::shared_ptr<sql::Connection> conn);
 
     DBConfig ReadDBConfig(const std::string& file_name);
     std::shared_ptr<sql::Connection> CreateConnection(const DBConfig& config);

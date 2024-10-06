@@ -21,12 +21,29 @@ void ConnectionPool::Init_pool() {
 // Получение соединения из пула
 std::shared_ptr<sql::Connection> ConnectionPool::GetConnection() {
     std::unique_lock<std::mutex> lock(mutex_);
-    while (pool_.empty()) {
-        condVar_.wait(lock); // Ожидаем, пока не появится свободное соединение
-    }
-    auto conn = std::move(pool_.front());
+    condVar_.wait(lock, [this] { return !pool_.empty(); });
+
+    auto conn = pool_.front();
     pool_.pop();
+
+    // Проверка активности соединения
+    if (!isConnectionActive(conn)) {
+        // Соединение не активно — удаляем и создаем новое
+        conn.reset();  // Явное освобождение ресурса
+        conn = CreateConnection(ReadDBConfig(configFilePath_));  // Создаем новое соединение
+    }
+
     return conn;
+}
+
+bool ConnectionPool::isConnectionActive(std::shared_ptr<sql::Connection> conn){
+    try {
+        std::shared_ptr<sql::Statement> stmt(conn->createStatement());
+        stmt->executeQuery("SELECT 1");  // Простой запрос для проверки активности
+        return true;  // Соединение активно
+    } catch (const sql::SQLException&) {
+        return false;  // Соединение не активно
+    }
 }
 
 // Возвращение соединения в пул

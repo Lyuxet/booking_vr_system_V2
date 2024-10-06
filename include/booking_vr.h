@@ -140,9 +140,11 @@ private:
 
             for (int attempt = 0; attempt < max_retries; ++attempt) {
                 try {
-                    conn->setAutoCommit(false);
-                    func(conn);
-                    conn->commit();
+                    Transaction transaction(conn); // Создаем транзакцию
+
+                    func(conn); // Выполняем нужную логику транзакции
+
+                    transaction.commit(); // Коммит транзакции, если все прошло успешно
                     return;
                 } 
                 catch (const sql::SQLException& e) {
