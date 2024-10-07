@@ -12,10 +12,18 @@ ConnectionPool::ConnectionPool(size_t poolSize, const std::string& configFilePat
 
 // Инициализация пула соединений
 void ConnectionPool::Init_pool() {
-    DBConfig config = ReadDBConfig(configFilePath_);
-    for (size_t i = 0; i < poolSize_; ++i) {
-        pool_.push(CreateConnection(config));
+    try
+    {
+        DBConfig config = ReadDBConfig(configFilePath_);
+        for (size_t i = 0; i < poolSize_; ++i) {
+            pool_.push(CreateConnection(config));
+        }
     }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
+    
 }
 
 // Получение соединения из пула
@@ -26,11 +34,9 @@ std::shared_ptr<sql::Connection> ConnectionPool::GetConnection() {
     auto conn = pool_.front();
     pool_.pop();
 
-    // Проверка активности соединения
     if (!isConnectionActive(conn)) {
-        // Соединение не активно — удаляем и создаем новое
-        conn.reset();  // Явное освобождение ресурса
-        conn = CreateConnection(ReadDBConfig(configFilePath_));  // Создаем новое соединение
+        conn.reset(); 
+        conn = CreateConnection(ReadDBConfig(configFilePath_));  
     }
 
     return conn;
@@ -39,10 +45,10 @@ std::shared_ptr<sql::Connection> ConnectionPool::GetConnection() {
 bool ConnectionPool::isConnectionActive(std::shared_ptr<sql::Connection> conn){
     try {
         std::shared_ptr<sql::Statement> stmt(conn->createStatement());
-        stmt->executeQuery("SELECT 1");  // Простой запрос для проверки активности
-        return true;  // Соединение активно
+        stmt->executeQuery("SELECT 1");  
+        return true;  
     } catch (const sql::SQLException&) {
-        return false;  // Соединение не активно
+        return false;  
     }
 }
 
@@ -50,7 +56,7 @@ bool ConnectionPool::isConnectionActive(std::shared_ptr<sql::Connection> conn){
 void ConnectionPool::ReleaseConnection(std::shared_ptr<sql::Connection> conn) {
     std::lock_guard<std::mutex> lock(mutex_);
     pool_.push(std::move(conn));
-    condVar_.notify_one(); // Уведомляем, что есть доступное соединение
+    condVar_.notify_one(); 
 }
 
 // Чтение конфигурации из файла
@@ -58,6 +64,7 @@ DBConfig ConnectionPool::ReadDBConfig(const std::string& file_name) {
     std::ifstream in_file(file_name);
     if (!in_file.is_open()) {
         throw ConfigFileException("Файл конфигурации не найден");
+        
     }
     DBConfig config;
     std::string line;
