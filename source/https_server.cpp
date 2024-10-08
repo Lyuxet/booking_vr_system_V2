@@ -1,4 +1,6 @@
 #include "https_server.h"
+#include "logger.h"
+#include <string>
 
 
 void HttpSession::start(){
@@ -12,7 +14,8 @@ void HttpSession::do_read(){
 void HttpSession::on_read(beast::error_code ec, std::size_t bytes_transferred){
     boost::ignore_unused(bytes_transferred);
     if (ec) {
-        std::cerr << "Error on read: " << ec.message() << " (" << ec.value() << ")" << std::endl;
+        Logger::getInstance().log("Ошибка чтения: " + ec.message() + "(" + std::to_string(ec.value()) + ")", 
+        "../../logs/error_read.log");
         return;
     }
 
@@ -111,7 +114,9 @@ void HttpSession::do_write(){
 }
 void HttpSession::on_write(beast::error_code ec, std::size_t){
     if (ec) {
-        std::cerr << "Error on write: " << ec.message() << " (" << ec.value() << ")" << std::endl;
+        Logger::getInstance().log("Ошибка чтения: " + ec.message() + "(" + std::to_string(ec.value()) + ")", 
+        "../../logs/error_read.log");
+
         return;
     }
     socket_.shutdown(tcp::socket::shutdown_send, ec);
@@ -136,7 +141,8 @@ void HttpServer::do_accept() {
             auto session = std::make_shared<HttpSession>(std::move(socket), pool_, sessions_);
             session->start();
         } else {
-            std::cerr << "Error on accept: " << ec.message() << std::endl; 
+            Logger::getInstance().log("Ошибка чтения: " + ec.message() + "(" + "test" + ")", 
+            "../../logs/error_read.log"); 
         }
         do_accept();
     });

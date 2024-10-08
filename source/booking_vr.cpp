@@ -1,4 +1,5 @@
 #include "booking_vr.h"
+#include "logger.h"
 #include <cppconn/prepared_statement.h>
 #include <cppconn/exception.h>
 #include <iostream>
@@ -96,6 +97,7 @@ namespace vr{
         } catch (const std::exception& e) {
             std::lock_guard<std::mutex> lock(mtxtest);
             std::cerr << operationName << " Exception: " << e.what() << std::endl;
+            Logger::getInstance().log(operationName + " Exeption: " + std::string(e.what()), "../..logs/error_transaction.log");
             throw;
         }
     }
@@ -120,7 +122,7 @@ namespace vr{
         }
         catch(const std::exception& e)
         {
-            std::cerr << e.what() << '\n';
+            Logger::getInstance().log(" Avalibality Exeption: " + std::string(e.what()), "../..logs/error_transaction.log");
             return "";
         }
         
@@ -139,7 +141,7 @@ namespace vr{
         }
         catch(const std::exception& e)
         {
-            std::cerr << e.what() << '\n';
+            Logger::getInstance().log("Avalibality Exeption: " + std::string(e.what()), "../..logs/error_transaction.log");
             return "";
         }
         
@@ -193,19 +195,21 @@ namespace vr{
             
         } catch (const std::exception& e) {
             std::lock_guard<std::mutex> lock(mtxtest);
-            std::cerr << "Cubes Exception: " << e.what() << std::endl;
+            Logger::getInstance().log("Cubes Exeption: " + std::string(e.what()), "../..logs/error_transaction.log");
             throw;
         }
     }
 
     void Booking::handleSQLException(const sql::SQLException& e, int attempt, int max_retries, int base_retry_delay_ms, std::shared_ptr<sql::Connection> conn) {
-        std::cerr << "Attempt " << (attempt + 1) << " - SQLException: " << e.what() << std::endl;
-        std::cerr << "Error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << std::endl;
+        Logger::getInstance().log("Attempt " + std::to_string(attempt + 1) + " - SQLException: " + std::string(e.what()),
+        "../..logs/error_transaction.log");
+        Logger::getInstance().log("Error code: " + std::to_string(e.getErrorCode()) + ", SQLState: " + e.getSQLState(),
+        "../../logs/error_transaction.log");
 
         if (e.getErrorCode() == 1213) { // Deadlock
             if (attempt < max_retries - 1) {
                 int delay = base_retry_delay_ms * (attempt + 1) + rand() % 1000;
-                std::cerr << "Retrying after " << delay << " ms" << std::endl;
+                Logger::getInstance().log("Retrying after " + std::to_string(delay) + " ms", "../../logs/error_transaction.log");
                 std::this_thread::sleep_for(std::chrono::milliseconds(delay));
             } else {
                 conn->rollback();
@@ -219,6 +223,7 @@ namespace vr{
 
     void Booking::handleStdException(const std::exception& e, std::shared_ptr<sql::Connection> conn) {
         std::cerr << "Exception: " << e.what() << std::endl;
+        Logger::getInstance().log("Exception: " + std::string(e.what()), "../..logs/error_transaction.log");
         conn->rollback();
         throw;
     }

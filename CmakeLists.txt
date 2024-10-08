@@ -4,6 +4,8 @@ project(Booking_vr_server)
 # Устанавливаем стандарт C++
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_definitions(-D_WIN32_WINNT=0x0A00)
+
 
 # Пути к заголовочным файлам и библиотекам MySQL Connector, Boost, nlohmann/json, и httplib
 set(C_Connector_include_dir "${CMAKE_CURRENT_SOURCE_DIR}/include/MySQL Connector C++ 9.0/include/jdbc")

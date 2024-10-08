@@ -1,5 +1,5 @@
 #include "websocket.h"
-
+#include "logger.h"
 
 
 WebSocketSession::WebSocketSession(tcp::socket socket, std::set<std::shared_ptr<WebSocketSession>>& sessions)
@@ -17,7 +17,8 @@ void WebSocketSession::send(const std::string& message) {
 
 void WebSocketSession::on_accept(beast::error_code ec) {
     if (ec) {
-        std::cerr << "Ошибка при принятии: " << ec.message() << " (" << ec.value() << ")" << std::endl;
+        Logger::getInstance().log("Ошибка при принятии: " + ec.message() + "(" + std::to_string(ec.value()) + ")",
+        "../../logs/error_accept");
         return;
     }
     do_read();
@@ -34,7 +35,8 @@ void WebSocketSession::on_read(beast::error_code ec, std::size_t bytes_transferr
         close_session();  // Закрываем и удаляем сессию
         return;
     } else if (ec) {
-        std::cerr << "Ошибка при чтении: " << ec.message() << " (" << ec.value() << ")" << std::endl;
+        Logger::getInstance().log("Ошибка при чтении: " + ec.message() + "(" + std::to_string(ec.value()) + ")",
+        "../../logs/error_read");        
         close_session();  // При ошибке также удаляем сессию
         return;
     }
@@ -43,25 +45,18 @@ void WebSocketSession::on_read(beast::error_code ec, std::size_t bytes_transferr
 
 void WebSocketSession::on_write(beast::error_code ec, std::size_t) {
     if (ec) {
-        std::cerr << "Ошибка при записи: " << ec.message() << " (" << ec.value() << ")" << std::endl;
-    }
+        Logger::getInstance().log("Ошибка при записи: " + ec.message() + "(" + std::to_string(ec.value()) + ")",
+        "../../logs/error_write");    }
 }
 
 void WebSocketSession::close_session() {
-    std::cout << "Попытка закрыть сессию..." << std::endl;
 
     if (ws_.is_open()) {
         beast::error_code ec;
         ws_.close(websocket::close_code::normal, ec);
-        if (ec) {
-            std::cerr << "Ошибка при закрытии: " << ec.message() << " (" << ec.value() << ")" << std::endl;
-        }
-    } else {
-        std::cout << "Сокет уже закрыт." << std::endl;
-    }
+    } 
 
     sessions_.erase(shared_from_this());
-    std::cout << "Сессия закрыта. Осталось активных сессий: " << sessions_.size() << std::endl << std::endl;
 }
 
 
@@ -82,10 +77,9 @@ void WebSocketServer::do_accept() {
                 auto ws_session = std::make_shared<WebSocketSession>(std::move(socket), sessions_);
                 ws_session->start();
                 sessions_.insert(ws_session); // Добавление сессии в набор
-                std::cout << "Добавлена новая сессия" << std::endl;
-                std::cout << "Количество активных сессий: " << sessions_.size() << std::endl << std::endl;
             } else {
-                std::cerr << "Error on accept: " << ec.message() << std::endl;
+                Logger::getInstance().log("Ошибка при принятии сесии: " + ec.message() + "(" + std::to_string(ec.value()) + ")",
+                "../../logs/error_accept");            
             }
             do_accept();
         });

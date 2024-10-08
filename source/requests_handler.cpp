@@ -1,6 +1,7 @@
 #include "requests_handler.h"
 #include "booking_vr.h"
 #include "parseInpudData.h"
+#include "logger.h"
 
 
 namespace vr{
@@ -69,7 +70,7 @@ namespace vr{
             res.body() = R"({"status": "success", "message": "Booking inserted successfully"})";
 
         } catch (const std::exception& e) {
-            std::cerr << "Error: " << e.what() << std::endl;
+            Logger::getInstance().log("Error: " + std::string(e.what()), "../../logs/error_transaction.log");
             res.result(http::status::internal_server_error);
             res.set(http::field::content_type, "application/json");
             res.body() = R"({"status": "error", "message": ")" + std::string(e.what()) + R"("})";
@@ -104,7 +105,7 @@ namespace vr{
 
         } catch (const std::exception& e) {
             // Логируем ошибки
-            std::cerr << "Error: " << e.what() << std::endl;
+            Logger::getInstance().log("Error: " + std::string(e.what()), "../../logs/error_transaction.log");
             res.result(http::status::internal_server_error);
             res.set(http::field::content_type, "text/plain");
             res.body() = e.what(); // Устанавливаем тело ответа в сообщении об ошибке
@@ -167,7 +168,7 @@ namespace vr{
             res.body() = R"({"status": "success", "message": "Booking inserted successfully"})";
 
         } catch (const std::exception& e) {
-            std::cerr << "Error: " << e.what() << std::endl;
+            Logger::getInstance().log("Error: " + std::string(e.what()), "../../logs/error_transaction.log");
             res.result(http::status::internal_server_error);
             res.set(http::field::content_type, "application/json");
             res.body() = R"({"status": "error", "message": ")" + std::string(e.what()) + R"("})";

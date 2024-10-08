@@ -1,4 +1,5 @@
 #include "Connect_to_DB.h"
+#include "logger.h"
 #include <cppconn/driver.h>
 #include <cppconn/exception.h>
 #include <fstream>
@@ -21,7 +22,7 @@ void ConnectionPool::Init_pool() {
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << std::endl;
+        Logger::getInstance().log("Ошибка инициализации пула соединений: " + std::string(e.what()), "../../logs/error_connect.log");
     }
     
 }
@@ -111,9 +112,9 @@ Transaction::~Transaction() {
     if (!committed_) {
         try {
             conn_->rollback(); // Откатываем изменения, если не закоммичено
-            std::cerr << "Transaction rolled back due to failure." << std::endl;
+            Logger::getInstance().log("Transaction rolled back due to failure", "../../logs/error_transaction.log");
         } catch (const sql::SQLException& e) {
-            std::cerr << "Error during rollback: " << e.what() << std::endl;
+            Logger::getInstance().log("Ошибка отката измеений: " + std::string(e.what()), "../../logs/error_transaction.log");
         }
     }
 }
@@ -124,7 +125,7 @@ void Transaction::commit() {
         conn_->commit(); // Фиксируем изменения
         committed_ = true;
     } catch (const sql::SQLException& e) {
-        std::cerr << "Error during commit: " << e.what() << std::endl;
+        Logger::getInstance().log("Ошибка отката измеений: " + std::string(e.what()), "../../logs/error_transaction.log");
         throw; // Перебрасываем исключение дальше
     }
 }
