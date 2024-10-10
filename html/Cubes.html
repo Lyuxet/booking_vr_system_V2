@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="fonts/stylesheet.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="css/datepicker-custom.css">
+    <link rel="stylesheet" href="./css/styles/loading.css">
+
 </head>
 
 <body>
@@ -40,95 +42,95 @@
                     <input type="text" id="date" name="date" readonly>
                     <script src="js/localization_calendar.js"></script>
                 </div>
-                
-                    <!-- Кнопки размещены в grid-контейнере -->
-                        <div class="booking-grid">
-                            <button id="button11" class="booking-button">
-                                <div class="time"></div>
-                                <div class="line"></div>
-                                <div class="price" data-price=""></div>
-                                <div class="players"><input type="text" id="playerInput11" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
-                                <div class="seats">Свободно: <span id="seatsCount11"></span></div>
-                            </button>
-                            <button id="button12" class="booking-button">
-                                <div class="time"></div>
-                                <div class="line"></div>
-                                <div class="price" data-price=""></div>
-                                <div class="players"><input type="text" id="playerInput12" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
-                                <div class="seats">Свободно: <span id="seatsCount12"></span></div>
-                            </button>
-                            <button id="button13" class="booking-button">
-                                <div class="time"></div>
-                                <div class="line"></div>
-                                <div class="price" data-price=""></div>
-                                <div class="players"><input type="text" id="playerInput13" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
-                                <div class="seats">Свободно: <span id="seatsCount13"></span></div>
-                            </button>
-                            <button id="button14" class="booking-button">
-                                <div class="time"></div>
-                                <div class="line"></div>
-                                <div class="price" data-price=""></div>
-                                <div class="players"><input type="text" id="playerInput14" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
-                                <div class="seats">Свободно: <span id="seatsCount14"></span></div>
-                            </button>
-                            <button id="button15" class="booking-button">
-                                <div class="time"></div>
-                                <div class="line"></div>
-                                <div class="price" data-price=""></div>
-                                <div class="players"><input type="text" id="playerInput15" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
-                                <div class="seats">Свободно: <span id="seatsCount15"></span></div>
-                            </button>
-                            <button id="button16" class="booking-button">
-                                <div class="time"></div>
-                                <div class="line"></div>
-                                <div class="price" data-price=""></div>
-                                <div class="players"><input type="text" id="playerInput16" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
-                                <div class="seats">Свободно: <span id="seatsCount16"></span></div>
-                            </button>
-                            <button id="button17" class="booking-button">
-                                <div class="time"></div>
-                                <div class="line"></div>
-                                <div class="price" data-price=""></div>
-                                <div class="players"><input type="text" id="playerInput17" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
-                                <div class="seats">Свободно: <span id="seatsCount17"></span></div>
-                            </button>
-                            <button id="button18" class="booking-button">
-                                <div class="time"></div>
-                                <div class="line"></div>
-                                <div class="price" data-price=""></div>
-                                <div class="players"><input type="text" id="playerInput18" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
-                                <div class="seats">Свободно: <span id="seatsCount18"></span></div>
-                            </button>
-                            <button id="button19" class="booking-button">
-                                <div class="time"></div>
-                                <div class="line"></div>
-                                <div class="price" data-price=""></div>
-                                <div class="players"><input type="text" id="playerInput19" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
-                                <div class="seats">Свободно: <span id="seatsCount19"></span></div>
-                            </button>
-                            <button id="button20" class="booking-button">
-                                <div class="time"></div>
-                                <div class="line"></div>
-                                <div class="price" data-price=""></div>
-                                <div class="players"><input type="text" id="playerInput20" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
-                                <div class="seats">Свободно: <span id="seatsCount20"></span></div>
-                            </button>
-                            <button id="button21" class="booking-button">
-                                <div class="time"></div>
-                                <div class="line"></div>
-                                <div class="price" data-price=""></div>
-                                <div class="players"><input type="text" id="playerInput21" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
-                                <div class="seats">Свободно: <span id="seatsCount21"></span></div>
-                            </button>
-                            <button id="button22" class="booking-button">
-                                <div class="time"></div>
-                                <div class="line"></div>
-                                <div class="price" data-price=""></div>
-                                <div class="players"><input type="text" id="playerInput22" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
-                                <div class="seats">Свободно: <span id="seatsCount22"></span></div>
-                            </button>
-                        </div>
-               
+                <div class="pac-man-container">
+                    <div id="loading" class="pac-man"></div>
+                </div>
+                <div class="booking-grid" style="display: none;">
+                    <button id="button11" class="booking-button">
+                        <div class="time"></div>
+                        <div class="line"></div>
+                        <div class="price" data-price=""></div>
+                        <div class="players"><input type="text" id="playerInput11" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
+                        <div class="seats">Свободно: <span id="seatsCount11"></span></div>
+                    </button>
+                    <button id="button12" class="booking-button">
+                        <div class="time"></div>
+                        <div class="line"></div>
+                        <div class="price" data-price=""></div>
+                        <div class="players"><input type="text" id="playerInput12" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
+                        <div class="seats">Свободно: <span id="seatsCount12"></span></div>
+                    </button>
+                    <button id="button13" class="booking-button">
+                        <div class="time"></div>
+                        <div class="line"></div>
+                        <div class="price" data-price=""></div>
+                        <div class="players"><input type="text" id="playerInput13" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
+                        <div class="seats">Свободно: <span id="seatsCount13"></span></div>
+                    </button>
+                    <button id="button14" class="booking-button">
+                        <div class="time"></div>
+                        <div class="line"></div>
+                        <div class="price" data-price=""></div>
+                        <div class="players"><input type="text" id="playerInput14" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
+                        <div class="seats">Свободно: <span id="seatsCount14"></span></div>
+                    </button>
+                    <button id="button15" class="booking-button">
+                        <div class="time"></div>
+                        <div class="line"></div>
+                        <div class="price" data-price=""></div>
+                        <div class="players"><input type="text" id="playerInput15" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
+                        <div class="seats">Свободно: <span id="seatsCount15"></span></div>
+                        </button>
+                    <button id="button16" class="booking-button">
+                        <div class="time"></div>
+                        <div class="line"></div>
+                        <div class="price" data-price=""></div>
+                        <div class="players"><input type="text" id="playerInput16" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
+                        <div class="seats">Свободно: <span id="seatsCount16"></span></div>
+                    </button>
+                    <button id="button17" class="booking-button">
+                        <div class="time"></div>
+                        <div class="line"></div>
+                        <div class="price" data-price=""></div>
+                        <div class="players"><input type="text" id="playerInput17" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
+                        <div class="seats">Свободно: <span id="seatsCount17"></span></div>
+                    </button>
+                    <button id="button18" class="booking-button">
+                        <div class="time"></div>
+                        <div class="line"></div>
+                        <div class="price" data-price=""></div>
+                        <div class="players"><input type="text" id="playerInput18" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
+                        <div class="seats">Свободно: <span id="seatsCount18"></span></div>
+                    </button>
+                    <button id="button19" class="booking-button">
+                        <div class="time"></div>
+                        <div class="line"></div>
+                        <div class="price" data-price=""></div>
+                        <div class="players"><input type="text" id="playerInput19" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
+                        <div class="seats">Свободно: <span id="seatsCount19"></span></div>
+                    </button>
+                    <button id="button20" class="booking-button">
+                        <div class="time"></div>
+                        <div class="line"></div>
+                        <div class="price" data-price=""></div>
+                        <div class="players"><input type="text" id="playerInput20" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
+                        <div class="seats">Свободно: <span id="seatsCount20"></span></div>
+                    </button>
+                    <button id="button21" class="booking-button">
+                        <div class="time"></div>
+                        <div class="line"></div>
+                        <div class="price" data-price=""></div>
+                        <div class="players"><input type="text" id="playerInput21" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
+                        <div class="seats">Свободно: <span id="seatsCount21"></span></div>
+                    </button>
+                    <button id="button22" class="booking-button">
+                        <div class="time"></div>
+                        <div class="line"></div>
+                        <div class="price" data-price=""></div>
+                        <div class="players"><input type="text" id="playerInput22" placeholder="Кол-мест" value="" class="player-input" min="1" /></div>
+                        <div class="seats">Свободно: <span id="seatsCount22"></span></div>
+                    </button>
+                </div>
                 <h3>Ваши данные:</h3>
                 <div class="form-container">
                     <label>Имя:</label>
@@ -141,7 +143,7 @@
                     <input type="email" id="email" name="email" placeholder="Введите почту*..." required>
                     <label>Комментарий:</label>
                     <textarea id="comment" name="comment"></textarea>
-                    <button id="add" class="submit-button">Отправить</button>
+                    <button id="add" class="submit-button">Забронировать</button>
                 </div>
                 
             </div>

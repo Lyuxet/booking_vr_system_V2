@@ -7,6 +7,13 @@
   width: 100%;                /* Контейнер занимает 100% ширины */
 }
 
+.pac-man-container {
+  display: flex;                  /* Включаем Flexbox */
+  justify-content: center;        /* Центрирование по горизонтали */
+  align-items: center;            /* Центрирование по вертикали */
+  height: auto;               /* Высота контейнера, чтобы разместить элемент по центру экрана */
+}
+
 .links-container {
   display: flex;
   justify-content: space-between;

@@ -9,10 +9,9 @@ const bookingButtons = document.querySelectorAll('.booking-button');
 
 
 document.addEventListener('DOMContentLoaded', function () {
+    let socket = createWebSocket();
     SetDate();
     const isCloseType = document.querySelector('.booking-container-close') !== null;
-
-    let socket = createWebSocket();
 
     window.onbeforeunload = function() {
         if (socket) {
@@ -42,8 +41,6 @@ document.addEventListener('DOMContentLoaded', function () {
         checkAvailabilityArena(bookingButtons); // Проверка доступности мест
     });
 
-    // Проверка доступности при загрузке страницы
-    checkAvailabilityArena(bookingButtons);
     const initialDate = $('#date').datepicker('getDate');
     updatePricesArena(initialDate, bookingButtons); // Обновление цены для начальной даты
 });

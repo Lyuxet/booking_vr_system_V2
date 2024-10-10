@@ -1,5 +1,9 @@
 import { updateButtonsStateCubes } from "./buttons_cubes.js";
 
+const bookingGrid = document.querySelector('.booking-grid');
+const pacmanContainer = document.querySelector('.pac-man-container');
+
+
 export function checkAvailability(bookingButtons) {
     var date = document.getElementById('date').value;
     var placegame = 'CUBES';
@@ -12,11 +16,17 @@ export function checkAvailability(bookingButtons) {
         return;
     }
 
+    bookingGrid.style.display = 'none'; // Или flex, в зависимости от вашего дизайна
+    pacmanContainer.style.display = 'flex'; // Скрываем анимацию загрузки
+
     const xhr = new XMLHttpRequest();
     xhr.open('GET', `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
     xhr.onload = function () {
+        // Возвращаем кнопки и скрываем загрузку после получения ответа
+        bookingGrid.style.display = 'grid'; // Или flex, в зависимости от вашего дизайна
+        pacmanContainer.style.display = 'none'; // Скрываем анимацию загрузки
         if (xhr.status >= 200 && xhr.status < 300) {
             try {
                 const availability = JSON.parse(xhr.responseText);
@@ -31,7 +41,10 @@ export function checkAvailability(bookingButtons) {
     };
 
     xhr.onerror = function () {
-        console.error('Ошибка сети.');
+       // Вернуть кнопки и скрыть загрузку в случае ошибки сети
+       bookingGrid.style.display = 'grid';
+       pacmanContainer.style.display = 'none';
+       console.error('Ошибка сети.');
     };
 
     xhr.send();

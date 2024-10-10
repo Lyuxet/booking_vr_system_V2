@@ -1,38 +1,16 @@
-import { updateButtonStateCubes } from "./buttons_cubes.js";
 import { SetDate } from "./date.js";
 import { checkAvailability } from "./availability_cubes.js";
 import { handleClickCubes, handleInputCubes } from "./buttons_cubes.js";
 import { button_cubes } from "./button_data.js";
 import { hidePriceDisplay } from "./priceDisplay.js";
 
+const bookingButtons = document.querySelectorAll('.booking-button');
+
+
 document.addEventListener('DOMContentLoaded', function () {
     SetDate();
-    const bookingButtons = document.querySelectorAll('.booking-button');
 
-    console.log('Попытка подключения к WebSocket...');
-    const socket = new WebSocket('ws://localhost:8082/ws');
-
-    socket.addEventListener('open', function() {
-        console.log('Соединение установлено');
-    });
-
-    socket.addEventListener('message', function(event) {
-        try {
-            console.log('Сообщение от сервера:', event.data);
-            checkAvailability(bookingButtons);
-            console.log('Обновление произошло');
-        } catch (error) {
-            console.error('Ошибка при обработке сообщения:', error);
-        }
-    });
-
-    socket.addEventListener('close', function(event) {
-        console.log('Соединение закрыто:', event.code, event.reason);
-    });
-
-    socket.addEventListener('error', function(error) {
-        console.error('Ошибка WebSocket:', error);
-    });
+    let socket = createWebSocket();
 
     window.onbeforeunload = function() {
         if (socket) {
@@ -40,7 +18,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    console.log('Инициализация');
+    // Обработчик события изменения видимости страницы
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'visible' && socket.readyState !== WebSocket.OPEN) {
+            socket = createWebSocket(); // Переподключаемся
+        }
+    });
+
 
     // Инициализация кнопок
     bookingButtons.forEach(button => {
@@ -51,17 +35,55 @@ document.addEventListener('DOMContentLoaded', function () {
     $('#date').on('change', function () {
         const selectedDate = $('#date').datepicker('getDate');
         hidePriceDisplay();
+        checkAvailability(bookingButtons); // Проверка доступности мест
+    });
+
+
+});
+
+function createWebSocket() {
+    const socket = new WebSocket('ws://localhost:8082/ws');
+
+    socket.addEventListener('open', function() {
         checkAvailability(bookingButtons);
     });
 
-    // Проверка доступности при загрузке страницы
-    checkAvailability(bookingButtons);
-    const initialDate = $('#date').datepicker('getDate');
-});
+    socket.addEventListener('message', function(event) {
+        try {
+            checkAvailability(bookingButtons);
+        } catch (error) {
+            console.error('Ошибка при обработке сообщения:', error);
+        }
+    });
+
+    socket.addEventListener('close', function(event) {
+        // Автоматическое переподключение при закрытии
+        setTimeout(function() {
+            createWebSocket();
+        }, 3000); // Попытка переподключения через 3 секунды
+    });
+
+    socket.addEventListener('error', function(error) {
+        console.error('Ошибка WebSocket:', error);
+    });
+
+    return socket;
+}
 
 function initializeBookingButton(button, socket) {
     button.addEventListener('click', function() {
         handleClickCubes.call(this); // Используем контекст текущей кнопки
+
+        const buttonId = this.id; // Получаем id кнопки
+        const playerInput = this.querySelector('.player-input');
+        const playerCount = playerInput.value;
+
+        const bookingData = {
+            buttonId: buttonId,
+            players: playerCount,
+        };
+
+        socket.send(JSON.stringify(bookingData)); // Отправляем данные на сервер
     });
 
     const buttonId = button.id;
@@ -74,7 +96,7 @@ function initializeBookingButton(button, socket) {
         button.querySelector('.price').setAttribute('data-price', data.price);
     }
 
-    playerInput.setAttribute('maxlength', '1');
+    playerInput.setAttribute('maxlength', '2');
     restrictNonNumericInput(playerInput); // Ограничение ввода только цифр
     playerInput.addEventListener('input', handleInputCubes);
 }

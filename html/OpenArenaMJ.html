@@ -17,7 +17,8 @@
     <link rel="stylesheet" href="fonts/stylesheet.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="css/datepicker-custom.css">
-  
+    <link rel="stylesheet" href="./css/styles/loading.css">
+
 </head>
 
 <body>
@@ -57,9 +58,11 @@
                     <input type="text" id="date" name="date" readonly>
                     <script src="js/localization_calendar.js"></script>
                 </div>
+                <div class="pac-man-container">
+                    <div id="loading" class="pac-man"></div>
+                </div>
                 <div class="booking-container-open">
-                    <!-- Кнопки размещены в grid-контейнере -->
-                        <div class="booking-grid">
+                        <div class="booking-grid" style="display: none;">
                             <button id="button11" class="booking-button">
                                 <div class="time"></div>
                                 <div class="line"></div>
@@ -158,7 +161,7 @@
                     <input type="email" id="email" name="email" placeholder="Введите почту*..." required>
                     <label>Комментарий:</label>
                     <textarea id="comment" name="comment"></textarea>
-                    <button id="add" class="submit-button">Отправить</button>
+                    <button id="add" class="submit-button">Забронировать</button>
                 </div>
                 
             </div>
