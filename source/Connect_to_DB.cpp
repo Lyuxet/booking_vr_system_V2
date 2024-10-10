@@ -22,7 +22,9 @@ void ConnectionPool::Init_pool() {
     }
     catch(const std::exception& e)
     {
-        Logger::getInstance().log("Ошибка инициализации пула соединений: " + std::string(e.what()), "../../logs/error_connect.log");
+        Logger::getInstance().log("Ошибка инициализации пула соединений: " + std::string(e.what()) + 
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__)
+        , "../../logs/error_connect.log");
     }
     
 }
@@ -112,9 +114,15 @@ Transaction::~Transaction() {
     if (!committed_) {
         try {
             conn_->rollback(); // Откатываем изменения, если не закоммичено
-            Logger::getInstance().log("Transaction rolled back due to failure", "../../logs/error_transaction.log");
+            Logger::getInstance().log(
+                "Ошибка отката транзакции в файле " + std::string(__FILE__) + 
+                " на строке " + std::to_string(__LINE__),
+                "../../logs/error_transaction.log"
+            );
         } catch (const sql::SQLException& e) {
-            Logger::getInstance().log("Ошибка отката измеений: " + std::string(e.what()), "../../logs/error_transaction.log");
+            Logger::getInstance().log("Ошибка отката измеений: " + std::string(e.what()) + 
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
+            "../../logs/error_transaction.log");
         }
     }
 }
@@ -125,7 +133,9 @@ void Transaction::commit() {
         conn_->commit(); // Фиксируем изменения
         committed_ = true;
     } catch (const sql::SQLException& e) {
-        Logger::getInstance().log("Ошибка отката измеений: " + std::string(e.what()), "../../logs/error_transaction.log");
+        Logger::getInstance().log("Ошибка отката измеений: " + std::string(e.what()) + 
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
+         "../../logs/error_transaction.log");
         throw; // Перебрасываем исключение дальше
     }
 }

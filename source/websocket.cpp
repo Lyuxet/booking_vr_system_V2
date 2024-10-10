@@ -17,8 +17,9 @@ void WebSocketSession::send(const std::string& message) {
 
 void WebSocketSession::on_accept(beast::error_code ec) {
     if (ec) {
-        Logger::getInstance().log("Ошибка при принятии: " + ec.message() + "(" + std::to_string(ec.value()) + ")",
-        "../../logs/error_accept");
+        Logger::getInstance().log("Ошибка при принятии: " + ec.message() + "(" + std::to_string(ec.value()) + ")" + 
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
+            "../../logs/error_accept.log");
         return;
     }
     do_read();
@@ -35,8 +36,9 @@ void WebSocketSession::on_read(beast::error_code ec, std::size_t bytes_transferr
         close_session();  // Закрываем и удаляем сессию
         return;
     } else if (ec) {
-        Logger::getInstance().log("Ошибка при чтении: " + ec.message() + "(" + std::to_string(ec.value()) + ")",
-        "../../logs/error_read");        
+        Logger::getInstance().log("Ошибка при чтении: " + ec.message() + "(" + std::to_string(ec.value()) + ")" + 
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
+            "../../logs/error_read.log");        
         close_session();  // При ошибке также удаляем сессию
         return;
     }
@@ -45,8 +47,9 @@ void WebSocketSession::on_read(beast::error_code ec, std::size_t bytes_transferr
 
 void WebSocketSession::on_write(beast::error_code ec, std::size_t) {
     if (ec) {
-        Logger::getInstance().log("Ошибка при записи: " + ec.message() + "(" + std::to_string(ec.value()) + ")",
-        "../../logs/error_write");    }
+        Logger::getInstance().log("Ошибка при записи: " + ec.message() + "(" + std::to_string(ec.value()) + ")" + 
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
+            "../../logs/error_write.log");    }
 }
 
 void WebSocketSession::close_session() {
@@ -78,8 +81,9 @@ void WebSocketServer::do_accept() {
                 ws_session->start();
                 sessions_.insert(ws_session); // Добавление сессии в набор
             } else {
-                Logger::getInstance().log("Ошибка при принятии сесии: " + ec.message() + "(" + std::to_string(ec.value()) + ")",
-                "../../logs/error_accept");            
+                Logger::getInstance().log("Ошибка при принятии сесии: " + ec.message() + "(" + std::to_string(ec.value()) + ")" + 
+                " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
+                "../../logs/error_accept.log");            
             }
             do_accept();
         });

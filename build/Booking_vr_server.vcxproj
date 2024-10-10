@@ -371,6 +371,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\Connect_to_DB.cpp" />
     <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\booking_vr.cpp" />
+    <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\booking_vr_print.cpp" />
     <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\https_server.cpp" />
     <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\logger.cpp" />
     <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\main.cpp" />

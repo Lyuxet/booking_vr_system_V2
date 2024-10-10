@@ -14,7 +14,8 @@ void HttpSession::do_read(){
 void HttpSession::on_read(beast::error_code ec, std::size_t bytes_transferred){
     boost::ignore_unused(bytes_transferred);
     if (ec) {
-        Logger::getInstance().log("Ошибка чтения: " + ec.message() + "(" + std::to_string(ec.value()) + ")", 
+        Logger::getInstance().log("Ошибка чтения: " + ec.message() + "(" + std::to_string(ec.value()) + ")" + 
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
         "../../logs/error_read.log");
         return;
     }
@@ -114,7 +115,8 @@ void HttpSession::do_write(){
 }
 void HttpSession::on_write(beast::error_code ec, std::size_t){
     if (ec) {
-        Logger::getInstance().log("Ошибка чтения: " + ec.message() + "(" + std::to_string(ec.value()) + ")", 
+        Logger::getInstance().log("Ошибка чтения: " + ec.message() + "(" + std::to_string(ec.value()) + ")" + 
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
         "../../logs/error_read.log");
 
         return;
@@ -141,7 +143,8 @@ void HttpServer::do_accept() {
             auto session = std::make_shared<HttpSession>(std::move(socket), pool_, sessions_);
             session->start();
         } else {
-            Logger::getInstance().log("Ошибка чтения: " + ec.message() + "(" + "test" + ")", 
+            Logger::getInstance().log("Ошибка чтения: " + ec.message() + "(" + std::to_string(ec.value()) + ")" + 
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
             "../../logs/error_read.log"); 
         }
         do_accept();

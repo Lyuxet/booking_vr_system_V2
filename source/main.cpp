@@ -17,7 +17,9 @@ int main() {
             try {
                 http_server.run();
             } catch (const std::exception& e) {
-                Logger::getInstance().log("Ошибка HTTP сервера: " + std::string(e.what()), "../../logs/error_connect.log");
+                Logger::getInstance().log("Ошибка HTTP сервера: " + std::string(e.what()) + 
+                " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
+                "../../logs/error_connect.log");
             }
         });
         std::cout << "HttpServer на порту 8081 запущен..." << std::endl;
@@ -28,7 +30,9 @@ int main() {
             try {
                 websocket_server.run(); 
             } catch (const std::exception& e) {
-                Logger::getInstance().log("Ошибка WebSocket сервера: " + std::string(e.what()), "../../logs/error_connect.log");
+                Logger::getInstance().log("Ошибка WebSocket сервера: " + std::string(e.what()) + 
+                " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
+                "../../logs/error_connect.log");
             }
         });
         std::cout << "WebSocketServer на порту 8082 запущен..." << std::endl << std::endl;
@@ -39,6 +43,8 @@ int main() {
    
     } catch (const std::exception& e) {
         // Логирование критической ошибки
-        Logger::getInstance().log("Критическая ошибка в приложении: " + std::string(e.what()), "../logs/error_connect.log");
+        Logger::getInstance().log("Критическая ошибка в приложении: " + std::string(e.what()) + 
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
+            "../logs/error_connect.log");
     }
 }

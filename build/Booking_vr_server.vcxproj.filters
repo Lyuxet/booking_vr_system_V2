@@ -7,6 +7,9 @@
     <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\booking_vr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\booking_vr_print.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\Lyuxet\projects\booking_vr\source\https_server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

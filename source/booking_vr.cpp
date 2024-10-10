@@ -12,64 +12,6 @@ std::mutex mtxtest;
 
 namespace vr{
     
-   void Booking::PrintInsertBooking() {
-        if (bookings_.empty()) {
-            std::cout << "Нет бронирований для вставки." << std::endl;
-            return;
-        }
-
-        std::cout << "=============== Забронированно ===============" << std::endl;
-        std::cout << "Игра:            " << bookings_[0].name_game << std::endl;
-        std::cout << "Тип:             " <<  bookings_[0].type_game << std::endl;
-
-        for (const auto& booking : bookings_) {
-            std::cout << "Дата и время:    " << booking.date_game << " " << booking.time_game << "         ";
-            std::cout << "Количество игроков:   " <<  booking.players_count << std::endl;
-        }
-       
-        std::cout << "----------------------------------------------" << std::endl;
-        std::cout << "================ Конец списка ================" << std::endl;
-    }
-
-    void Booking::PrintDeleteBooking() {
-        if (bookings_.empty()) {
-            std::cout << "Нет бронирований для удаления." << std::endl;
-            return;
-        }
-
-        std::cout << "=== Список удаленных бронирований ===" << std::endl;
-        std::cout << "Игра:            " <<  bookings_[0].name_game << std::endl;
-        std::cout << "Тип:             " <<  bookings_[0].type_game << std::endl;
-        for (const auto& booking : bookings_) {
-            std::cout << "Дата и время:    " <<  bookings_[0].date_game << " " <<  bookings_[0].time_game << std::endl;
-        }
-        std::cout << "=== Конец списка ===" << std::endl;
-        std::cout << "-------------------------------" << std::endl;
-
-    }
-
-    void Booking::PrintUpdateBooking() {
-        if (bookings_.empty()) {
-            std::cout << "Нет бронирований для обновления." << std::endl;
-            return;
-        }
-
-        std::cout << "=== Список обновленных бронирований ===" << std::endl;
-        for (const auto& booking : bookings_) {
-            std::cout << "Обновлено бронирование:" << std::endl;
-            std::cout << "Игра:            " << booking.name_game << std::endl;
-            std::cout << "Тип:             " << booking.type_game << std::endl;
-            std::cout << "С:               " << booking.current_date_game << " " << booking.current_time_game << std::endl;
-            std::cout << "На:              " << booking.date_game << " " << booking.time_game << std::endl;
-            std::cout << "-------------------------------" << std::endl;
-        }
-        std::cout << "=== Конец списка ===" << std::endl;
-    }
-
-
-
-
-
     void Booking::AddDataByInsertAndUpdate(const Client_data& client, const std::vector<Booking_data>& bookings) {
         clients_ = std::move(client);
         bookings_ = std::move(bookings);
@@ -97,7 +39,9 @@ namespace vr{
         } catch (const std::exception& e) {
             std::lock_guard<std::mutex> lock(mtxtest);
             std::cerr << operationName << " Exception: " << e.what() << std::endl;
-            Logger::getInstance().log(operationName + " Exeption: " + std::string(e.what()), "../..logs/error_transaction.log");
+            Logger::getInstance().log(operationName + " Exeption: " + std::string(e.what()) + 
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
+            "../..logs/error_transaction.log");
             throw;
         }
     }
@@ -122,7 +66,9 @@ namespace vr{
         }
         catch(const std::exception& e)
         {
-            Logger::getInstance().log(" Avalibality Exeption: " + std::string(e.what()), "../..logs/error_transaction.log");
+            Logger::getInstance().log(" Avalibality Exeption: " + std::string(e.what()) + 
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
+            "../..logs/error_transaction.log");
             return "";
         }
         
@@ -141,7 +87,9 @@ namespace vr{
         }
         catch(const std::exception& e)
         {
-            Logger::getInstance().log("Avalibality Exeption: " + std::string(e.what()), "../..logs/error_transaction.log");
+            Logger::getInstance().log("Avalibality Exeption: " + std::string(e.what()) + 
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
+            "../..logs/error_transaction.log");
             return "";
         }
         
@@ -195,16 +143,20 @@ namespace vr{
             
         } catch (const std::exception& e) {
             std::lock_guard<std::mutex> lock(mtxtest);
-            Logger::getInstance().log("Cubes Exeption: " + std::string(e.what()), "../..logs/error_transaction.log");
+            Logger::getInstance().log("Cubes Exeption: " + std::string(e.what()) + 
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
+            "../..logs/error_transaction.log");
             throw;
         }
     }
 
     void Booking::handleSQLException(const sql::SQLException& e, int attempt, int max_retries, int base_retry_delay_ms, std::shared_ptr<sql::Connection> conn) {
-        Logger::getInstance().log("Attempt " + std::to_string(attempt + 1) + " - SQLException: " + std::string(e.what()),
-        "../..logs/error_transaction.log");
-        Logger::getInstance().log("Error code: " + std::to_string(e.getErrorCode()) + ", SQLState: " + e.getSQLState(),
-        "../../logs/error_transaction.log");
+        Logger::getInstance().log("Attempt " + std::to_string(attempt + 1) + " - SQLException: " + std::string(e.what()) + 
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
+            "../..logs/error_transaction.log");
+        Logger::getInstance().log("Error code: " + std::to_string(e.getErrorCode()) + ", SQLState: " + e.getSQLState() + 
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
+            "../../logs/error_transaction.log");
 
         if (e.getErrorCode() == 1213) { // Deadlock
             if (attempt < max_retries - 1) {
