@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function  createWebSocket() {
-    const socket = new WebSocket('ws://localhost:8082/ws');
+    const socket = new WebSocket('ws://cmsvrdevelopment.ru/ws');
 
     socket.addEventListener('open', function() {
         checkAvailabilityArena(bookingButtons);
@@ -61,10 +61,8 @@ function  createWebSocket() {
     });
 
     socket.addEventListener('close', function(event) {
-        console.log('Соединение закрыто:', event.code, event.reason);
         // Автоматическое переподключение при закрытии
         setTimeout(function() {
-            console.log('Попытка переподключения к WebSocket...');
             createWebSocket();
         }, 3000); // Попытка переподключения через 3 секунды
     });

@@ -84,15 +84,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Создаем запрос через XMLHttpRequest
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:8081/addBookingOpenArena', true);
+        xhr.open('POST', 'http://cmsvrdevelopment.ru/api/addBookingOpenArena', true);
         xhr.setRequestHeader('Content-Type', 'application/json'); // Устанавливаем заголовок на JSON
 
         // Обрабатываем ответ от сервера
         xhr.onload = function () {
             if (xhr.status >= 200 && xhr.status < 300) {
                 alert('Бронирование успешно отправлено.');
-                console.log('Response data:', xhr.responseText);
-                // Вызов функции обновления после добавления
                 updateBookingContainer();
             } else {
                 alert(`Ошибка отправки бронирования: ${xhr.responseText}`);
@@ -102,7 +100,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         xhr.onerror = function () {
             alert('Ошибка сети.');
-            console.error('Network Error');
         };
 
         // Отправляем данные на сервер
@@ -122,24 +119,39 @@ function updateBookingContainer() {
     const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : '';
 
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
+    xhr.open('GET', `http://cmsvrdevelopment.ru/api/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
     xhr.setRequestHeader('Content-Type', 'application/json'); // Установите заголовок на JSON, если ваш сервер поддерживает это
 
+    // Время начала запроса
+    const startTime = Date.now();
+    const minDuration = 750; // Минимальная продолжительность анимации (в миллисекундах)
+
     xhr.onload = function () {
-        if (xhr.status >= 200 && xhr.status < 300) {
-            try {
-                const availability = JSON.parse(xhr.responseText);
-                if (typeof updateButtonsStateArena === 'function') {
-                    updateButtonsStateArena(availability, bookingButtons);
-                    hidePriceDisplay(); 
-                } else {
-                    console.error('Функция updateButtonsState не найдена');
+        const elapsedTime = Date.now() - startTime;
+
+        const handleResponse = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                    const availability = JSON.parse(xhr.responseText);
+                    if (typeof updateButtonsStateArena === 'function') {
+                        updateButtonsStateArena(availability, bookingButtons);
+                        hidePriceDisplay(); 
+                    } else {
+                        console.error('Функция updateButtonsStateArena не найдена');
+                    }
+                } catch (error) {
+                    console.error('Ошибка при обработке ответа:', error);
                 }
-            } catch (error) {
-                console.error('Ошибка при обработке ответа:', error);
+            } else {
+                console.error('Ошибка запроса доступности. Статус:', xhr.status);
             }
+        };
+
+        // Если время выполнения запроса меньше минимальной длительности, ждем оставшееся время
+        if (elapsedTime < minDuration) {
+            setTimeout(handleResponse, minDuration - elapsedTime);
         } else {
-            console.error('Ошибка запроса доступности. Статус:', xhr.status);
+            handleResponse();
         }
     };
 
@@ -149,3 +161,4 @@ function updateBookingContainer() {
 
     xhr.send();
 }
+

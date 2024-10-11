@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function createWebSocket() {
-    const socket = new WebSocket('ws://localhost:8082/ws');
+    const socket = new WebSocket('ws://cmsvrdevelopment.ru/ws');
 
     socket.addEventListener('open', function() {
         checkAvailability(bookingButtons);

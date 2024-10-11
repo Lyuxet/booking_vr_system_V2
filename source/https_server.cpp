@@ -62,7 +62,6 @@ void HttpSession::handle_add_booking_open_arena(){
     vr::ArenaBookingInsert(parsed_json, response_, pool_);
     notify_clients("New booking made in open arena!");
 
-    response_.set(http::field::content_type, "application/json");
     do_write();
 }
 void HttpSession::handle_add_booking_cubes(){
@@ -73,7 +72,6 @@ void HttpSession::handle_add_booking_cubes(){
     vr::CubesBookingInsert(parsed_json, response_, pool_);
     notify_clients("New booking made in cubes!");
 
-    response_.set(http::field::content_type, "application/json");
         
     do_write();
 }

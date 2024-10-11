@@ -20,31 +20,45 @@ export function checkAvailability(bookingButtons) {
     pacmanContainer.style.display = 'flex'; // Скрываем анимацию загрузки
 
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
+    xhr.open('GET', `http://cmsvrdevelopment.ru/api/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-    xhr.onload = function () {
-        // Возвращаем кнопки и скрываем загрузку после получения ответа
-        bookingGrid.style.display = 'grid'; // Или flex, в зависимости от вашего дизайна
-        pacmanContainer.style.display = 'none'; // Скрываем анимацию загрузки
-        if (xhr.status >= 200 && xhr.status < 300) {
-            try {
-                const availability = JSON.parse(xhr.responseText);
+    const startTime = Date.now(); // Запоминаем время начала запроса
 
-                updateButtonsStateCubes(availability, bookingButtons);
-            } catch (error) {
-                console.error('Ошибка при обработке ответа:', error);
+    xhr.onload = function () {
+        const elapsedTime = Date.now() - startTime;
+        const minDuration = 750; // Минимальная продолжительность анимации в миллисекундах
+
+        const handleResponse = () => {
+            bookingGrid.style.display = 'grid'; // Показываем сетку кнопок
+            pacmanContainer.style.display = 'none'; // Скрываем анимацию загрузки
+
+            if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                    const availability = JSON.parse(xhr.responseText);
+                    updateButtonsStateCubes(availability, bookingButtons);
+                } catch (error) {
+                    console.error('Ошибка при обработке ответа:', error);
+                }
+            } else {
+                console.error('Ошибка запроса доступности. Статус:', xhr.status);
             }
+        };
+
+        if (elapsedTime < minDuration) {
+            // Если время выполнения запроса меньше минимального времени, ждем оставшееся время
+            setTimeout(handleResponse, minDuration - elapsedTime);
         } else {
-            console.error('Ошибка запроса доступности. Статус:', xhr.status);
+            // Если время запроса достаточно, сразу обрабатываем ответ
+            handleResponse();
         }
     };
 
     xhr.onerror = function () {
-       // Вернуть кнопки и скрыть загрузку в случае ошибки сети
-       bookingGrid.style.display = 'grid';
-       pacmanContainer.style.display = 'none';
-       console.error('Ошибка сети.');
+        // Вернуть кнопки и скрыть загрузку в случае ошибки сети
+        bookingGrid.style.display = 'grid';
+        pacmanContainer.style.display = 'none';
+        console.error('Ошибка сети.');
     };
 
     xhr.send();

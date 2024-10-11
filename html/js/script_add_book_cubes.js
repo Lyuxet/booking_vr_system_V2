@@ -66,26 +66,43 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Создаем запрос через XMLHttpRequest
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:8081/addBookingCubes', true);
+        xhr.open('POST', 'http://cmsvrdevelopment.ru/api/addBookingCubes', true);
         xhr.setRequestHeader('Content-Type', 'application/json');
 
-        // Обрабатываем ответ от сервера
-        xhr.onload = function () {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                alert('Бронирование успешно отправлено.');
-                console.log('Response data:', xhr.responseText);
-                // Вызов функции обновления после добавления
-                updateBookingContainer();
+        // Время начала запроса
+        const startTime = Date.now();
+        const minDuration = 750; // Минимальная продолжительность анимации (в миллисекундах)
 
+        xhr.onload = function () {
+            const elapsedTime = Date.now() - startTime;
+
+            const handleResponse = () => {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    try {
+                        const availability = JSON.parse(xhr.responseText);
+                        if (typeof updateButtonsStateArena === 'function') {
+                            updateButtonsStateCubes(availability, bookingButtons);
+                            hidePriceDisplay(); 
+                        } else {
+                            console.error('Функция updateButtonsStateArena не найдена');
+                        }
+                    } catch (error) {
+                        console.error('Ошибка при обработке ответа:', error);
+                    }
+                } else {
+                    console.error('Ошибка запроса доступности. Статус:', xhr.status);
+                }
+            };
+
+            // Если время выполнения запроса меньше минимальной длительности, ждем оставшееся время
+            if (elapsedTime < minDuration) {
+                setTimeout(handleResponse, minDuration - elapsedTime);
             } else {
-                alert(`Ошибка отправки бронирования: ${xhr.responseText}`);
-                updateBookingContainer();
+                handleResponse();
             }
         };
-
         xhr.onerror = function () {
             alert('Ошибка сети.');
-            console.error('Network Error');
         };
 
         // Отправляем данные на сервер в формате JSON
@@ -104,7 +121,7 @@ function updateBookingContainer() {
     const namegame = 'CUBES';
 
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
+    xhr.open('GET', `http://cmsvrdevelopment.ru/api/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
 
     xhr.onload = function () {

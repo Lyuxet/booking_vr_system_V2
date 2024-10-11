@@ -21,23 +21,37 @@ export function checkAvailabilityArena(bookingButtons) {
     pacmanContainer.style.display = 'flex'; // Скрываем анимацию загрузки
 
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
+    xhr.open('GET', `http://cmsvrdevelopment.ru/api/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-    xhr.onload = function () {
-        // Возвращаем кнопки и скрываем загрузку после получения ответа
-        bookingGrid.style.display = 'grid'; // Или flex, в зависимости от вашего дизайна
-        pacmanContainer.style.display = 'none'; // Скрываем анимацию загрузки
+    const startTime = Date.now(); // Запоминаем время начала запроса
 
-        if (xhr.status >= 200 && xhr.status < 300) {
-            try {
-                const availability = JSON.parse(xhr.responseText);
-                updateButtonsStateArena(availability, bookingButtons);
-            } catch (error) {
-                console.error('Ошибка при обработке ответа:', error);
+    xhr.onload = function () {
+        const elapsedTime = Date.now() - startTime;
+        const minDuration = 750; // Минимальная продолжительность анимации в миллисекундах
+
+        const handleResponse = () => {
+            bookingGrid.style.display = 'grid'; // Показываем сетку кнопок
+            pacmanContainer.style.display = 'none'; // Скрываем анимацию загрузки
+
+            if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                    const availability = JSON.parse(xhr.responseText);
+                    updateButtonsStateArena(availability, bookingButtons);
+                } catch (error) {
+                    console.error('Ошибка при обработке ответа:', error);
+                }
+            } else {
+                console.error('Ошибка запроса доступности. Статус:', xhr.status);
             }
+        };
+
+        if (elapsedTime < minDuration) {
+            // Если время выполнения запроса меньше минимального времени, ждем оставшееся время
+            setTimeout(handleResponse, minDuration - elapsedTime);
         } else {
-            console.error('Ошибка запроса доступности. Статус:', xhr.status);
+            // Если время запроса достаточно, сразу обрабатываем ответ
+            handleResponse();
         }
     };
 
