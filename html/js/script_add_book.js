@@ -68,9 +68,14 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('Sending data:', postData);
 
         const xhr = new XMLHttpRequest();
+<<<<<<< HEAD:html/js/script_add_book.js
         const url = isCloseType 
             ? 'http://localhost:8081/addBookingOpenArena' 
             : 'http://localhost:8081/addBookingCubes';
+=======
+        xhr.open('POST', 'http://localhost:8081/addBookingOpenArena', true);
+        xhr.setRequestHeader('Content-Type', 'application/json'); // Устанавливаем заголовок на JSON
+>>>>>>> 986f3a47fbf8062dd8860f05dee3044ceaac9313:html/js/script_add_book_arena.js
 
         xhr.open('POST', url, true);
         xhr.setRequestHeader('Content-Type', 'application/json');
@@ -104,12 +109,17 @@ function updateBookingContainer() {
     const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : 'CUBES';
 
     const xhr = new XMLHttpRequest();
+<<<<<<< HEAD:html/js/script_add_book.js
     const url = placegame === 'ARENA' 
         ? `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}` 
         : `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`;
 
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+=======
+    xhr.open('GET', `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
+    xhr.setRequestHeader('Content-Type', 'application/json'); // Установите заголовок на JSON, если ваш сервер поддерживает это
+>>>>>>> 986f3a47fbf8062dd8860f05dee3044ceaac9313:html/js/script_add_book_arena.js
 
     const startTime = Date.now();
     const minDuration = 750;

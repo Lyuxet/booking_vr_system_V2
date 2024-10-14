@@ -20,12 +20,16 @@ export function checkAvailability(bookingButtons, place) {
     pacmanContainer.style.display = 'flex'; // Скрываем анимацию загрузки
 
     const xhr = new XMLHttpRequest();
+<<<<<<< HEAD:html/js/availability.js
     const url = place === 'ARENA' ? 
         `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(place)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}` :
         `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(place)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`;
 
     
     xhr.open('GET', url, true);
+=======
+    xhr.open('GET', `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
+>>>>>>> 986f3a47fbf8062dd8860f05dee3044ceaac9313:html/js/availability_arena.js
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
     const startTime = Date.now(); // Запоминаем время начала запроса

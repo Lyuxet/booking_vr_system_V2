@@ -74,6 +74,7 @@
 2024-10-12 15:15:34 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
 2024-10-12 15:17:30 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
 2024-10-12 15:19:00 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
+<<<<<<< HEAD
 2024-10-14 13:42:25 Ошибка при чтении: ��������� ���� ������������� �������� ������������ �����������(10054) в файле C:\Users\Lyuxet\projects\booking_vr\source\websocket.cpp строке 48
 2024-10-14 13:47:06 Ошибка чтения: end of stream(1) в файле C:\Users\Lyuxet\projects\booking_vr\source\https_server.cpp строке 18
 2024-10-14 14:29:21 Ошибка при чтении: End of file(2) в файле C:\Users\Lyuxet\projects\booking_vr\source\websocket.cpp строке 48
@@ -338,3 +339,5 @@
 2024-10-14 20:03:14 Ошибка при обработке сообщения: out of range [boost.json:17 at .\boost/json/impl/object.ipp:452:5 in function 'class boost::system::result<class boost::json::value const &,class boost::system::error_code> __cdecl boost::json::object::try_at(class boost::core::basic_string_view<char>) noexcept const']
 2024-10-14 20:03:25 Ошибка при обработке сообщения: out of range [boost.json:17 at .\boost/json/impl/object.ipp:452:5 in function 'class boost::system::result<class boost::json::value const &,class boost::system::error_code> __cdecl boost::json::object::try_at(class boost::core::basic_string_view<char>) noexcept const']
 2024-10-14 21:42:07 Ошибка чтения: end of stream(1) в файле C:\Users\Lyuxet\projects\booking_vr\source\https_server.cpp строке 18
+=======
+>>>>>>> 986f3a47fbf8062dd8860f05dee3044ceaac9313

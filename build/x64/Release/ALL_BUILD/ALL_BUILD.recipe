@@ -2,13 +2,13 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\Lyuxet\projects\booking_vr\build\x64\Release\ZERO_CHECK</FullPath>
+      <FullPath>C:\Users\Vovoc\project\booking_vr\build\x64\Release\ZERO_CHECK</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>C:\Users\Lyuxet\projects\booking_vr\build\Release\Booking_vr_server.exe</FullPath>
+      <FullPath>C:\Users\Vovoc\project\booking_vr\build\Release\Booking_vr_server.exe</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>C:\Users\Lyuxet\projects\booking_vr\build\x64\Release\ALL_BUILD</FullPath>
+      <FullPath>C:\Users\Vovoc\project\booking_vr\build\x64\Release\ALL_BUILD</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

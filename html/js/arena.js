@@ -8,12 +8,24 @@ import { hidePriceDisplay } from "./priceDisplay.js";
 const bookingButtons = document.querySelectorAll('.booking-button');
 let socket = null; // Глобальная переменная для WebSocket
 let storedDate = null; // Глобальная переменная для хранения даты
+<<<<<<< HEAD
 const place = 'ARENA';
 
 document.addEventListener('DOMContentLoaded', function () {
     SetDate();
     storedDate = document.getElementById('date').value;
     initializeWebSocket(place, storedDate);
+=======
+
+document.addEventListener('DOMContentLoaded', function () {
+    
+    SetDate();
+    
+    storedDate = document.getElementById('date').value;
+    var place = 'ARENA';
+    initializeWebSocket(place, storedDate);
+
+>>>>>>> 986f3a47fbf8062dd8860f05dee3044ceaac9313
     const isCloseType = document.querySelector('.booking-container-close') !== null;
 
     window.onbeforeunload = function() {
@@ -40,13 +52,26 @@ document.addEventListener('DOMContentLoaded', function () {
         const year = selectedDate.getFullYear();
         const month = ('0' + (selectedDate.getMonth() + 1)).slice(-2);
         const day = ('0' + selectedDate.getDate()).slice(-2);
+<<<<<<< HEAD
         storedDate = `${year}.${month}.${day}`;
+=======
+        storedDate = `${year}-${month}-${day}`;
+
+        console.log(storedDate);
+>>>>>>> 986f3a47fbf8062dd8860f05dee3044ceaac9313
         if (socket) {
             socket.close();
         }
         initializeWebSocket(place, storedDate);
+<<<<<<< HEAD
         updatePricesArena(selectedDate, bookingButtons);
         hidePriceDisplay();
+=======
+
+        updatePricesArena(selectedDate, bookingButtons);
+        hidePriceDisplay();
+        checkAvailabilityArena(bookingButtons);
+>>>>>>> 986f3a47fbf8062dd8860f05dee3044ceaac9313
     });
 
     const initialDate = $('#date').datepicker('getDate');
@@ -57,6 +82,7 @@ function initializeWebSocket(arena, currentDate) {
     if (socket && socket.readyState === WebSocket.OPEN) {
         return;
     }
+<<<<<<< HEAD
     socket = new WebSocket('ws://localhost:8082/ws');
     socket.addEventListener('open', function() {
         const data = JSON.stringify({ place: arena, date: currentDate });
@@ -72,6 +98,28 @@ function initializeWebSocket(arena, currentDate) {
             }, 3000);
         } 
     });
+=======
+
+    socket = new WebSocket('ws://cmsvrdevelopment.ru/ws');
+    socket.addEventListener('open', function() {
+        const data = JSON.stringify({ place: arena, date: currentDate });
+        socket.send(data);
+        checkAvailabilityArena(bookingButtons);
+    });
+
+    socket.addEventListener('close', function(event) {
+        if (event.code === 1006) {
+            setTimeout(function() {
+                if (!socket || socket.readyState !== WebSocket.OPEN) {
+                    initializeWebSocket(arena, currentDate);
+                }
+            }, 3000);
+        } else {
+            console.log(`Соединение закрыто: ${event.code}`);
+        }
+    });
+
+>>>>>>> 986f3a47fbf8062dd8860f05dee3044ceaac9313
     socket.addEventListener('message', function(event) {
         try {
             checkAvailability(bookingButtons, place);
@@ -79,19 +127,39 @@ function initializeWebSocket(arena, currentDate) {
             console.error('Ошибка при обработке сообщения:', error);
         }
     });
+<<<<<<< HEAD
+=======
+
+>>>>>>> 986f3a47fbf8062dd8860f05dee3044ceaac9313
     socket.addEventListener('error', function(error) {
         console.error('Ошибка WebSocket:', error);
     });
 }
 
+<<<<<<< HEAD
 function initializeBookingButton(button, socket, place, isCloseType) {
     button.addEventListener('click', function(event) {
         handleClick.call(this, event, place); // Используем контекст текущей кнопки
+=======
+
+function initializeBookingButton(button, socket, isCloseType) {
+    button.addEventListener('click', function() {
+        handleClickArena.call(this); // Используем контекст текущей кнопки
+
+>>>>>>> 986f3a47fbf8062dd8860f05dee3044ceaac9313
         const buttonId = this.id; // Получаем id кнопки
         const playerInput = this.querySelector('.player-input');
         const playerCount = playerInput.value;
         const bookingData = { buttonId: buttonId, players: playerCount };
 
+<<<<<<< HEAD
+=======
+        const bookingData = {
+            buttonId: buttonId,
+            players: playerCount,
+        };
+
+>>>>>>> 986f3a47fbf8062dd8860f05dee3044ceaac9313
         if (socket.readyState === WebSocket.OPEN) {
             socket.send(JSON.stringify(bookingData)); // Отправляем данные на сервер
         } else {
