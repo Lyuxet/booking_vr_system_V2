@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const month = ('0' + (selectedDate.getMonth() + 1)).slice(-2); // Добавляем ведущий ноль
         const day = ('0' + selectedDate.getDate()).slice(-2); // Добавляем ведущий ноль
         storedDate = `${year}.${month}.${day}`;
-        console.log(storedDate);
         if (socket) {
             socket.close(); // Закрываем текущее WebSocket соединение перед созданием нового
         }
@@ -74,9 +73,7 @@ function initializeWebSocket(arena, currentDate) {
                     initializeWebSocket(arena, currentDate); // Переподключение
                 }
             }, 3000); // Попытка переподключения через 3 секунды
-        } else {
-            console.log(`Соединение закрыто: ${event.code}`);
-        }
+        } 
     });
     socket.addEventListener('message', function(event) {
         try {

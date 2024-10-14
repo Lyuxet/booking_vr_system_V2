@@ -41,14 +41,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const month = ('0' + (selectedDate.getMonth() + 1)).slice(-2);
         const day = ('0' + selectedDate.getDate()).slice(-2);
         storedDate = `${year}.${month}.${day}`;
-        console.log(storedDate);
         if (socket) {
             socket.close();
         }
         initializeWebSocket(place, storedDate);
         updatePricesArena(selectedDate, bookingButtons);
         hidePriceDisplay();
-        checkAvailability(bookingButtons, place);
     });
 
     const initialDate = $('#date').datepicker('getDate');
@@ -72,9 +70,7 @@ function initializeWebSocket(arena, currentDate) {
                     initializeWebSocket(arena, currentDate);
                 }
             }, 3000);
-        } else {
-            console.log(`Соединение закрыто: ${event.code}`);
-        }
+        } 
     });
     socket.addEventListener('message', function(event) {
         try {
@@ -114,13 +110,15 @@ function initializeBookingButton(button, socket, place, isCloseType) {
         button.querySelector('.price').setAttribute('data-price', data.price);
     }
 
-    playerInput.setAttribute('maxlength', '2');
-    restrictNonNumericInput(playerInput);
+    if (!isCloseType){
+        playerInput.setAttribute('maxlength', '2');
+        restrictNonNumericInput(playerInput);
+        playerInput.addEventListener('input', function(event) {
+            handleInput.call(this, event, place); // Используем контекст текущей кнопки
+        });
+    }
 
-    playerInput.addEventListener('input', function(event) {
-        console.log(place);
-        handleInput.call(this, event, place); // Используем контекст текущей кнопки
-    });
+    
 }
 
 function restrictNonNumericInput(input) {

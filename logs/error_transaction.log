@@ -1,0 +1,4 @@
+2024-10-14 18:33:01 Ошибка отката транзакции в файле C:\Users\Lyuxet\projects\booking_vr\source\Connect_to_DB.cpp на строке 119
+2024-10-14 18:33:01 Exception: Unknown game type.
+2024-10-14 18:33:01 Cubes Exeption: Unknown game type. в файле C:\Users\Lyuxet\projects\booking_vr\source\booking_vr.cpp строке 148
+2024-10-14 18:33:01 Error: Unknown game type. в файле C:\Users\Lyuxet\projects\booking_vr\source\requests_handler.cpp строке 176

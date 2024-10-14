@@ -6,23 +6,25 @@ const pacmanContainer = document.querySelector('.pac-man-container');
 export function checkAvailability(bookingButtons, place) {
     // Скрываем кнопки и показываем элемент загрузки
     const date = document.getElementById('date').value;
-    const placegame = place.toUpperCase(); // Указываем место, например 'ARENA' или 'CUBES'
     
-    // Извлекаем название игры
-    const namegame = placegame; // Можно использовать место как название игры, или изменить это в зависимости от логики
+    
+    const gameTitleElement = document.querySelector('.navigation h1');
+    const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : 'CUBES';
     if (!date || !namegame) {
         console.error('Заполните все поля.');
         return;
     }
+
 
     bookingGrid.style.display = 'none'; // Или flex, в зависимости от вашего дизайна
     pacmanContainer.style.display = 'flex'; // Скрываем анимацию загрузки
 
     const xhr = new XMLHttpRequest();
     const url = place === 'ARENA' ? 
-        `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}` :
-        `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`;
+        `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(place)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}` :
+        `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(place)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`;
 
+    
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
@@ -39,7 +41,7 @@ export function checkAvailability(bookingButtons, place) {
             if (xhr.status >= 200 && xhr.status < 300) {
                 try {
                     const availability = JSON.parse(xhr.responseText);
-                    updateButtonsState(availability, bookingButtons, place.toUpperCase());
+                    updateButtonsState(availability, bookingButtons, place);
                 } catch (error) {
                     console.error('Ошибка при обработке ответа:', error);
                 }

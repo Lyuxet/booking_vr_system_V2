@@ -7,10 +7,10 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error('Кнопка "Добавить" не найдена');
         return;
     }
-
-    addButton.addEventListener('click', function (event) {
-        event.preventDefault(); // Предотвращаем стандартное поведение кнопки
     
+    addButton.addEventListener('click', function (event) {
+        event.preventDefault();
+        
         const selectedButtons = document.querySelectorAll('.booking-button.selected');
         const firstname = document.getElementById('firstName').value;
         const lastname = document.getElementById('lastName').value;
@@ -18,76 +18,63 @@ document.addEventListener('DOMContentLoaded', function () {
         const email = document.getElementById('email').value;
         const date = document.getElementById('date').value;
         const comment = document.getElementById('comment').value;
-
+        
         if (!firstname || !phone || !email) {
             alert("Пожалуйста, заполните все обязательные поля.");
             return;
         }
-
+        
         if (selectedButtons.length === 0) {
             alert('Пожалуйста, выберите хотя бы одно время бронирования.');
             return;
         }
 
-        // Извлекаем название игры
         const gameTitleElement = document.querySelector('.navigation h1');
-        const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : '';
-
-        // Определяем тип игры по наличию контейнера
+        const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : 'CUBES';
         const isCloseType = document.querySelector('.booking-container-close') !== null;
-
+        
         let selectedTimes = [];
         let selectedPlayersCount = [];
         let selectedPrice = [];
-
-        if (!isCloseType) {
-            // Для типа OPEN
-            selectedButtons.forEach(function (button) {
-                const time = button.querySelector('.time').textContent;
-                selectedTimes.push(time);
-
-                const priceButton = parseInt(button.querySelector('.price').textContent, 10);
+        
+        selectedButtons.forEach(function (button) {
+            const time = button.querySelector('.time').textContent;
+            selectedTimes.push(time);
+            const priceButton = parseInt(button.querySelector('.price').textContent, 10);
+            if (!isCloseType) {
                 const playersCount = parseInt(button.querySelector('.player-input').value, 10);
                 selectedPlayersCount.push(playersCount);
                 const price = priceButton * playersCount;
                 selectedPrice.push(price);
-            });
-        } else {
-            // Для типа CLOSE количество игроков всегда 10
-            selectedButtons.forEach(function (button) {
-                const time = button.querySelector('.time').textContent;
-                const priceButton = parseInt(button.querySelector('.price').textContent, 10);
-                selectedTimes.push(time);
+            } else {
+                selectedPlayersCount.push(10);
+                selectedPrice.push(priceButton);
+            }
+        });
 
-                selectedPlayersCount.push(10); // Количество игроков всегда 10
-                selectedPrice.push(priceButton); // Фиксированная стоимость
-            });
+        let placegame = 'ARENA';
+        if (document.querySelector('.booking-container-close') == null && document.querySelector('.booking-container-open') == null){
+            placegame = 'CUBES';
         }
 
-        // Создаем объект данных для отправки в формате JSON
+
         const postData = {
-            firstname,
-            lastname,
-            phone,
-            email,
-            placegame: 'ARENA',
+            firstname, lastname, phone, email, placegame,
             typegame: isCloseType ? 'CLOSE' : 'OPEN',
-            namegame,
-            date,
-            times: selectedTimes,
-            playerCount: selectedPlayersCount,
-            price: selectedPrice,
-            comment
+            namegame, date, times: selectedTimes,
+            playerCount: selectedPlayersCount, price: selectedPrice, comment
         };
 
         console.log('Sending data:', postData);
 
-        // Создаем запрос через XMLHttpRequest
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:8081/addBookingOpenArena', true);
-        xhr.setRequestHeader('Content-Type', 'application/json'); // Устанавливаем заголовок на JSON
+        const url = isCloseType 
+            ? 'http://localhost:8081/addBookingOpenArena' 
+            : 'http://localhost:8081/addBookingCubes';
 
-        // Обрабатываем ответ от сервера
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        
         xhr.onload = function () {
             if (xhr.status >= 200 && xhr.status < 300) {
                 alert('Бронирование успешно отправлено.');
@@ -97,47 +84,47 @@ document.addEventListener('DOMContentLoaded', function () {
                 updateBookingContainer();
             }
         };
-
+        
         xhr.onerror = function () {
             alert('Ошибка сети.');
         };
 
-        // Отправляем данные на сервер
-        xhr.send(JSON.stringify(postData)); // Сериализуем объект в JSON
+        xhr.send(JSON.stringify(postData));
     });
 });
 
-// Функция обновления контейнера бронирования
 function updateBookingContainer() {
-    // Получаем данные о доступных слотах
     const date = document.getElementById('date').value;
-    const placegame = 'ARENA';
+    let placegame = 'ARENA';
+        if (document.querySelector('.booking-container-close') == null && document.querySelector('.booking-container-open') == null){
+            placegame = 'CUBES';
+    }
     const bookingButtons = document.querySelectorAll('.booking-button');
-
-    // Извлекаем название игры
     const gameTitleElement = document.querySelector('.navigation h1');
-    const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : '';
+    const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : 'CUBES';
 
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
-    xhr.setRequestHeader('Content-Type', 'application/json'); // Установите заголовок на JSON, если ваш сервер поддерживает это
+    const url = placegame === 'ARENA' 
+        ? `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}` 
+        : `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`;
 
-    // Время начала запроса
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
     const startTime = Date.now();
-    const minDuration = 750; // Минимальная продолжительность анимации (в миллисекундах)
+    const minDuration = 750;
 
     xhr.onload = function () {
         const elapsedTime = Date.now() - startTime;
-
         const handleResponse = () => {
             if (xhr.status >= 200 && xhr.status < 300) {
                 try {
                     const availability = JSON.parse(xhr.responseText);
-                    if (typeof updateButtonsStateArena === 'function') {
-                        updateButtonsState(availability, bookingButtons, 'ARENA');
-                        hidePriceDisplay(); 
+                    if (typeof updateButtonsState === 'function') {
+                        updateButtonsState(availability, bookingButtons, placegame);
+                        hidePriceDisplay();
                     } else {
-                        console.error('Функция updateButtonsStateArena не найдена');
+                        console.error('Функция updateButtonsState не найдена');
                     }
                 } catch (error) {
                     console.error('Ошибка при обработке ответа:', error);
@@ -147,7 +134,6 @@ function updateBookingContainer() {
             }
         };
 
-        // Если время выполнения запроса меньше минимальной длительности, ждем оставшееся время
         if (elapsedTime < minDuration) {
             setTimeout(handleResponse, minDuration - elapsedTime);
         } else {
@@ -161,4 +147,3 @@ function updateBookingContainer() {
 
     xhr.send();
 }
-
