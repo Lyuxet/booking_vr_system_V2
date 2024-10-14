@@ -41,7 +41,7 @@ namespace vr{
             std::cerr << operationName << " Exception: " << e.what() << std::endl;
             Logger::getInstance().log(operationName + " Exeption: " + std::string(e.what()) + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-            "../..logs/error_transaction.log");
+            "../../logs/error_transaction.log");
             throw;
         }
     }
@@ -68,7 +68,7 @@ namespace vr{
         {
             Logger::getInstance().log(" Avalibality Exeption: " + std::string(e.what()) + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-            "../..logs/error_transaction.log");
+            "../../logs/error_transaction.log");
             return "";
         }
         
@@ -89,7 +89,7 @@ namespace vr{
         {
             Logger::getInstance().log("Avalibality Exeption: " + std::string(e.what()) + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-            "../..logs/error_transaction.log");
+            "../../logs/error_transaction.log");
             return "";
         }
         
@@ -145,7 +145,7 @@ namespace vr{
             std::lock_guard<std::mutex> lock(mtxtest);
             Logger::getInstance().log("Cubes Exeption: " + std::string(e.what()) + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-            "../..logs/error_transaction.log");
+            "../../logs/error_transaction.log");
             throw;
         }
     }
@@ -153,7 +153,7 @@ namespace vr{
     void Booking::handleSQLException(const sql::SQLException& e, int attempt, int max_retries, int base_retry_delay_ms, std::shared_ptr<sql::Connection> conn) {
         Logger::getInstance().log("Attempt " + std::to_string(attempt + 1) + " - SQLException: " + std::string(e.what()) + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
-            "../..logs/error_transaction.log");
+            "../../logs/error_transaction.log");
         Logger::getInstance().log("Error code: " + std::to_string(e.getErrorCode()) + ", SQLState: " + e.getSQLState() + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
             "../../logs/error_transaction.log");
@@ -175,7 +175,7 @@ namespace vr{
 
     void Booking::handleStdException(const std::exception& e, std::shared_ptr<sql::Connection> conn) {
         std::cerr << "Exception: " << e.what() << std::endl;
-        Logger::getInstance().log("Exception: " + std::string(e.what()), "../..logs/error_transaction.log");
+        Logger::getInstance().log("Exception: " + std::string(e.what()), "../../logs/error_transaction.log");
         conn->rollback();
         throw;
     }

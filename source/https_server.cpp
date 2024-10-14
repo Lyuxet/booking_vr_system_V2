@@ -27,10 +27,7 @@ void HttpSession::on_read(beast::error_code ec, std::size_t bytes_transferred){
     }
 
     // Обработка других методов
-    if (request_.method() == http::verb::get && request_.target() == "/ws") {
-        // Если запрос на WebSocket, начинаем соединение
-        handle_websocket_connection();
-    } else if (request_.method() == http::verb::post && request_.target() == "/addBookingOpenArena") {
+    if (request_.method() == http::verb::post && request_.target() == "/addBookingOpenArena") {
         handle_add_booking_open_arena();
     } else if (request_.method() == http::verb::post && request_.target() == "/addBookingCubes") {
         handle_add_booking_cubes();
@@ -41,11 +38,6 @@ void HttpSession::on_read(beast::error_code ec, std::size_t bytes_transferred){
     } else {
         handle_not_found();
     }
-}
-void HttpSession::handle_websocket_connection(){
-    auto ws_session = std::make_shared<WebSocketSession>(std::move(socket_), sessions_);
-    ws_session->start();
-    sessions_.insert(ws_session); 
 }
 void HttpSession::handle_options(){
     response_.result(http::status::no_content);
@@ -60,7 +52,9 @@ void HttpSession::handle_add_booking_open_arena(){
     auto parsed_json = json::parse(request_.body());
 
     vr::ArenaBookingInsert(parsed_json, response_, pool_);
-    notify_clients("New booking made in open arena!");
+    std::string place_game = parsed_json.at("placegame").as_string().c_str();
+    std::string date_game = parsed_json.at("date").as_string().c_str();
+    notify_clients("New booking made in open arena!", place_game, date_game);
 
     do_write();
 }
@@ -70,14 +64,19 @@ void HttpSession::handle_add_booking_cubes(){
     auto parsed_json = json::parse(request_.body());
 
     vr::CubesBookingInsert(parsed_json, response_, pool_);
-    notify_clients("New booking made in cubes!");
+    std::string place_game = parsed_json.at("placegame").as_string().c_str();
+    std::string date_game = parsed_json.at("date").as_string().c_str();
+    notify_clients("New booking made in open arena!", place_game, date_game);
 
         
     do_write();
 }
-void HttpSession::notify_clients(const std::string& message){
+void HttpSession::notify_clients(const std::string& message, 
+                                const std::string& place_game, const std::string& date_game){
     for (const auto& session : sessions_) {
-        session->send(message);
+        if (session->GetDate() == date_game && session->GetPlace() == place_game){
+            session->send(message);
+        }
     }
 }
 void HttpSession::handle_get_booking_cubes(){

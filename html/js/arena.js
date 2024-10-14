@@ -6,50 +6,82 @@ import { button_data_open_arena, button_data_close_arena } from "./button_data.j
 import { hidePriceDisplay } from "./priceDisplay.js";
 
 const bookingButtons = document.querySelectorAll('.booking-button');
-
+let socket = null; // Глобальная переменная для WebSocket
+let storedDate = null; // Глобальная переменная для хранения даты
 
 document.addEventListener('DOMContentLoaded', function () {
-    let socket = createWebSocket();
+    
     SetDate();
+    
+    storedDate = document.getElementById('date').value;
+    var place = 'ARENA';
+    initializeWebSocket(place, storedDate);
+
     const isCloseType = document.querySelector('.booking-container-close') !== null;
 
     window.onbeforeunload = function() {
         if (socket) {
-            socket.close(); // Закрываем соединение перед уходом со страницы
+            socket.close();
         }
     };
 
-    // Обработчик события изменения видимости страницы
     document.addEventListener('visibilitychange', function() {
         if (document.visibilityState === 'visible' && socket.readyState !== WebSocket.OPEN) {
-            console.log('Страница активна, восстанавливаем соединение WebSocket...');
-            socket = createWebSocket(); // Переподключаемся
+            if (socket) {
+                socket.close();
+            }
+            initializeWebSocket(place, storedDate);
         }
     });
 
-
-    // Инициализация кнопок
     bookingButtons.forEach(button => {
         initializeBookingButton(button, socket, isCloseType);
     });
 
-    // Обновляем цены и состояния кнопок при изменении даты
     $('#date').on('change', function () {
         const selectedDate = $('#date').datepicker('getDate');
-        updatePricesArena(selectedDate, bookingButtons); // Обновление цены
+        const year = selectedDate.getFullYear();
+        const month = ('0' + (selectedDate.getMonth() + 1)).slice(-2);
+        const day = ('0' + selectedDate.getDate()).slice(-2);
+        storedDate = `${year}-${month}-${day}`;
+
+        console.log(storedDate);
+        if (socket) {
+            socket.close();
+        }
+        initializeWebSocket(place, storedDate);
+
+        updatePricesArena(selectedDate, bookingButtons);
         hidePriceDisplay();
-        checkAvailabilityArena(bookingButtons); // Проверка доступности мест
+        checkAvailabilityArena(bookingButtons);
     });
 
     const initialDate = $('#date').datepicker('getDate');
-    updatePricesArena(initialDate, bookingButtons); // Обновление цены для начальной даты
+    updatePricesArena(initialDate, bookingButtons);
 });
 
-function  createWebSocket() {
-    const socket = new WebSocket('ws://cmsvrdevelopment.ru/ws');
+function initializeWebSocket(arena, currentDate) {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        return;
+    }
 
+    socket = new WebSocket('ws://cmsvrdevelopment.ru/ws');
     socket.addEventListener('open', function() {
+        const data = JSON.stringify({ place: arena, date: currentDate });
+        socket.send(data);
         checkAvailabilityArena(bookingButtons);
+    });
+
+    socket.addEventListener('close', function(event) {
+        if (event.code === 1006) {
+            setTimeout(function() {
+                if (!socket || socket.readyState !== WebSocket.OPEN) {
+                    initializeWebSocket(arena, currentDate);
+                }
+            }, 3000);
+        } else {
+            console.log(`Соединение закрыто: ${event.code}`);
+        }
     });
 
     socket.addEventListener('message', function(event) {
@@ -60,19 +92,11 @@ function  createWebSocket() {
         }
     });
 
-    socket.addEventListener('close', function(event) {
-        // Автоматическое переподключение при закрытии
-        setTimeout(function() {
-            createWebSocket();
-        }, 3000); // Попытка переподключения через 3 секунды
-    });
-
     socket.addEventListener('error', function(error) {
         console.error('Ошибка WebSocket:', error);
     });
-
-    return socket;
 }
+
 
 function initializeBookingButton(button, socket, isCloseType) {
     button.addEventListener('click', function() {
@@ -87,7 +111,11 @@ function initializeBookingButton(button, socket, isCloseType) {
             players: playerCount,
         };
 
-        socket.send(JSON.stringify(bookingData)); // Отправляем данные на сервер
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify(bookingData)); // Отправляем данные на сервер
+        } else {
+            console.warn('WebSocket не открыт. Не удается отправить данные.');
+        }
     });
 
     const buttonId = button.id;
