@@ -35,11 +35,11 @@ public:
 private:
     void do_read();
     void on_read(beast::error_code ec, std::size_t bytes_transferred);
-    void handle_websocket_connection();
     void handle_options();
     void handle_add_booking_open_arena();
     void handle_add_booking_cubes();
-    void notify_clients(const std::string& message);
+    void notify_clients(const std::string& message, 
+                                const std::string& place_game, const std::string& date_game);
     void handle_get_booking_cubes();
     void handle_get_booking_open_arena();
     void handle_not_found();

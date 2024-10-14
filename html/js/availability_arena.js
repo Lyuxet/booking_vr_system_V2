@@ -21,7 +21,7 @@ export function checkAvailabilityArena(bookingButtons) {
     pacmanContainer.style.display = 'flex'; // Скрываем анимацию загрузки
 
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `http://cmsvrdevelopment.ru/api/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
+    xhr.open('GET', `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
     const startTime = Date.now(); // Запоминаем время начала запроса

@@ -28,6 +28,10 @@ public:
     explicit WebSocketSession(tcp::socket socket, std::set<std::shared_ptr<WebSocketSession>>& sessions);
     void start();
     void send(const std::string& message);
+    std::string GetPlace();
+    std::string GetDate();
+    void UpdateGameInfo(const std::string& place, const std::string& date); // Новый метод для обновления данных
+
 private:
     void on_accept(beast::error_code ec);
     void do_read();
@@ -35,9 +39,10 @@ private:
     void on_write(beast::error_code ec, std::size_t);
     void close_session();
 
-
     websocket::stream<tcp::socket> ws_;
     beast::flat_buffer buffer_;
+    std::string place_game_;
+    std::string date_game_;
     std::set<std::shared_ptr<WebSocketSession>>& sessions_;
 };
 

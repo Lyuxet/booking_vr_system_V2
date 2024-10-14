@@ -2,7 +2,6 @@
 #include "Connect_to_DB.h"
 #include <memory>
 #include <string>
-#include <nlohmann/json.hpp>
 
 
 namespace vr{

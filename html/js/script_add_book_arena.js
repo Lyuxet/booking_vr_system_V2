@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Создаем запрос через XMLHttpRequest
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://cmsvrdevelopment.ru/api/addBookingOpenArena', true);
+        xhr.open('POST', 'http://localhost:8081/addBookingOpenArena', true);
         xhr.setRequestHeader('Content-Type', 'application/json'); // Устанавливаем заголовок на JSON
 
         // Обрабатываем ответ от сервера
@@ -119,7 +119,7 @@ function updateBookingContainer() {
     const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : '';
 
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `http://cmsvrdevelopment.ru/api/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
+    xhr.open('GET', `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
     xhr.setRequestHeader('Content-Type', 'application/json'); // Установите заголовок на JSON, если ваш сервер поддерживает это
 
     // Время начала запроса

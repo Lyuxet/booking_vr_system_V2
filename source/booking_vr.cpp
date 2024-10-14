@@ -1,5 +1,6 @@
 #include "booking_vr.h"
 #include "logger.h"
+#include <boost/json.hpp>
 #include <cppconn/prepared_statement.h>
 #include <cppconn/exception.h>
 #include <iostream>
@@ -41,7 +42,7 @@ namespace vr{
             std::cerr << operationName << " Exception: " << e.what() << std::endl;
             Logger::getInstance().log(operationName + " Exeption: " + std::string(e.what()) + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-            "../..logs/error_transaction.log");
+            "../../logs/error_transaction.log");
             throw;
         }
     }
@@ -68,7 +69,7 @@ namespace vr{
         {
             Logger::getInstance().log(" Avalibality Exeption: " + std::string(e.what()) + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-            "../..logs/error_transaction.log");
+            "../../logs/error_transaction.log");
             return "";
         }
         
@@ -89,7 +90,7 @@ namespace vr{
         {
             Logger::getInstance().log("Avalibality Exeption: " + std::string(e.what()) + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-            "../..logs/error_transaction.log");
+            "../../logs/error_transaction.log");
             return "";
         }
         
@@ -145,7 +146,7 @@ namespace vr{
             std::lock_guard<std::mutex> lock(mtxtest);
             Logger::getInstance().log("Cubes Exeption: " + std::string(e.what()) + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-            "../..logs/error_transaction.log");
+            "../../logs/error_transaction.log");
             throw;
         }
     }
@@ -153,7 +154,7 @@ namespace vr{
     void Booking::handleSQLException(const sql::SQLException& e, int attempt, int max_retries, int base_retry_delay_ms, std::shared_ptr<sql::Connection> conn) {
         Logger::getInstance().log("Attempt " + std::to_string(attempt + 1) + " - SQLException: " + std::string(e.what()) + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
-            "../..logs/error_transaction.log");
+            "../../logs/error_transaction.log");
         Logger::getInstance().log("Error code: " + std::to_string(e.getErrorCode()) + ", SQLState: " + e.getSQLState() + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
             "../../logs/error_transaction.log");
@@ -175,7 +176,7 @@ namespace vr{
 
     void Booking::handleStdException(const std::exception& e, std::shared_ptr<sql::Connection> conn) {
         std::cerr << "Exception: " << e.what() << std::endl;
-        Logger::getInstance().log("Exception: " + std::string(e.what()), "../..logs/error_transaction.log");
+        Logger::getInstance().log("Exception: " + std::string(e.what()), "../../logs/error_transaction.log");
         conn->rollback();
         throw;
     }
@@ -529,12 +530,12 @@ namespace vr{
                 std::unique_ptr<sql::ResultSet> resSet(pstmtCheckAvailability->executeQuery());
 
                 // Создаем JSON объект для хранения результатов
-                nlohmann::json jsonResponse;
+                boost::json::array jsonResponse;
 
                 // Перебираем результаты и добавляем их в JSON массив
                 while (resSet->next()) {
-                    nlohmann::json gameInfo;
-                    gameInfo["time_game"] = resSet->getString("time_game");
+                    boost::json::object gameInfo;
+                    gameInfo["time_game"] = std::string(resSet->getString("time_game"));
                     gameInfo["total_players"] = resSet->getInt("total_players");
                     gameInfo["available_slots"] = resSet->getInt("available_slots");
 
@@ -543,7 +544,7 @@ namespace vr{
                 }
 
                 // Преобразуем JSON в строку
-                response = jsonResponse.dump();
+                 response = boost::json::serialize(jsonResponse);
                 conn->commit();  // Завершаем транзакцию
                 return;          // Успешный выход из функции
 
@@ -585,12 +586,12 @@ namespace vr{
                 std::unique_ptr<sql::ResultSet> resSet(pstmtCheckAvailability->executeQuery());
 
                 // Создаем JSON объект для хранения результатов
-                nlohmann::json jsonResponse;
+                boost::json::array jsonResponse;
 
                 // Перебираем результаты и добавляем их в JSON массив
                 while (resSet->next()) {
-                    nlohmann::json gameInfo;
-                    gameInfo["time_game"] = resSet->getString("time_game");
+                    boost::json::object gameInfo;
+                    gameInfo["time_game"] = std::string(resSet->getString("time_game"));
                     gameInfo["total_players"] = resSet->getInt("total_players");
                     gameInfo["available_slots"] = resSet->getInt("available_slots");
 
@@ -599,7 +600,7 @@ namespace vr{
                 }
 
                 // Преобразуем JSON в строку
-                response = jsonResponse.dump();
+                response = boost::json::serialize(jsonResponse);
                 conn->commit();  // Завершаем транзакцию
                 return;          // Успешный выход из функции
 
