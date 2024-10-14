@@ -1,4 +1,4 @@
-import { updateButtonsStateCubes } from "./buttons_cubes.js";
+import { updateButtonsState } from "./buttons.js";
 import { hidePriceDisplay } from "./priceDisplay.js";
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -69,44 +69,23 @@ document.addEventListener('DOMContentLoaded', function () {
         xhr.open('POST', 'http://cmsvrdevelopment.ru/api/addBookingCubes', true);
         xhr.setRequestHeader('Content-Type', 'application/json');
 
-        // Время начала запроса
-        const startTime = Date.now();
-        const minDuration = 750; // Минимальная продолжительность анимации (в миллисекундах)
-
+        // Обрабатываем ответ от сервера
         xhr.onload = function () {
-            const elapsedTime = Date.now() - startTime;
-
-            const handleResponse = () => {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    try {
-                        const availability = JSON.parse(xhr.responseText);
-                        if (typeof updateButtonsStateArena === 'function') {
-                            updateButtonsStateCubes(availability, bookingButtons);
-                            hidePriceDisplay(); 
-                        } else {
-                            console.error('Функция updateButtonsStateArena не найдена');
-                        }
-                    } catch (error) {
-                        console.error('Ошибка при обработке ответа:', error);
-                    }
-                } else {
-                    console.error('Ошибка запроса доступности. Статус:', xhr.status);
-                }
-            };
-
-            // Если время выполнения запроса меньше минимальной длительности, ждем оставшееся время
-            if (elapsedTime < minDuration) {
-                setTimeout(handleResponse, minDuration - elapsedTime);
+            if (xhr.status >= 200 && xhr.status < 300) {
+                alert('Бронирование успешно отправлено.');
+                updateBookingContainer();
             } else {
-                handleResponse();
+                alert(`Ошибка отправки бронирования: ${xhr.responseText}`);
+                updateBookingContainer();
             }
         };
+
         xhr.onerror = function () {
             alert('Ошибка сети.');
         };
 
-        // Отправляем данные на сервер в формате JSON
-        xhr.send(JSON.stringify(postData));
+        // Отправляем данные на сервер
+        xhr.send(JSON.stringify(postData)); // Сериализуем объект в JSON
     });
 
 });
@@ -129,7 +108,7 @@ function updateBookingContainer() {
             try {
                 const availability = JSON.parse(xhr.responseText);
                 if (typeof updateButtonsStateCubes === 'function') {
-                    updateButtonsStateCubes(availability, bookingButtons);
+                    updateButtonsState(availability, bookingButtons, "CUBES");
                     hidePriceDisplay();
                 } else {
                     console.error('Функция updateButtonsState не найдена');

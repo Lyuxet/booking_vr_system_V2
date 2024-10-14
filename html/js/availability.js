@@ -1,16 +1,15 @@
-import { updateButtonsStateCubes } from "./buttons_cubes.js";
+import { updateButtonsState } from "./buttons.js";
 
 const bookingGrid = document.querySelector('.booking-grid');
 const pacmanContainer = document.querySelector('.pac-man-container');
 
-
-export function checkAvailability(bookingButtons) {
-    var date = document.getElementById('date').value;
-    var placegame = 'CUBES';
-    // Проверяем URL и задаем значение для namegame в зависимости от пути файла
+export function checkAvailability(bookingButtons, place) {
+    // Скрываем кнопки и показываем элемент загрузки
+    const date = document.getElementById('date').value;
+    const placegame = place.toUpperCase(); // Указываем место, например 'ARENA' или 'CUBES'
+    
     // Извлекаем название игры
-    const namegame = 'CUBES';
-
+    const namegame = placegame; // Можно использовать место как название игры, или изменить это в зависимости от логики
     if (!date || !namegame) {
         console.error('Заполните все поля.');
         return;
@@ -20,7 +19,11 @@ export function checkAvailability(bookingButtons) {
     pacmanContainer.style.display = 'flex'; // Скрываем анимацию загрузки
 
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
+    const url = place === 'ARENA' ? 
+        `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}` :
+        `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`;
+
+    xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
     const startTime = Date.now(); // Запоминаем время начала запроса
@@ -36,7 +39,7 @@ export function checkAvailability(bookingButtons) {
             if (xhr.status >= 200 && xhr.status < 300) {
                 try {
                     const availability = JSON.parse(xhr.responseText);
-                    updateButtonsStateCubes(availability, bookingButtons);
+                    updateButtonsState(availability, bookingButtons, place.toUpperCase());
                 } catch (error) {
                     console.error('Ошибка при обработке ответа:', error);
                 }
