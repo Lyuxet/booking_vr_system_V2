@@ -11,7 +11,7 @@ export const button_data_open_arena = {
     button20: { time: "20:15 - 21:00", price: 1600 },
     button21: { time: "21:15 - 22:00", price: 1600 },
     button22: { time: "22:15 - 23:00", price: 1600 },
-    // Добавьте больше данных по мере необходимости
+   
 };
 
 export const button_data_close_arena = {
@@ -27,7 +27,7 @@ export const button_data_close_arena = {
     button20: { time: "20:15 - 21:00", price: 15000 },
     button21: { time: "21:15 - 22:00", price: 15000 },
     button22: { time: "22:15 - 23:00", price: 15000 },
-    // Добавьте больше данных по мере необходимости
+    
 };
 
 export const button_cubes = {

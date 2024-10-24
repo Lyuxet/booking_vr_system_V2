@@ -2,6 +2,7 @@
 #include "Connect_to_DB.h"
 #include <memory>
 #include <string>
+#include <unordered_map>
 
 
 namespace vr{
@@ -107,7 +108,7 @@ private:
     // Базовый класс для управления бронированиями
     class Booking {
     public:
-        Booking(ConnectionPool& pool) : pool_(pool) {}
+        Booking(ConnectionPool& pool) : pool_(pool) { gameTables = LoadGameTables("../../games/games.conf");}
         virtual ~Booking() = default;
 
         void AddDataByCheckAvailability(const AvailabilityData& data);
@@ -156,6 +157,8 @@ private:
         }
 
     private:
+        std::unordered_map<std::string, std::string> gameTables;
+        std::unordered_map<std::string, std::string> LoadGameTables(const std::string& filename);
         std::string urlEncode(const std::string &value);
         bool checkAvailableSlots(std::shared_ptr<sql::Connection> conn, const Booking_data& booking);
         void insertClient(std::shared_ptr<sql::Connection> conn);

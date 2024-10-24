@@ -1,32 +1,35 @@
-html {
-  background-color: black;
-  background-image: url(../meshBackGroundNew.png);
-  min-height: 100%; 
-  background-size: cover;
-  display: grid;
-  justify-content: center;
-  align-items: center;
+html {  
+  background-color: black;  
+  background-image: linear-gradient(to bottom, black, transparent 20%, transparent 80%, black), url(../meshBackGroundNew.png);  
+  min-height: 100%;     
+  background-size: cover;  
+  display: grid;  
+  justify-content: center;  
+  align-items: center;  
+  background-repeat: no-repeat;
 }
 
 .links label {
-  font-size: 28px; /* Укажите нужный размер шрифта */
-  font-weight: bold; /* (Опционально) Сделать шрифт жирным */
+  font-family: Akzidenz-Grotesk Pro; 
+  font-size: 28px;
+  font-weight: bold;
 }
 
-  
 input, textarea {
+  font-family: Akzidenz-Grotesk Pro; 
   color: #fff;
   border: 1px solid #fff;
   border-radius: 24px;
-  
   background: #0c0c0c;
 }
 
-input[name="date"]{
+input[name="date"] {
+  font-family: Akzidenz-Grotesk Pro; 
   width: 30%;
 }
 
 input[type="text"], input[type="email"], input[type="tel"], textarea {
+  font-family: Akzidenz-Grotesk Pro; 
   text-align: center;
 }
 
@@ -38,14 +41,14 @@ input {
 textarea {
   width: 576px;
   height: 88px;
-  padding: 8px; 
-  box-sizing: border-box; 
+  padding: 8px;
+  box-sizing: border-box;
   margin-bottom: 32px;
   resize: none;
 }
-  
+
 label {
-  font-family: var(--font-family);
+  font-family: Akzidenz-Grotesk Pro; 
   font-weight: 400;
   font-size: 19px;
   text-align: center;
@@ -53,18 +56,88 @@ label {
   display: grid;
   margin: 8px;
 }
-  
 
 textarea[name="comment"] {
-  color: #fff; 
-  background: #0c0c0c; 
+  color: #fff;
+  background: #0c0c0c;
   border: 1px solid #fff;
   border-radius: 24px;
   text-align: left;
+  margin-bottom: 0px;
 }
-  
+
 .ui-datepicker {
   z-index: 1000;
   position: absolute;
 }
-  
+
+input[name="checkbox"] {
+  font-family: Akzidenz-Grotesk Pro; 
+  width: 20px;
+  height: 33px;
+}
+
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.underline-text {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+
+
+.custom-checkbox input {
+  font-family: Akzidenz-Grotesk Pro; 
+  width: 20px;
+  height: 20px;
+  appearance: none;
+  background: #0c0c0c;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  position: relative;
+}
+
+.custom-checkbox input:checked::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  background-color: #a707dc;
+  border-radius: 2px;
+}
+
+.custom-checkbox label {
+  font-family: Akzidenz-Grotesk Pro; 
+  margin-left: 8px;
+  color: #fff;
+  font-size: 19px;
+}
+
+.checkbox-text {
+  font-family: Akzidenz-Grotesk Pro; 
+  margin-left: 10px;
+  color: white;
+}
+
+.checkbox-text:hover {
+  color: #a707dc;
+}
+
+.agreement-table {
+  width: 576px;
+  border-radius: 24px;
+  font-size: 22px;
+  margin-top: 16px;
+  margin-bottom: 24px;
+}
+
+.agreement-table td {
+  padding: 8px;
+  vertical-align: middle;
+}

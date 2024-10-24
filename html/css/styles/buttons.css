@@ -6,6 +6,7 @@
   transition: all 0.4s ease;
   border: 2px solid transparent;
   color: white;
+  font-family: Akzidenz-Grotesk Pro; 
   font-size: 19px;
   z-index: 1;
   position: relative;
@@ -99,7 +100,7 @@
     padding: 8px 30px;
     background: #a707dc;
     border-radius: 16px;
-    font-family: var(--font-family);  
+    font-family: Akzidenz-Grotesk Pro; 
     font-weight: 400;
     font-size: calc(1rem + 0.5vw);
     color: #fff;
@@ -107,12 +108,30 @@
     cursor: pointer;
     transition: all 0.4s ease;
     width: 576px;
-    box-shadow: 0 0 20px #a707dc, 0 0 40px #a707dc, 0 0 60px #a707dc;
+    box-shadow: 0 0 20px #a707dc, 0 0 35px #a707dc, 0 0 55px #a707dc;
     transition: box-shadow 0.3s;
+    margin-bottom: 40px;
   }
   
   .submit-button:hover {
     box-shadow: 0 0 40px #a707dc, 0 0 80px #a707dc, 0 0 120px #a707dc;
   }
   
-  
+
+  .disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+
+.close-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  }

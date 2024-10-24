@@ -1,4 +1,5 @@
 import { calculateTotalPrice } from "./price.js";
+import { button_data_open_arena, button_data_close_arena,button_cubes } from "./button_data.js";
 
 const maxPlayersArena = 10;
 const maxPlayersCubes = 4;
@@ -180,4 +181,51 @@ export function updateButtonsState(availability, bookingButtons, place) {
             }
         });
     }
+}
+
+export function initializeBookingButton(button, place, isCloseType) {
+    button.addEventListener('click', function(event) {
+        handleClick.call(this, event, place);
+    });
+
+    const buttonId = button.id;
+    const playerInput = button.querySelector('.player-input');
+    const buttonData = place === 'ARENA' ? (isCloseType ? button_data_close_arena : button_data_open_arena) : button_cubes;
+    if (buttonData[buttonId]) {
+        const data = buttonData[buttonId];
+        button.querySelector('.time').textContent = data.time;
+        button.querySelector('.price').textContent = `${data.price} ₽`;
+        button.querySelector('.price').setAttribute('data-price', data.price);
+    }
+
+    if (!isCloseType) {
+        playerInput.setAttribute('maxlength', '2');
+        restrictNonNumericInput(playerInput);
+        playerInput.addEventListener('input', function(event) {
+            handleInput.call(this, event, place);
+        });
+    }
+}
+
+function restrictNonNumericInput(input) {
+    input.addEventListener('input', function() {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+    input.addEventListener('keydown', function(event) {
+        const isNumberKey = (event.keyCode >= 48 && event.keyCode <= 57) ||
+                            (event.keyCode >= 96 && event.keyCode <= 105) ||
+                            event.keyCode === 8 ||
+                            event.keyCode === 46;
+        if (!isNumberKey) {
+            event.preventDefault();
+        }
+    });
+
+    input.addEventListener('paste', function(event) {
+        const pastedData = (event.clipboardData || window.clipboardData).getData('text');
+        if (!/^\d*$/.test(pastedData)) {
+            event.preventDefault();
+        }
+    });
 }

@@ -22,6 +22,8 @@
 </head>
 
 <body>
+    <div id="notification" class="notification"></div>
+
     <script type="module" src="./js/arena.js"></script>
     <script type="module" src="js/script_add_book.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -151,19 +153,60 @@
                 </div>
                 <h3>Ваши данные:</h3>
                 <div class="form-container">
-                    <label>Имя:</label>
-                    <input type="text" id="firstName" name="name" placeholder="Введите имя*..." required>
+                    <label>*Имя:</label>
+                    <input type="text" id="firstName" name="name" placeholder="Введите имя..." required>
                     <label>Фамилия:</label>
                     <input type="text" id="lastName" name="lastname" placeholder="Введите фамилию...">
-                    <label>Телефон:</label>
-                    <input type="tel" id="phone" name="phone" placeholder="Введите номер*..." required>
-                    <label>Электронная почта:</label>
-                    <input type="email" id="email" name="email" placeholder="Введите почту*..." required>
+                    <label>*Телефон:</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Введите номер..." required>
+                    <label>*Электронная почта:</label>
+                    <input type="email" id="email" name="email" placeholder="Введите почту..." required>
                     <label>Комментарий:</label>
                     <textarea id="comment" name="comment"></textarea>
+                    <table class="agreement-table">
+                        <tr>
+                            <td>
+                                <div class="custom-checkbox">
+                                    <input type="checkbox" id="checkbox" name="checkbox" required>
+                                </div>
+                            </td>
+                            <td class="checkbox-text">                                
+                                <span onclick="showPopup()" class="underline-text">Принимаю условия обработки персональных данных</span>                            
+                            </td>
+                        </tr>
+                    </table>
                     <button id="add" class="submit-button">Забронировать</button>
                 </div>
+                <div id="overlay" class="overlay"></div>
+                <div class="custom-popup" id="customPopup">
+                    <p>Я даю свое согласие ИП «Заборня Анна Викторовна» на обработку моих персональных данных.</p>
+                    <p>Согласие касается данных, указываемых мною в полях при бронировании времени на сайте www.vr-real.ru.</p>
+                    <p>Я даю согласие на использование персональных данных исключительно в целях бронирования игрового времени, а также информационного информирования.</p>
+                    <p>До моего сведения доведено, что ИП «Заборня Анна Викторовна» гарантирует обработку моих персональных данных в соответствии с действующим законодательством Российской Федерации.</p>
+                    <p>Срок действия данного согласия не ограничен. Согласие может быть отозвано в любой момент по моему письменному заявлению.</p>
+                    <p>Подтверждаю, что, давая согласие, я действую без принуждения, по собственной воле и в своих интересах.</p>
+                    <button class="close-button" onclick="closePopup()">×</button>
+                  </div>
+
+                <script>
+               function showPopup() {
+                const overlay = document.getElementById('overlay');
+                const popup = document.getElementById('customPopup');
                 
+                overlay.style.display = 'block'; // Показываем overlay
+                popup.classList.add('show');
+                popup.classList.remove('hide');
+                }
+
+                function closePopup() {
+                const overlay = document.getElementById('overlay');
+                const popup = document.getElementById('customPopup');
+
+                overlay.style.display = 'none'; // Скрываем overlay
+                popup.classList.add('hide');
+                popup.classList.remove('show');
+                }
+                </script>
             </div>
         </div>
     </div>

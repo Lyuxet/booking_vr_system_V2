@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    // Настройки локализации для русского языка
+    
     $.datepicker.regional['ru'] = {
         closeText: 'Закрыть',
         prevText: 'Пред',

@@ -1,15 +1,15 @@
 export function showPriceDisplay() {
     const priceDisplay = document.querySelector('.price-display');
-    priceDisplay.style.display = 'inline-flex'; // Показываем элемент
+    priceDisplay.style.display = 'inline-flex'; 
     setTimeout(() => {
-        priceDisplay.classList.add('show'); // Активируем анимацию появления
-    }, 5); // Небольшая задержка для срабатывания transition
+        priceDisplay.classList.add('show');
+    }, 5); 
 }
 
 export function hidePriceDisplay(){
     const priceDisplay = document.querySelector('.price-display');
-    priceDisplay.classList.remove('show'); // Убираем класс для анимации скрытия
+    priceDisplay.classList.remove('show'); 
     setTimeout(() => {
-        priceDisplay.style.display = 'none'; // Полностью скрываем элемент после анимации
-    }); // Время анимации соответствует transition (0.5s)
+        priceDisplay.style.display = 'none'; 
+    }); 
 }

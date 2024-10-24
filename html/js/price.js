@@ -7,14 +7,12 @@ const isCloseType = document.querySelector('.booking-container-close') !== null;
 export function updatePricesArena(date, bookingButtons) {
     const isSpecialDay = isWeekendOrHoliday(date);
     bookingButtons.forEach(button => {
-        const priceElement = button.querySelector('.price'); // Получаем элемент цены
-        let basePrice = priceElement.dataset.price; // Получаем базовую цену из data-атрибута
+        const priceElement = button.querySelector('.price'); 
+        let basePrice = priceElement.dataset.price; 
 
-        // Устанавливаем цену в зависимости от условий
+       
         basePrice = isSpecialDay ? (isCloseType ? 15000 : 1600) : basePrice;
         
-
-        // Обновляем текстовое содержимое элемента с учётом символа ₽
         priceElement.textContent = `${basePrice} ₽`;
     });
 }
@@ -37,23 +35,21 @@ export function calculateTotalPrice() {
             const playerCount = parseInt(playerInput.value, 10) || 0;
             const pricePerPlayer = parseInt(button.querySelector('.price').textContent);
 
-            // Добавляем к общей стоимости
+          
             totalPrice += playerCount * pricePerPlayer;
         });
     }
 
-    // Обновляем содержимое таблички
+    
     const displayAmountElement = document.getElementById('displayAmount');
     if (displayAmountElement) {
         displayAmountElement.textContent = totalPrice;
     }
 
-    // Проверяем, выбрана ли хотя бы одна кнопка
     const anyButtonSelected = document.querySelectorAll('.booking-button.selected').length > 0;
 
     const priceDisplayElement = document.querySelector('.price-display');
     if (priceDisplayElement) {
-        // Показываем или скрываем табличку в зависимости от состояния кнопок
         if (anyButtonSelected) {
             showPriceDisplay();
         } else {

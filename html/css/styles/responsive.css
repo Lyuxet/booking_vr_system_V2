@@ -1,119 +1,54 @@
-/* Медиазапросы для адаптации под разные экраны */
-
-/* Для экранов шириной 1200px и менее */
-@media (max-width: 1200px) {
-  .booking-button {
-    width: 100%;
-    height: 100%;
-  }
-  input, textarea[name="comment"], .submit-button {
-    width: 70%;
-  }
+/* Базовые стили */
+html {
+  font-size: 16px;
 }
 
-/* Для экранов шириной 960px и менее */
-@media (max-width: 960px) {
-  .booking-button {
-    width: 100%;
-    height: 100%;
-  }
-  input, textarea[name="comment"], .submit-button {
-    width: 70%;
-  }
+/* Медиазапросы для разных экранов и ориентаций */
+@media (max-width: 1200px) { 
+  .booking-button { width: 100%; height: 100%; } 
+  .checkbox-text, .custom-popup { font-size: 18px; } 
+  input, textarea[name="comment"], .submit-button, .notification, .agreement-table { width: 70%; } 
 }
-
-/* Для экранов шириной 768px и менее */
-@media (max-width: 768px) {
-  .booking-button {
-    width: 100%;
-    height: 100%;
-  }
-  input, textarea[name="comment"], .submit-button {
-    width: 70%;
-  }
-  h1 {
-    font-size: 40px;
-  }
-  h2, h3 {
-    font-size: 28px;
-  }
+@media (max-width: 960px) { 
+  .booking-button { width: 100%; height: 100%; }
+  .checkbox-text, .custom-popup { font-size: 18px; }
+  input, textarea[name="comment"], .submit-button, .notification, .agreement-table { width: 70%; }
 }
-
-/* Для экранов шириной 700px и менее */
-@media (max-width: 700px) {
-  .links-container {
-    flex-wrap: wrap; /* Позволяет кнопкам переноситься на следующую строку */
-  }
-  .links {
-    flex: 1 1 48%; /* Занимает минимально 48% ширины, чтобы быть в два ряда */
-    margin: 10px; /* Уменьшите отступ при необходимости */
-  }
+@media (max-width: 768px) { 
+  .booking-button { width: 100%; height: 100%; } 
+  input, textarea[name="comment"], .submit-button, .notification, .agreement-table { width: 70%; } 
+  h1 { font-size: 40px; } 
+  h2, h3 { font-size: 28px; } 
 }
-
-/* Для экранов шириной 576px и менее */
-@media (max-width: 576px) {
-  .booking-button {
-    width: 100%;
-    height: auto;
-  }
-  input, textarea[name="comment"], .submit-button {
-    width: 70%;
-  }
-  h1 {
-    font-size: 36px;
-  }
-  h2, h3 {
-    font-size: 24px;
-  }
+@media (max-width: 700px) { 
+  .links-container { flex-wrap: wrap; }
+  .links { flex: 1 1 48%; margin: 10px; }
 }
-
-/* Для экранов шириной 480px и менее */
-@media (max-width: 480px) {
-  .booking-button {
-    width: 100%;
-    height: auto;
-  }
-  input, textarea[name="comment"], .submit-button {
-    width: 70%;
-  }
-  h1 {
-    font-size: 32px;
-  }
-  h2, h3 {
-    font-size: 20px;
-  }
+@media (max-width: 576px) { 
+  .booking-button { width: 100%; height: auto; } 
+  input, textarea[name="comment"], .submit-button, .notification, .agreement-table { width: 70%; } 
+  .checkbox-text, .custom-popup { font-size: 17px; } 
+  h1 { font-size: 36px; } 
+  h2, h3 { font-size: 24px; }
 }
-
-/* Для экранов шириной 375px и менее (например, iPhone 12, iPhone X) */
-@media (max-width: 375px) {
-  .booking-button {
-    width: 100%;
-    height: auto;
-  }
-  input, textarea[name="comment"], .submit-button {
-    width: 70%;
-  }
-  h1 {
-    font-size: 30px;
-  }
-  h2, h3 {
-    font-size: 18px;
-  }
+@media (max-width: 480px) { 
+  .booking-button { width: 100%; height: auto; } 
+  input, textarea[name="comment"], .submit-button, .notification, .agreement-table { width: 70%; } 
+  .checkbox-text, .custom-popup { font-size: 14px; } 
+  h1 { font-size: 32px; } 
+  h2, h3 { font-size: 20px; } 
 }
-
-/* Для экранов шириной 320px и менее (например, iPhone SE) */
-@media (max-width: 320px) {
-  .booking-button {
-    width: 100%;
-    height: auto;
-  }
-  input, textarea[name="comment"], .submit-button {
-    width: 70%;
-  }
-  h1 {
-    font-size: 28px;
-  }
-  h2, h3 {
-    font-size: 16px;
-  }
+@media (max-width: 375px) { 
+  .booking-button { width: 100%; height: auto; } 
+  input, textarea[name="comment"], .submit-button, .notification, .agreement-table { width: 70%; } 
+  .checkbox-text, .custom-popup { font-size: 13px; } 
+  h1 { font-size: 30px; } 
+  h2, h3 { font-size: 18px; } 
+}
+@media (max-width: 320px) { 
+  .booking-button { width: 100%; height: auto; } 
+  input, textarea[name="comment"], .submit-button, .notification, .agreement-table { width: 70%; } 
+  .checkbox-text, .custom-popup { font-size: 10px; } 
+  h1 { font-size: 28px; } 
+  h2, h3 { font-size: 16px; }
 }

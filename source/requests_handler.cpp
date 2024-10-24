@@ -75,7 +75,7 @@ namespace vr{
             "../../logs/error_transaction.log");
             res.result(http::status::internal_server_error);
             res.set(http::field::content_type, "application/json");
-            res.body() = R"({"status": "error", "message": ")" + std::string(e.what()) + R"("})";
+            res.body() = std::string(e.what());
         }
     }
     void Availability(const http::request<http::string_body>& req, http::response<http::string_body>& res, ConnectionPool& pool) {
@@ -177,7 +177,7 @@ namespace vr{
             "../../logs/error_transaction.log");
             res.result(http::status::internal_server_error);
             res.set(http::field::content_type, "application/json");
-            res.body() = R"({"status": "error", "message": ")" + std::string(e.what()) + R"("})";
+            res.body() = std::string(e.what());
         }
     }
 

@@ -3,10 +3,12 @@
 #include <boost/json.hpp>
 #include <cppconn/prepared_statement.h>
 #include <cppconn/exception.h>
+#include <fstream>
 #include <iostream>
 #include <chrono>
 #include <thread>
 #include <cstdlib>
+#include <sstream>
 
 std::mutex mtxtest;
 
@@ -217,7 +219,7 @@ namespace vr{
             pstmtCheck->setString(4, booking.time_game);   // Время игры
         } 
         else {
-            throw std::runtime_error("Неизвестная площадка игры.");
+            throw std::runtime_error("Неизвестная площадка игры");
         }
 
         std::unique_ptr<sql::ResultSet> res(pstmtCheck->executeQuery());
@@ -225,7 +227,7 @@ namespace vr{
         if (res->next()) {
             int available_slots = res->getInt("available_slots");
             if (available_slots < booking.players_count) {
-                throw std::runtime_error("Недостаточно свободных мест для бронирования.");
+                throw std::runtime_error("Недостаточно свободных мест для бронирования");
             }
         }
         return true;
@@ -252,14 +254,11 @@ namespace vr{
 
         // Определение таблицы в зависимости от типа игры
         std::string tableName;
-        if (bookings_[0].name_game == "Combat Squad") {
-            tableName = "ArenaShooterStats";
-        } else if (bookings_[0].name_game == "Medieval Journey") {
-            tableName = "ArenaQuestStats";
-        } else if (bookings_[0].name_game == "CUBES") {
-            tableName = "Cubes";
-        } else {
-            throw std::runtime_error("Unknown game type.");
+        if (gameTables.find(bookings_[0].name_game) != gameTables.end()){
+            tableName = gameTables.at(bookings_[0].name_game);
+        }
+        else{
+            throw std::runtime_error("Неизвестный тип игры");
         }
 
         // Добавление клиента
@@ -276,7 +275,7 @@ namespace vr{
         for (const auto& booking : bookings_) {
             // Проверка наличия доступных мест
             if (!checkAvailableSlots(conn, booking)) {
-                throw std::runtime_error("Недостаточно свободных мест для бронирования.");
+                throw std::runtime_error("Недостаточно свободных мест для бронирования");
             }
 
             pstmt2->setString(1, clients_.phone);
@@ -614,6 +613,26 @@ namespace vr{
             
 
         }
+    }
+
+    std::unordered_map<std::string, std::string> Booking::LoadGameTables(const std::string& filename){
+        std::unordered_map<std::string, std::string> gameTableMap;
+        std::fstream file(filename);
+        if (!file.is_open()){
+            throw std::runtime_error("Не удалось открыть файл чтения игр");
+        }
+        std::string line;
+        while(std::getline(file, line)){
+            std::istringstream iss(line);
+            std::string gameName, tableName;
+            if (std::getline(iss, gameName, ':') && std::getline(iss, tableName)) {
+                gameTableMap[gameName] = tableName;
+            }
+        }
+
+        file.close();
+        return gameTableMap;
+
     }
 
 }

@@ -1,16 +1,31 @@
 import { updateButtonsState } from "./buttons.js";
 import { hidePriceDisplay } from "./priceDisplay.js";
 
-document.addEventListener('DOMContentLoaded', function () {
-    const addButton = document.getElementById('add');
-    if (!addButton) {
-        console.error('Кнопка "Добавить" не найдена');
-        return;
-    }
+const addButton = document.getElementById('add');
+function showNotification(message, isError = false) {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.classList.toggle('error', isError); // Добавляем класс 'error', если это ошибка
     
+    // Показываем уведомление
+    notification.classList.add('show');
+    notification.classList.remove('hide'); // Убираем класс 'hide', если он был
+
+    // Скрываем уведомление через 3 секунды с плавной анимацией
+    setTimeout(() => {
+        notification.classList.remove('show');
+        notification.classList.add('hide');
+        addButton.classList.remove('disabled');
+    }, 3000);
+}
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
     addButton.addEventListener('click', function (event) {
         event.preventDefault();
-        
+        addButton.classList.add('disabled');
+
         const selectedButtons = document.querySelectorAll('.booking-button.selected');
         const firstname = document.getElementById('firstName').value;
         const lastname = document.getElementById('lastName').value;
@@ -18,28 +33,51 @@ document.addEventListener('DOMContentLoaded', function () {
         const email = document.getElementById('email').value;
         const date = document.getElementById('date').value;
         const comment = document.getElementById('comment').value;
-        
+
         if (!firstname || !phone || !email) {
-            alert("Пожалуйста, заполните все обязательные поля.");
+            showNotification("Пожалуйста, заполните все обязательные поля", true);
+            return;
+        }
+
+        if (selectedButtons.length === 0) {
+            showNotification('Пожалуйста, выберите хотя бы одно время бронирования', true);
+            return;
+        }
+        if (!document.getElementById('checkbox').checked){
+            showNotification('Пожалуйста, примите соглашение на обработку персональных данных', true);
             return;
         }
         
-        if (selectedButtons.length === 0) {
-            alert('Пожалуйста, выберите хотя бы одно время бронирования.');
-            return;
+        let selectedTimes = [];
+        for (let button of selectedButtons) {
+            const timeText = button.querySelector('.time').textContent.trim();
+            const [startTime] = timeText.split(' - ').map(time => time.trim());
+            const [startHours, startMinutes] = startTime.split(':').map(Number);
+
+            const now = new Date();
+            const selectedDateText = document.getElementById('date').value;
+            const [year, month, day] = selectedDateText.split('.').map(Number);
+
+            const buttonDate = new Date(year, month - 1, day, startHours, startMinutes);
+
+            if (buttonDate <= now) {
+                showNotification(`Время ${timeText} уже прошло, выберите другое время`, true);
+                updateBookingContainer();
+                return;
+            }
+            selectedTimes.push(timeText);
         }
+
+        if (!selectedTimes.length) return;
 
         const gameTitleElement = document.querySelector('.navigation h1');
         const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : 'CUBES';
         const isCloseType = document.querySelector('.booking-container-close') !== null;
-        
-        let selectedTimes = [];
+
         let selectedPlayersCount = [];
         let selectedPrice = [];
-        
+
         selectedButtons.forEach(function (button) {
-            const time = button.querySelector('.time').textContent;
-            selectedTimes.push(time);
             const priceButton = parseInt(button.querySelector('.price').textContent, 10);
             if (!isCloseType) {
                 const playersCount = parseInt(button.querySelector('.player-input').value, 10);
@@ -57,7 +95,6 @@ document.addEventListener('DOMContentLoaded', function () {
             placegame = 'CUBES';
         }
 
-
         const postData = {
             firstname, lastname, phone, email, placegame,
             typegame: isCloseType ? 'CLOSE' : 'OPEN',
@@ -65,33 +102,25 @@ document.addEventListener('DOMContentLoaded', function () {
             playerCount: selectedPlayersCount, price: selectedPrice, comment
         };
 
-        console.log('Sending data:', postData);
-
         const xhr = new XMLHttpRequest();
-<<<<<<< HEAD:html/js/script_add_book.js
-        const url = isCloseType 
-            ? 'http://localhost:8081/addBookingOpenArena' 
-            : 'http://localhost:8081/addBookingCubes';
-=======
-        xhr.open('POST', 'http://localhost:8081/addBookingOpenArena', true);
-        xhr.setRequestHeader('Content-Type', 'application/json'); // Устанавливаем заголовок на JSON
->>>>>>> 986f3a47fbf8062dd8860f05dee3044ceaac9313:html/js/script_add_book_arena.js
-
+        const url = isCloseType
+            ? 'http://cmsvrdevelopment.ru/api/addBookingOpenArena'
+            : 'http://cmsvrdevelopment.ru/api/addBookingCubes';
         xhr.open('POST', url, true);
         xhr.setRequestHeader('Content-Type', 'application/json');
-        
+
         xhr.onload = function () {
             if (xhr.status >= 200 && xhr.status < 300) {
-                alert('Бронирование успешно отправлено.');
+                showNotification('Бронирование успешно отправлено');
                 updateBookingContainer();
             } else {
-                alert(`Ошибка отправки бронирования: ${xhr.responseText}`);
+                showNotification(`Ошибка отправки бронирования: ${xhr.responseText}`, true);
                 updateBookingContainer();
             }
         };
-        
+
         xhr.onerror = function () {
-            alert('Ошибка сети.');
+            showNotification('Ошибка сети.', true);
         };
 
         xhr.send(JSON.stringify(postData));
@@ -109,17 +138,12 @@ function updateBookingContainer() {
     const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : 'CUBES';
 
     const xhr = new XMLHttpRequest();
-<<<<<<< HEAD:html/js/script_add_book.js
     const url = placegame === 'ARENA' 
-        ? `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}` 
-        : `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`;
+        ? `http://cmsvrdevelopment.ru/api/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}` 
+        : `http://cmsvrdevelopment.ru/api/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`;
 
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-=======
-    xhr.open('GET', `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`, true);
-    xhr.setRequestHeader('Content-Type', 'application/json'); // Установите заголовок на JSON, если ваш сервер поддерживает это
->>>>>>> 986f3a47fbf8062dd8860f05dee3044ceaac9313:html/js/script_add_book_arena.js
 
     const startTime = Date.now();
     const minDuration = 750;
@@ -130,17 +154,17 @@ function updateBookingContainer() {
             if (xhr.status >= 200 && xhr.status < 300) {
                 try {
                     const availability = JSON.parse(xhr.responseText);
-                    if (typeof updateButtonsState === 'function') {
-                        updateButtonsState(availability, bookingButtons, placegame);
-                        hidePriceDisplay();
-                    } else {
-                        console.error('Функция updateButtonsState не найдена');
-                    }
+                    updateButtonsState(availability, bookingButtons, placegame);
+                    hidePriceDisplay();
+                    addButton.classList.remove('disabled');
+                   
                 } catch (error) {
                     console.error('Ошибка при обработке ответа:', error);
+                    addButton.classList.remove('disabled');
                 }
             } else {
                 console.error('Ошибка запроса доступности. Статус:', xhr.status);
+                addButton.classList.remove('disabled');
             }
         };
 
@@ -153,6 +177,7 @@ function updateBookingContainer() {
 
     xhr.onerror = function () {
         console.error('Ошибка сети.');
+        addButton.classList.remove('disabled');
     };
 
     xhr.send();
