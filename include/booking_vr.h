@@ -133,6 +133,7 @@ private:
         void PrintInsertBooking();
         void PrintDeleteBooking();
         void PrintUpdateBooking();
+        void PrintInsertClient();
     
         Client_data clients_;
         std::vector<Booking_data> bookings_;

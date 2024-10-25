@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         };
         xhr.onerror = function () {
-            showNotification('Ошибка сети.', true);
+            showNotification('Ошибка сети', true);
         };
         xhr.send(JSON.stringify(postData));
     });
@@ -187,7 +187,7 @@ function updateBookingContainer() {
     };
 
     xhr.onerror = function () {
-        console.error('Ошибка сети.');
+        console.error('Ошибка сети');
         addButton.classList.remove('disabled');
     };
 

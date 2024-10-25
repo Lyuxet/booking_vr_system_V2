@@ -3,6 +3,18 @@
 
 
 namespace vr{
+
+
+void Booking::PrintInsertClient(){
+    std::cout << "================ Новый клиент ================" << std::endl;
+    std::cout << "Имя:            " << clients_.first_name << std::endl;
+    std::cout << "Фамилия:        " << clients_.last_name << std::endl;
+    std::cout << "Телефон:        " << clients_.phone << std::endl;
+    std::cout << "Почта:          " << clients_.email << std::endl;
+    std::cout << "----------------------------------------------" << std::endl;
+    std::cout << "================ Конец списка ================" << std::endl;
+}
+
 void Booking::PrintInsertBooking() {
         if (bookings_.empty()) {
             std::cout << "Нет бронирований для вставки." << std::endl;

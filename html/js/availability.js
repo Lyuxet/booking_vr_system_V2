@@ -10,12 +10,7 @@ export function checkAvailability(bookingButtons, place) {
     
     const gameTitleElement = document.querySelector('.navigation h1');
     const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : 'CUBES';
-    if (!date || !namegame) {
-        console.error('Заполните все поля.');
-        return;
-    }
-
-
+    
     bookingGrid.style.display = 'none'; 
     pacmanContainer.style.display = 'flex'; 
 

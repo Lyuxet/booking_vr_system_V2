@@ -235,15 +235,32 @@ namespace vr{
 
 
     void Booking::insertClient(std::shared_ptr<sql::Connection> conn) {
-        std::unique_ptr<sql::PreparedStatement> pstmt(conn->prepareStatement(
-            "INSERT IGNORE INTO Clients (first_name, last_name, phone, email) VALUES (?, ?, ?, ?)"
+        // Проверяем, существует ли клиент с таким телефоном или почтой
+        std::unique_ptr<sql::PreparedStatement> checkStmt(conn->prepareStatement(
+            "SELECT id FROM Clients WHERE phone = ? AND email = ?"
         ));
-        pstmt->setString(1, clients_.first_name);
-        pstmt->setString(2, clients_.last_name);
-        pstmt->setString(3, clients_.phone);
-        pstmt->setString(4, clients_.email);
-        pstmt->execute();
+        checkStmt->setString(1, clients_.phone);
+        checkStmt->setString(2, clients_.email);
+        std::unique_ptr<sql::ResultSet> res(checkStmt->executeQuery());
+
+        if (res->next()) {
+            return;
+        } else {
+            std::unique_ptr<sql::PreparedStatement> pstmt(conn->prepareStatement(
+                "INSERT INTO Clients (first_name, last_name, phone, email) VALUES (?, ?, ?, ?)"
+            ));
+            pstmt->setString(1, clients_.first_name);
+            pstmt->setString(2, clients_.last_name);
+            pstmt->setString(3, clients_.phone);
+            pstmt->setString(4, clients_.email);
+            int affectedRows = pstmt->executeUpdate();  // Получаем количество затронутых строк
+
+            if (affectedRows > 0) {
+                PrintInsertClient();
+            }
+        }
     }
+
 
 
 
