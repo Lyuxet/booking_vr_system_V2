@@ -1,30 +1,13 @@
-2024-10-23 00:33:44 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 00:34:43 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 00:36:52 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 00:41:30 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 00:45:26 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 08:51:25 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 08:51:26 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 08:51:26 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 08:51:26 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 08:51:27 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 08:52:29 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 12:27:07 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 13:07:00 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 13:29:38 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 13:30:44 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 14:36:52 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 14:37:56 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 14:38:41 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 14:54:10 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 14:57:25 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 14:58:07 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 15:00:08 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 15:03:50 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 15:04:55 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 15:05:59 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 15:06:40 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 15:09:09 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-23 17:35:08 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-24 15:05:01 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
-2024-10-24 15:29:58 Ошибка при чтении: End of file(2) в файле C:\Users\Vovoc\project\booking_vr\source\websocket.cpp строке 48
+2024-10-25 18:29:37 Ошибка чтения: end of stream(1) в файле C:\Users\Lyuxet\projects\booking_vr\source\https_server.cpp строке 18
+2024-10-25 18:32:17 Ошибка чтения: end of stream(1) в файле C:\Users\Lyuxet\projects\booking_vr\source\https_server.cpp строке 18
+2024-10-25 18:34:05 Ошибка чтения: end of stream(1) в файле C:\Users\Lyuxet\projects\booking_vr\source\https_server.cpp строке 18
+2024-10-25 18:35:42 Ошибка чтения: end of stream(1) в файле C:\Users\Lyuxet\projects\booking_vr\source\https_server.cpp строке 18
+2024-10-25 18:40:44 Ошибка чтения: end of stream(1) в файле C:\Users\Lyuxet\projects\booking_vr\source\https_server.cpp строке 18
+2024-10-25 18:42:47 Ошибка чтения: end of stream(1) в файле C:\Users\Lyuxet\projects\booking_vr\source\https_server.cpp строке 18
+2024-10-25 18:45:04 Ошибка чтения: end of stream(1) в файле C:\Users\Lyuxet\projects\booking_vr\source\https_server.cpp строке 18
+2024-10-25 18:46:17 Ошибка чтения: end of stream(1) в файле C:\Users\Lyuxet\projects\booking_vr\source\https_server.cpp строке 18
+2024-10-25 18:51:14 Ошибка чтения: end of stream(1) в файле C:\Users\Lyuxet\projects\booking_vr\source\https_server.cpp строке 18
+2024-10-25 19:01:23 Ошибка чтения: end of stream(1) в файле C:\Users\Lyuxet\projects\booking_vr\source\https_server.cpp строке 18
+2024-10-25 19:16:56 Ошибка чтения: end of stream(1) в файле C:\Users\Lyuxet\projects\booking_vr\source\https_server.cpp строке 18
+2024-10-25 19:19:44 Ошибка чтения: end of stream(1) в файле C:\Users\Lyuxet\projects\booking_vr\source\https_server.cpp строке 18
+2024-10-25 19:25:42 Ошибка чтения: end of stream(1) в файле C:\Users\Lyuxet\projects\booking_vr\source\https_server.cpp строке 18

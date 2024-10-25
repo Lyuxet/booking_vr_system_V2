@@ -1,9 +1,0 @@
-C:\Users\Vovoc\project\booking_vr\source\Connect_to_DB.cpp;C:\Users\Vovoc\project\booking_vr\build\Booking_vr_server.dir\Release\Connect_to_DB.obj
-C:\Users\Vovoc\project\booking_vr\source\booking_vr.cpp;C:\Users\Vovoc\project\booking_vr\build\Booking_vr_server.dir\Release\booking_vr.obj
-C:\Users\Vovoc\project\booking_vr\source\booking_vr_print.cpp;C:\Users\Vovoc\project\booking_vr\build\Booking_vr_server.dir\Release\booking_vr_print.obj
-C:\Users\Vovoc\project\booking_vr\source\https_server.cpp;C:\Users\Vovoc\project\booking_vr\build\Booking_vr_server.dir\Release\https_server.obj
-C:\Users\Vovoc\project\booking_vr\source\logger.cpp;C:\Users\Vovoc\project\booking_vr\build\Booking_vr_server.dir\Release\logger.obj
-C:\Users\Vovoc\project\booking_vr\source\main.cpp;C:\Users\Vovoc\project\booking_vr\build\Booking_vr_server.dir\Release\main.obj
-C:\Users\Vovoc\project\booking_vr\source\parseInpudData.cpp;C:\Users\Vovoc\project\booking_vr\build\Booking_vr_server.dir\Release\parseInpudData.obj
-C:\Users\Vovoc\project\booking_vr\source\requests_handler.cpp;C:\Users\Vovoc\project\booking_vr\build\Booking_vr_server.dir\Release\requests_handler.obj
-C:\Users\Vovoc\project\booking_vr\source\websocket.cpp;C:\Users\Vovoc\project\booking_vr\build\Booking_vr_server.dir\Release\websocket.obj

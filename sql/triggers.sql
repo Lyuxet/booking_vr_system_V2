@@ -8,9 +8,6 @@ BEGIN
     IF NEW.players_count > NEW.max_players THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Players count exceeds the maximum number of players.';
     END IF;
-
-    -- Рассчитываем количество свободных мест
-    SET NEW.free_slots = NEW.max_players - NEW.players_count;
 END$$
 DELIMITER ;
 
@@ -32,8 +29,8 @@ BEGIN
     -- Проверяем, занято ли это время для текущей игры
     ELSE
         -- Если время свободно, добавляем запись в таблицу расписания
-        INSERT INTO GameSchedule (client_id, place_game, type_game, name_game, date_game, time_game, players_count, max_players, free_slots, price, comment_game)
-        VALUES (NEW.client_id, NEW.place_game, NEW.type_game, NEW.name_game, NEW.date_game, NEW.time_game, NEW.players_count, NEW.max_players, NEW.free_slots, NEW.price, NEW.comment_game);
+        INSERT INTO GameSchedule (client_id, place_game, type_game, name_game, date_game, time_game, players_count, max_players, price, comment_game, who_reservation, book_status)
+        VALUES (NEW.client_id, NEW.place_game, NEW.type_game, NEW.name_game, NEW.date_game, NEW.time_game, NEW.players_count, NEW.max_players, NEW.price, NEW.comment_game, NEW.who_reservation, NEW.book_status);
     END IF;
 END$$
 
@@ -50,10 +47,6 @@ BEGIN
     IF NEW.players_count > NEW.max_players THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Players count exceeds the maximum number of players.';
     END IF;
-
-    -- Рассчитываем количество свободных мест
-    SET NEW.free_slots = NEW.max_players - NEW.players_count;
-
     -- Проверяем, изменяются ли ключевые поля (date_game, time_game, name_game)
     IF NEW.date_game != OLD.date_game OR NEW.time_game != OLD.time_game OR NEW.name_game != OLD.name_game THEN
         
@@ -88,9 +81,9 @@ BEGIN
             time_game = NEW.time_game,
             players_count = NEW.players_count,
             max_players = NEW.max_players, 
-            free_slots = NEW.free_slots, 
             price = NEW.price,
-            comment_game = NEW.comment_game
+            comment_game = NEW.comment_game,
+            book_status = NEW.book_status
         WHERE name_game = OLD.name_game 
           AND date_game = OLD.date_game 
           AND time_game = OLD.time_game;	
@@ -100,9 +93,9 @@ BEGIN
         UPDATE GameSchedule 
         SET players_count = NEW.players_count,
             max_players = NEW.max_players, 
-            free_slots = NEW.free_slots, 
             price = NEW.price,
-            comment_game = NEW.comment_game
+            comment_game = NEW.comment_game,
+            book_status = NEW.book_status
         WHERE name_game = OLD.name_game 
           AND date_game = OLD.date_game 
           AND time_game = OLD.time_game;
@@ -135,9 +128,6 @@ BEGIN
     IF NEW.players_count > NEW.max_players THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Players count exceeds the maximum number of players.';
     END IF;
-
-    -- Рассчитываем количество свободных мест
-    SET NEW.free_slots = NEW.max_players - NEW.players_count;
 END$$
 DELIMITER ;
 
@@ -160,8 +150,8 @@ BEGIN
     -- Проверяем, занято ли это время для текущей игры
     ELSE
         -- Если время свободно, добавляем запись в таблицу расписания
-        INSERT INTO GameSchedule (client_id, place_game, type_game, name_game, date_game, time_game, players_count, max_players, free_slots, price, comment_game)
-        VALUES (NEW.client_id, NEW.place_game, NEW.type_game, NEW.name_game, NEW.date_game, NEW.time_game, NEW.players_count, NEW.max_players, NEW.free_slots, NEW.price, NEW.comment_game);
+        INSERT INTO GameSchedule (client_id, place_game, type_game, name_game, date_game, time_game, players_count, max_players, price, comment_game, who_reservation, book_status)
+        VALUES (NEW.client_id, NEW.place_game, NEW.type_game, NEW.name_game, NEW.date_game, NEW.time_game, NEW.players_count, NEW.max_players, NEW.price, NEW.comment_game, NEW.who_reservation, NEW.book_status);
     END IF;
 END$$
 DELIMITER ;
@@ -177,10 +167,6 @@ BEGIN
     IF NEW.players_count > NEW.max_players THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Players count exceeds the maximum number of players.';
     END IF;
-
-    -- Рассчитываем количество свободных мест
-    SET NEW.free_slots = NEW.max_players - NEW.players_count;
-
     -- Проверяем, изменяются ли ключевые поля (date_game, time_game, name_game)
     IF NEW.date_game != OLD.date_game OR NEW.time_game != OLD.time_game OR NEW.name_game != OLD.name_game THEN
         
@@ -215,9 +201,9 @@ BEGIN
             time_game = NEW.time_game,
             players_count = NEW.players_count,
             max_players = NEW.max_players, 
-            free_slots = NEW.free_slots, 
             price = NEW.price,
-            comment_game = NEW.comment_game
+            comment_game = NEW.comment_game,
+            book_status = NEW.book_status
         WHERE name_game = OLD.name_game 
           AND date_game = OLD.date_game 
           AND time_game = OLD.time_game;
@@ -227,9 +213,9 @@ BEGIN
         UPDATE GameSchedule 
         SET players_count = NEW.players_count,
             max_players = NEW.max_players, 
-            free_slots = NEW.free_slots, 
             price = NEW.price,
-            comment_game = NEW.comment_game
+            comment_game = NEW.comment_game,
+            book_status = NEW.book_status
         WHERE name_game = OLD.name_game 
           AND date_game = OLD.date_game 
           AND time_game = OLD.time_game;
@@ -262,9 +248,6 @@ BEGIN
     IF NEW.players_count > NEW.max_players THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Players count exceeds the maximum number of players.';
     END IF;
-
-    -- Рассчитываем количество свободных мест
-    SET NEW.free_slots = NEW.max_players - NEW.players_count;
 END$$
 DELIMITER ;
 
@@ -287,8 +270,8 @@ BEGIN
     -- Проверяем, занято ли это время для текущей игры
     ELSE
         -- Если время свободно, добавляем запись в таблицу расписания
-        INSERT INTO GameSchedule (client_id, place_game, type_game, name_game, date_game, time_game, players_count, max_players, free_slots, price, comment_game)
-        VALUES (NEW.client_id, NEW.place_game, NEW.type_game, NEW.name_game, NEW.date_game, NEW.time_game, NEW.players_count, NEW.max_players, NEW.free_slots, NEW.price, NEW.comment_game);
+        INSERT INTO GameSchedule (client_id, place_game, type_game, name_game, date_game, time_game, players_count, max_players, price, comment_game, who_reservation, book_status)
+        VALUES (NEW.client_id, NEW.place_game, NEW.type_game, NEW.name_game, NEW.date_game, NEW.time_game, NEW.players_count, NEW.max_players, NEW.price, NEW.comment_game, NEW.who_reservation, NEW.book_status);
     END IF;
 END$$
 DELIMITER ;
@@ -303,10 +286,6 @@ BEGIN
     IF NEW.players_count > NEW.max_players THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Players count exceeds the maximum number of players.';
     END IF;
-
-    -- Рассчитываем количество свободных мест
-    SET NEW.free_slots = NEW.max_players - NEW.players_count;
-
     -- Проверяем, изменяются ли ключевые поля (date_game, time_game, name_game)
     IF NEW.date_game != OLD.date_game OR NEW.time_game != OLD.time_game OR NEW.name_game != OLD.name_game THEN
         
@@ -341,9 +320,9 @@ BEGIN
             time_game = NEW.time_game,
             players_count = NEW.players_count,
             max_players = NEW.max_players, 
-            free_slots = NEW.free_slots, 
             price = NEW.price,
-            comment_game = NEW.comment_game
+            comment_game = NEW.comment_game,
+            book_status = NEW.book_status
         WHERE name_game = OLD.name_game 
           AND date_game = OLD.date_game 
           AND time_game = OLD.time_game;
@@ -353,9 +332,9 @@ BEGIN
         UPDATE GameSchedule 
         SET players_count = NEW.players_count,
             max_players = NEW.max_players, 
-            free_slots = NEW.free_slots, 
             price = NEW.price,
-            comment_game = NEW.comment_game
+            comment_game = NEW.comment_game,
+            book_status = NEW.book_status
         WHERE name_game = OLD.name_game 
           AND date_game = OLD.date_game 
           AND time_game = OLD.time_game;

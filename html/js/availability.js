@@ -21,8 +21,8 @@ export function checkAvailability(bookingButtons, place) {
 
     const xhr = new XMLHttpRequest();
     const url = place === 'ARENA' ? 
-        `http://cmsvrdevelopment.ru/api/getBookingOpenArena?placegame=${encodeURIComponent(place)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}` :
-        `http://cmsvrdevelopment.ru/api/getBookingCubes?placegame=${encodeURIComponent(place)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`;
+        `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(place)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}` :
+        `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(place)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`;
 
     
     xhr.open('GET', url, true);

@@ -19,7 +19,9 @@ namespace vr{
             std::string typegame = jsonData.at("typegame").as_string().c_str();
             std::string namegame = jsonData.at("namegame").as_string().c_str();
             std::string date = jsonData.at("date").as_string().c_str();
-
+            std::string who_reservation = jsonData.at("lastname_admin").as_string().c_str();
+            std::string book_status = jsonData.at("book_status").as_string().c_str();
+            
             // Получаем массивы из JSON
             std::vector<std::string> times;
             for (const auto& time : jsonData.at("times").as_array()) {
@@ -51,7 +53,7 @@ namespace vr{
             // Формируем массив данных для вставки
             std::vector<Booking_data> bookings;
             for (size_t i = 0; i < times.size(); ++i) {
-                bookings.push_back({placegame, typegame, namegame, date, times[i], playerCount[i], price[i], comment});
+                bookings.push_back({placegame, typegame, namegame, date, times[i], playerCount[i], price[i], comment, who_reservation, book_status});
             }
 
             // Вставка данных
@@ -127,7 +129,9 @@ namespace vr{
             std::string typegame = jsonData.at("typegame").as_string().c_str();
             std::string namegame = jsonData.at("namegame").as_string().c_str();
             std::string date = jsonData.at("date").as_string().c_str();
-
+            std::string who_reservation = jsonData.at("lastname_admin").as_string().c_str();
+            std::string book_status = jsonData.at("book_status").as_string().c_str();
+            
             // Получаем массивы из JSON
             std::vector<std::string> times;
             for (const auto& time : jsonData.at("times").as_array()) {
@@ -159,7 +163,7 @@ namespace vr{
             // Формируем массив данных для вставки
             std::vector<Booking_data> bookings;
             for (size_t i = 0; i < times.size(); ++i) {
-                bookings.push_back({placegame, typegame, namegame, date, times[i], playerCount[i], price[i], comment});
+                bookings.push_back({placegame, typegame, namegame, date, times[i], playerCount[i], price[i], comment, who_reservation, book_status});
             }
 
             // Вставка данных

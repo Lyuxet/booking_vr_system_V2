@@ -34,6 +34,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const date = document.getElementById('date').value;
         const comment = document.getElementById('comment').value;
 
+        const lastname_admin = document.getElementById('lastname_admin') ? document.getElementById('lastname_admin').value : 'Клиент';
+        const book_status = document.getElementById('book_status') ? document.getElementById('book_status').value : 'Принят';
+
         if (!firstname || !phone || !email) {
             showNotification("Пожалуйста, заполните все обязательные поля", true);
             return;
@@ -43,11 +46,12 @@ document.addEventListener('DOMContentLoaded', function () {
             showNotification('Пожалуйста, выберите хотя бы одно время бронирования', true);
             return;
         }
-        if (!document.getElementById('checkbox').checked){
+
+        if (!document.getElementById('checkbox').checked) {
             showNotification('Пожалуйста, примите соглашение на обработку персональных данных', true);
             return;
         }
-        
+
         let selectedTimes = [];
         for (let button of selectedButtons) {
             const timeText = button.querySelector('.time').textContent.trim();
@@ -57,7 +61,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const now = new Date();
             const selectedDateText = document.getElementById('date').value;
             const [year, month, day] = selectedDateText.split('.').map(Number);
-
             const buttonDate = new Date(year, month - 1, day, startHours, startMinutes);
 
             if (buttonDate <= now) {
@@ -91,24 +94,33 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         let placegame = 'ARENA';
-        if (document.querySelector('.booking-container-close') == null && document.querySelector('.booking-container-open') == null){
+        if (document.querySelector('.booking-container-close') == null && document.querySelector('.booking-container-open') == null) {
             placegame = 'CUBES';
         }
 
         const postData = {
-            firstname, lastname, phone, email, placegame,
+            firstname,
+            lastname,
+            phone,
+            email,
+            placegame,
             typegame: isCloseType ? 'CLOSE' : 'OPEN',
-            namegame, date, times: selectedTimes,
-            playerCount: selectedPlayersCount, price: selectedPrice, comment
+            namegame,
+            date,
+            times: selectedTimes,
+            playerCount: selectedPlayersCount,
+            price: selectedPrice,
+            comment,
+            lastname_admin,
+            book_status
         };
 
         const xhr = new XMLHttpRequest();
-        const url = isCloseType
-            ? 'http://cmsvrdevelopment.ru/api/addBookingOpenArena'
-            : 'http://cmsvrdevelopment.ru/api/addBookingCubes';
+        const url = placegame === 'ARENA' 
+            ? 'http://localhost:8081/addBookingOpenArena'
+            : 'http://localhost:8081/addBookingCubes';
         xhr.open('POST', url, true);
         xhr.setRequestHeader('Content-Type', 'application/json');
-
         xhr.onload = function () {
             if (xhr.status >= 200 && xhr.status < 300) {
                 showNotification('Бронирование успешно отправлено');
@@ -118,14 +130,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 updateBookingContainer();
             }
         };
-
         xhr.onerror = function () {
             showNotification('Ошибка сети.', true);
         };
-
         xhr.send(JSON.stringify(postData));
     });
 });
+
 
 function updateBookingContainer() {
     const date = document.getElementById('date').value;
@@ -139,8 +150,8 @@ function updateBookingContainer() {
 
     const xhr = new XMLHttpRequest();
     const url = placegame === 'ARENA' 
-        ? `http://cmsvrdevelopment.ru/api/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}` 
-        : `http://cmsvrdevelopment.ru/api/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`;
+        ? `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}` 
+        : `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`;
 
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');

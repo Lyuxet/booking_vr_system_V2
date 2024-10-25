@@ -17,6 +17,7 @@ namespace vr{
     };
 
     // Структура для хранения данных бронирования
+    //Порядок не менять!!!!
     struct Booking_data {
         std::string place_game;
         std::string type_game;
@@ -26,6 +27,8 @@ namespace vr{
         int players_count = 0;
         int price = 0;
         std::string comment_game;
+        std::string who_reservation;
+        std::string book_status;
         std::string current_date_game;
         std::string current_time_game;
     };
@@ -81,6 +84,10 @@ public:
                 booking.type_game.clear();
                 booking.place_game.clear();
                 booking.price = 0;
+                booking.current_date_game.clear();
+                booking.current_time_game.clear();
+                booking.who_reservation.clear();
+                booking.book_status.clear();
             }
             bookings_->clear(); // Также очищаем сам вектор
         }

@@ -266,8 +266,8 @@ namespace vr{
 
         // Подготовка запроса на вставку данных о бронировании
         std::string queryInsert = "INSERT INTO " + tableName +
-            " (client_id, date_game, time_game, name_game, players_count, comment_game, type_game, price, place_game) "
-            "VALUES ((SELECT id FROM Clients WHERE phone = ? LIMIT 1), ?, ?, ?, ?, ?, ?, ?, ?)";
+            " (client_id, place_game, name_game, type_game, date_game, time_game, players_count, price, comment_game, who_reservation, book_status) "
+            "VALUES ((SELECT id FROM Clients WHERE phone = ? LIMIT 1), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         std::unique_ptr<sql::PreparedStatement> pstmt2(conn->prepareStatement(queryInsert));
 
@@ -279,14 +279,16 @@ namespace vr{
             }
 
             pstmt2->setString(1, clients_.phone);
-            pstmt2->setString(2, booking.date_game);
-            pstmt2->setString(3, booking.time_game);
-            pstmt2->setString(4, booking.name_game);
-            pstmt2->setInt(5, booking.players_count);
-            pstmt2->setString(6, booking.comment_game);
-            pstmt2->setString(7, booking.type_game);
+            pstmt2->setString(2, booking.place_game);
+            pstmt2->setString(3, booking.name_game);
+            pstmt2->setString(4, booking.type_game);
+            pstmt2->setString(5, booking.date_game);
+            pstmt2->setString(6, booking.time_game);
+            pstmt2->setInt(7, booking.players_count);
             pstmt2->setInt(8, booking.price);
-            pstmt2->setString(9, booking.place_game);
+            pstmt2->setString(9, booking.comment_game);
+            pstmt2->setString(10, booking.who_reservation);
+            pstmt2->setString(11, booking.book_status);
 
             pstmt2->execute();
         }

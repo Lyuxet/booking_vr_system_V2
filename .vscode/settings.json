@@ -97,7 +97,8 @@
         "stacktrace": "cpp",
         "stdfloat": "cpp",
         "syncstream": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "xstring": "cpp"
     },
     "liveServer.settings.port": 5501
 }

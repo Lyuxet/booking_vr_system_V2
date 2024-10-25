@@ -8,7 +8,7 @@ export function initializeWebSocket(place, currentDate, bookingButtons) {
         return;
     }
 
-    socket = new WebSocket('ws://cmsvrdevelopment.ru/ws');
+    socket = new WebSocket('ws://localhost:8082/ws');
 
     socket.addEventListener('open', function() {
         const data = JSON.stringify({ place: place, date: currentDate });

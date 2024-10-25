@@ -1,6 +1,6 @@
-^C:\USERS\VOVOC\PROJECT\BOOKING_VR\BUILD\CMAKEFILES\50A17078EFE8FCEB83265D08B0E13461\GENERATE.STAMP.RULE
+^C:\USERS\LYUXET\PROJECTS\BOOKING_VR\BUILD\CMAKEFILES\45A339368F71FA17CA03DED435919AA8\GENERATE.STAMP.RULE
 setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Vovoc/project/booking_vr -BC:/Users/Vovoc/project/booking_vr/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/Vovoc/project/booking_vr/build/Booking_vr_server.sln
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Lyuxet/projects/booking_vr -BC:/Users/Lyuxet/projects/booking_vr/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/Lyuxet/projects/booking_vr/build/Booking_vr_server.sln
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
