@@ -1,5 +1,0 @@
-2024-10-25 18:27:54 Ошибка отката транзакции в файле C:\Users\Lyuxet\projects\booking_vr\source\Connect_to_DB.cpp на строке 119
-2024-10-25 18:27:54 Attempt 1 - SQLException: Column 'max_players' cannot be null в файле C:\Users\Lyuxet\projects\booking_vr\source\booking_vr.cpp строке 158
-2024-10-25 18:27:54 Error code: 1048, SQLState: 23000 в файле C:\Users\Lyuxet\projects\booking_vr\source\booking_vr.cpp строке 161
-2024-10-25 18:27:54 Cubes Exeption: Column 'max_players' cannot be null в файле C:\Users\Lyuxet\projects\booking_vr\source\booking_vr.cpp строке 150
-2024-10-25 18:27:54 Error: Column 'max_players' cannot be null в файле C:\Users\Lyuxet\projects\booking_vr\source\requests_handler.cpp строке 178

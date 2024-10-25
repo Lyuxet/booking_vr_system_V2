@@ -198,9 +198,9 @@ namespace vr{
                 "GROUP BY time_game"
             ));
             pstmtCheck->setString(1, booking.name_game);
-            pstmtCheck->setString(2, booking.place_game);  // 'ARENA'
-            pstmtCheck->setString(3, booking.date_game);   // Дата игры
-            pstmtCheck->setString(4, booking.time_game);   // Время игры
+            pstmtCheck->setString(2, booking.place_game); 
+            pstmtCheck->setString(3, booking.date_game);   
+            pstmtCheck->setString(4, booking.time_game);   
         } 
         else if (booking.place_game == "CUBES") {
             pstmtCheck.reset(conn->prepareStatement(
@@ -214,9 +214,9 @@ namespace vr{
                 "GROUP BY time_game"
             ));
             pstmtCheck->setString(1, booking.name_game);
-            pstmtCheck->setString(2, booking.place_game);  // 'CUBES'
-            pstmtCheck->setString(3, booking.date_game);   // Дата игры
-            pstmtCheck->setString(4, booking.time_game);   // Время игры
+            pstmtCheck->setString(2, booking.place_game);  
+            pstmtCheck->setString(3, booking.date_game);   
+            pstmtCheck->setString(4, booking.time_game);   
         } 
         else {
             throw std::runtime_error("Неизвестная площадка игры");

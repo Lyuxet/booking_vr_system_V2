@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="C:\Users\Lyuxet\projects\booking_vr\build\CMakeFiles\45a339368f71fa17ca03ded435919aa8\generate.stamp.rule">
+    <CustomBuild Include="C:\Users\Vovoc\project\booking_system_vr\build\CMakeFiles\6d2e6841f683665eaca2447f81badd75\generate.stamp.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{37FC3C3E-71C4-3660-97CD-8E044711B323}</UniqueIdentifier>
+      <UniqueIdentifier>{5AC21ECB-D91F-33D3-9EED-3B421C90572C}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

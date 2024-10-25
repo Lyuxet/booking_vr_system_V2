@@ -7,6 +7,8 @@
 #include <sstream>
 #include <map>  // Для хранения лог-файлов с их именами
 
+std::string currentDateTime();
+
 class Logger {
 public:
     // Получение единственного экземпляра логгера (Singleton)
@@ -29,8 +31,6 @@ private:
     Logger(const Logger&) = delete;
     Logger& operator=(const Logger&) = delete;
 
-    // Получение текущей даты и времени в формате YYYY-MM-DD HH:MM:SS
-    std::string currentDateTime();
     // Деструктор для закрытия всех файлов
     ~Logger();
 };
