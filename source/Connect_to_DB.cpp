@@ -13,53 +13,47 @@ ConnectionPool::ConnectionPool(size_t poolSize, const std::string& configFilePat
 
 // Инициализация пула соединений
 void ConnectionPool::Init_pool() {
-    try
-    {
+    try {
         DBConfig config = ReadDBConfig(configFilePath_);
         for (size_t i = 0; i < poolSize_; ++i) {
             pool_.push(CreateConnection(config));
         }
+    } catch (const std::exception& e) {
+        Logger::getInstance().log("Ошибка инициализации пула соединений: " + std::string(e.what()) +
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
+            "../../logs/error_connect.log");
     }
-    catch(const std::exception& e)
-    {
-        Logger::getInstance().log("Ошибка инициализации пула соединений: " + std::string(e.what()) + 
-            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__)
-        , "../../logs/error_connect.log");
-    }
-    
 }
 
 // Получение соединения из пула
-std::shared_ptr<sql::Connection> ConnectionPool::GetConnection() {
+std::unique_ptr<sql::Connection> ConnectionPool::GetConnection() {
     std::unique_lock<std::mutex> lock(mutex_);
     condVar_.wait(lock, [this] { return !pool_.empty(); });
 
-    auto conn = pool_.front();
+    auto conn = std::move(pool_.front());
     pool_.pop();
-
-    if (!isConnectionActive(conn)) {
-        conn.reset(); 
-        conn = CreateConnection(ReadDBConfig(configFilePath_));  
+    if (!isConnectionActive(conn.get())) {
+        conn = CreateConnection(ReadDBConfig(configFilePath_));
     }
-
     return conn;
 }
 
-bool ConnectionPool::isConnectionActive(std::shared_ptr<sql::Connection> conn){
+// Проверка активности соединения
+bool ConnectionPool::isConnectionActive(sql::Connection* conn) {
     try {
-        std::shared_ptr<sql::Statement> stmt(conn->createStatement());
-        stmt->executeQuery("SELECT 1");  
-        return true;  
+        std::unique_ptr<sql::Statement> stmt(conn->createStatement());
+        stmt->executeQuery("SELECT 1");
+        return true;
     } catch (const sql::SQLException&) {
-        return false;  
+        return false;
     }
 }
 
 // Возвращение соединения в пул
-void ConnectionPool::ReleaseConnection(std::shared_ptr<sql::Connection> conn) {
+void ConnectionPool::ReleaseConnection(std::unique_ptr<sql::Connection> conn) {
     std::lock_guard<std::mutex> lock(mutex_);
     pool_.push(std::move(conn));
-    condVar_.notify_one(); 
+    condVar_.notify_one();
 }
 
 // Чтение конфигурации из файла
@@ -67,8 +61,8 @@ DBConfig ConnectionPool::ReadDBConfig(const std::string& file_name) {
     std::ifstream in_file(file_name);
     if (!in_file.is_open()) {
         throw ConfigFileException("Файл конфигурации не найден");
-        
     }
+
     DBConfig config;
     std::string line;
     while (std::getline(in_file, line)) {
@@ -78,14 +72,11 @@ DBConfig ConnectionPool::ReadDBConfig(const std::string& file_name) {
             std::string value = line.substr(delimiter_pos + 1);
             if (key == "host") {
                 config.host = value;
-            }
-            else if (key == "dbname") {
+            } else if (key == "dbname") {
                 config.dbname = value;
-            }
-            else if (key == "user") {
+            } else if (key == "user") {
                 config.user = value;
-            }
-            else if (key == "password") {
+            } else if (key == "password") {
                 config.password = value;
             }
         }
@@ -94,35 +85,34 @@ DBConfig ConnectionPool::ReadDBConfig(const std::string& file_name) {
 }
 
 // Создание нового соединения
-std::shared_ptr<sql::Connection> ConnectionPool::CreateConnection(const DBConfig& config) {
+std::unique_ptr<sql::Connection> ConnectionPool::CreateConnection(const DBConfig& config) {
     std::string tcp_ip = "tcp://" + config.host;
     sql::mysql::MySQL_Driver* driver = sql::mysql::get_mysql_driver_instance();
-    auto conn = std::shared_ptr<sql::Connection>(driver->connect(tcp_ip, config.user, config.password));
+    std::unique_ptr<sql::Connection> conn(driver->connect(tcp_ip, config.user, config.password));
     conn->setSchema(config.dbname);
     return conn;
 }
 
-
-// Конструктор
-Transaction::Transaction(std::shared_ptr<sql::Connection> conn)
+// Конструктор Transaction
+Transaction::Transaction(sql::Connection* conn)
     : conn_(conn), committed_(false) {
     conn_->setAutoCommit(false); // Отключаем автоматический коммит
 }
 
-// Деструктор
+// Деструктор Transaction
 Transaction::~Transaction() {
     if (!committed_) {
         try {
             conn_->rollback(); // Откатываем изменения, если не закоммичено
             Logger::getInstance().log(
-                "Ошибка отката транзакции в файле " + std::string(__FILE__) + 
+                "Ошибка отката транзакции в файле " + std::string(__FILE__) +
                 " на строке " + std::to_string(__LINE__),
                 "../../logs/error_transaction.log"
             );
         } catch (const sql::SQLException& e) {
-            Logger::getInstance().log("Ошибка отката измеений: " + std::string(e.what()) + 
-            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
-            "../../logs/error_transaction.log");
+            Logger::getInstance().log("Ошибка отката изменений: " + std::string(e.what()) +
+                " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
+                "../../logs/error_transaction.log");
         }
     }
 }
@@ -133,9 +123,9 @@ void Transaction::commit() {
         conn_->commit(); // Фиксируем изменения
         committed_ = true;
     } catch (const sql::SQLException& e) {
-        Logger::getInstance().log("Ошибка отката измеений: " + std::string(e.what()) + 
-            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-         "../../logs/error_transaction.log");
+        Logger::getInstance().log("Ошибка коммита изменений: " + std::string(e.what()) +
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
+            "../../logs/error_transaction.log");
         throw; // Перебрасываем исключение дальше
     }
 }

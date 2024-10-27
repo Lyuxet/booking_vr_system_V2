@@ -1,4 +1,5 @@
 #pragma once
+
 #include <mysql_driver.h>
 #include <mysql_connection.h>
 #include <cppconn/exception.h>
@@ -31,32 +32,32 @@ public:
 class ConnectionPool {
 public:
     ConnectionPool(size_t poolSize, const std::string& configFilePath);
-
     void Init_pool();
-    std::shared_ptr<sql::Connection> GetConnection();
-    void ReleaseConnection(std::shared_ptr<sql::Connection> conn);
+    std::unique_ptr<sql::Connection> GetConnection();
+    void ReleaseConnection(std::unique_ptr<sql::Connection> conn);
+    size_t size(){
+        return pool_.size();
+    }
 
 private:
     std::string configFilePath_;
-    std::queue<std::shared_ptr<sql::Connection>> pool_;
+    std::queue<std::unique_ptr<sql::Connection>> pool_;
     std::mutex mutex_;
     std::condition_variable condVar_;
     size_t poolSize_;
-    bool isConnectionActive(std::shared_ptr<sql::Connection> conn);
-
+    bool isConnectionActive(sql::Connection* conn);
     DBConfig ReadDBConfig(const std::string& file_name);
-    std::shared_ptr<sql::Connection> CreateConnection(const DBConfig& config);
+    std::unique_ptr<sql::Connection> CreateConnection(const DBConfig& config);
 };
 
 // Класс для управления транзакциями
 class Transaction {
 public:
-    explicit Transaction(std::shared_ptr<sql::Connection> conn);
+    explicit Transaction(sql::Connection* conn);
     ~Transaction();
-
     void commit();
 
 private:
-    std::shared_ptr<sql::Connection> conn_;
+    sql::Connection* conn_;
     bool committed_;
 };

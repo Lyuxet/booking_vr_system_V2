@@ -10,6 +10,16 @@
 #include <cstdlib>
 #include <sstream>
 
+#include <windows.h>
+#include <psapi.h>
+
+void printMemoryUsage() {
+    PROCESS_MEMORY_COUNTERS_EX pmc;
+    GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
+    SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
+    std::cout << "Используемая память: " << physMemUsedByMe / 1024 << " KB\n";
+}
+
 std::mutex mtxtest;
 
 
@@ -28,26 +38,24 @@ namespace vr{
     }
 
     void Arena::ProcessArenaTransaction(const std::string& operationName) {
-        
         ScopeGuard guard(bookings_, clients_);
-        
         try {
-            std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
-            ConnectionGuard conn_guard(conn, pool_);
+            std::unique_ptr<sql::Connection> conn = pool_.GetConnection();
+            ConnectionGuard conn_guard(std::move(conn), pool_);
             
-            executeTransactionInsert(conn);
-
+            executeTransactionInsert(conn_guard.getConnection());
             std::lock_guard<std::mutex> lock(mtxtest);
             PrintInsertBooking();
         } catch (const std::exception& e) {
             std::lock_guard<std::mutex> lock(mtxtest);
             std::cerr << operationName << " Exception: " << e.what() << std::endl;
-            Logger::getInstance().log(operationName + " Exeption: " + std::string(e.what()) + 
-            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-            "../../logs/error_transaction.log");
+            Logger::getInstance().log(operationName + " Exception: " + std::string(e.what()) +
+                " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
+                "../../logs/error_transaction.log");
             throw;
         }
     }
+
     void Arena::Open_arena() {
         ProcessArenaTransaction("Open_Arena");
     }
@@ -56,47 +64,39 @@ namespace vr{
         ProcessArenaTransaction("Close_Arena");
     }
 
-    std::string Arena::CheckAvailabilityPlace(){
-        ScopeGuard guard(availability_);
-        try
-        {
-            std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
-            ConnectionGuard conn_guard(conn, pool_);
+    std::string Arena::CheckAvailabilityPlace() {
+        try {
+            std::unique_ptr<sql::Connection> conn = pool_.GetConnection();
+            ConnectionGuard conn_guard(std::move(conn), pool_);
             std::string response;
-            executeTransactionCheckAvailabilityArena(conn, response);
+            executeTransactionCheckAvailabilityArena(conn_guard.getConnection(), response);
             return response;
-
-        }
-        catch(const std::exception& e)
-        {
-            Logger::getInstance().log(" Avalibality Exeption: " + std::string(e.what()) + 
-            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-            "../../logs/error_transaction.log");
+        } catch (const std::exception& e) {
+            Logger::getInstance().log("Avalibality Exception: " + std::string(e.what()) +
+                " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
+                "../../logs/error_transaction.log");
             return "";
         }
-        
     }
 
-    std::string Cubes::CheckAvailabilityPlace(){
-        ScopeGuard guard(availability_);
-        try
-        {
-            std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
-            ConnectionGuard conn_guard(conn, pool_);
-            std::string response;
-            executeTransactionCheckAvailabilityCubes(conn, response);
-            return response;
 
-        }
-        catch(const std::exception& e)
-        {
-            Logger::getInstance().log("Avalibality Exeption: " + std::string(e.what()) + 
-            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-            "../../logs/error_transaction.log");
+    std::string Cubes::CheckAvailabilityPlace() {
+        ScopeGuard guard(availability_);
+        try {
+            std::unique_ptr<sql::Connection> conn = pool_.GetConnection();
+            ConnectionGuard conn_guard(std::move(conn), pool_);
+            std::string response;
+            executeTransactionCheckAvailabilityCubes(conn_guard.getConnection(), response);
+            return response;
+        } catch (const std::exception& e) {
+            Logger::getInstance().log("Avalibality Exception: " + std::string(e.what()) +
+                " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
+                "../../logs/error_transaction.log");
             return "";
         }
-        
     }
+
+
     /*
     void Booking::Update(){
         ScopeGuard guard(booking_);
@@ -138,26 +138,26 @@ namespace vr{
     void Cubes::Open_cubes() {
         ScopeGuard guard(bookings_, clients_);
         try {
-            std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
-            ConnectionGuard conn_guard(conn, pool_);
-            executeTransactionInsert(conn);
+            std::unique_ptr<sql::Connection> conn = pool_.GetConnection();
+            ConnectionGuard conn_guard(std::move(conn), pool_);
+            executeTransactionInsert(conn_guard.getConnection());
             std::lock_guard<std::mutex> lock(mtxtest);
             PrintInsertBooking();
-            
         } catch (const std::exception& e) {
             std::lock_guard<std::mutex> lock(mtxtest);
-            Logger::getInstance().log("Cubes Exeption: " + std::string(e.what()) + 
-            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-            "../../logs/error_transaction.log");
+            Logger::getInstance().log("Cubes Exception: " + std::string(e.what()) +
+                " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
+                "../../logs/error_transaction.log");
             throw;
         }
     }
 
-    void Booking::handleSQLException(const sql::SQLException& e, int attempt, int max_retries, int base_retry_delay_ms, std::shared_ptr<sql::Connection> conn) {
-        Logger::getInstance().log("Attempt " + std::to_string(attempt + 1) + " - SQLException: " + std::string(e.what()) + 
+
+    void Booking::handleSQLException(const sql::SQLException& e, int attempt, int max_retries, int base_retry_delay_ms, sql::Connection* conn) {
+        Logger::getInstance().log("Attempt " + std::to_string(attempt + 1) + " - SQLException: " + std::string(e.what()) +
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
             "../../logs/error_transaction.log");
-        Logger::getInstance().log("Error code: " + std::to_string(e.getErrorCode()) + ", SQLState: " + e.getSQLState() + 
+        Logger::getInstance().log("Error code: " + std::to_string(e.getErrorCode()) + ", SQLState: " + e.getSQLState() +
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
             "../../logs/error_transaction.log");
 
@@ -176,16 +176,16 @@ namespace vr{
         }
     }
 
-    void Booking::handleStdException(const std::exception& e, std::shared_ptr<sql::Connection> conn) {
+    void Booking::handleStdException(const std::exception& e, sql::Connection* conn) {
         std::cerr << "Exception: " << e.what() << std::endl;
         Logger::getInstance().log("Exception: " + std::string(e.what()), "../../logs/error_transaction.log");
         conn->rollback();
         throw;
     }
 
-   bool Booking::checkAvailableSlots(std::shared_ptr<sql::Connection> conn, const Booking_data& booking) {
-        std::unique_ptr<sql::PreparedStatement> pstmtCheck;
 
+   bool Booking::checkAvailableSlots(sql::Connection* conn, const Booking_data& booking) {
+        std::unique_ptr<sql::PreparedStatement> pstmtCheck;
         if (booking.place_game == "ARENA") {
             pstmtCheck.reset(conn->prepareStatement(
                 "SELECT time_game, SUM(players_count) AS total_players, "
@@ -198,11 +198,10 @@ namespace vr{
                 "GROUP BY time_game"
             ));
             pstmtCheck->setString(1, booking.name_game);
-            pstmtCheck->setString(2, booking.place_game); 
-            pstmtCheck->setString(3, booking.date_game);   
-            pstmtCheck->setString(4, booking.time_game);   
-        } 
-        else if (booking.place_game == "CUBES") {
+            pstmtCheck->setString(2, booking.place_game);
+            pstmtCheck->setString(3, booking.date_game);
+            pstmtCheck->setString(4, booking.time_game);
+        } else if (booking.place_game == "CUBES") {
             pstmtCheck.reset(conn->prepareStatement(
                 "SELECT time_game, SUM(players_count) AS total_players, "
                 "CASE "
@@ -214,16 +213,14 @@ namespace vr{
                 "GROUP BY time_game"
             ));
             pstmtCheck->setString(1, booking.name_game);
-            pstmtCheck->setString(2, booking.place_game);  
-            pstmtCheck->setString(3, booking.date_game);   
-            pstmtCheck->setString(4, booking.time_game);   
-        } 
-        else {
+            pstmtCheck->setString(2, booking.place_game);
+            pstmtCheck->setString(3, booking.date_game);
+            pstmtCheck->setString(4, booking.time_game);
+        } else {
             throw std::runtime_error("Неизвестная площадка игры");
         }
-
+        
         std::unique_ptr<sql::ResultSet> res(pstmtCheck->executeQuery());
-
         if (res->next()) {
             int available_slots = res->getInt("available_slots");
             if (available_slots < booking.players_count) {
@@ -234,7 +231,8 @@ namespace vr{
     }
 
 
-    void Booking::insertClient(std::shared_ptr<sql::Connection> conn) {
+
+    void Booking::insertClient(sql::Connection* conn) {
         // Проверяем, существует ли клиент с таким телефоном или почтой
         std::unique_ptr<sql::PreparedStatement> checkStmt(conn->prepareStatement(
             "SELECT id FROM Clients WHERE phone = ? AND email = ?"
@@ -242,7 +240,7 @@ namespace vr{
         checkStmt->setString(1, clients_.phone);
         checkStmt->setString(2, clients_.email);
         std::unique_ptr<sql::ResultSet> res(checkStmt->executeQuery());
-
+        
         if (res->next()) {
             return;
         } else {
@@ -253,8 +251,8 @@ namespace vr{
             pstmt->setString(2, clients_.last_name);
             pstmt->setString(3, clients_.phone);
             pstmt->setString(4, clients_.email);
+            
             int affectedRows = pstmt->executeUpdate();  // Получаем количество затронутых строк
-
             if (affectedRows > 0) {
                 PrintInsertClient();
             }
@@ -264,53 +262,50 @@ namespace vr{
 
 
 
-    void Booking::executeTransactionInsert(std::shared_ptr<sql::Connection> conn) {
-    executeTransactionWithRetry(conn, [&](std::shared_ptr<sql::Connection> conn) {
-        
-        conn->setAutoCommit(false); // Начинаем транзакцию
 
-        // Определение таблицы в зависимости от типа игры
-        std::string tableName;
-        if (gameTables.find(bookings_[0].name_game) != gameTables.end()){
-            tableName = gameTables.at(bookings_[0].name_game);
-        }
-        else{
-            throw std::runtime_error("Неизвестный тип игры");
-        }
-
-        // Добавление клиента
-        insertClient(conn);
-
-        // Подготовка запроса на вставку данных о бронировании
-        std::string queryInsert = "INSERT INTO " + tableName +
-            " (client_id, place_game, name_game, type_game, date_game, time_game, players_count, price, comment_game, who_reservation, book_status) "
-            "VALUES ((SELECT id FROM Clients WHERE phone = ? LIMIT 1), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        std::unique_ptr<sql::PreparedStatement> pstmt2(conn->prepareStatement(queryInsert));
-
-            // Вставка всех данных из массива
-        for (const auto& booking : bookings_) {
-            // Проверка наличия доступных мест
-            if (!checkAvailableSlots(conn, booking)) {
-                throw std::runtime_error("Недостаточно свободных мест для бронирования");
+    void Booking::executeTransactionInsert(sql::Connection* conn) {
+        executeTransactionWithRetry(conn, [&](sql::Connection* conn) {
+            conn->setAutoCommit(false); // Начинаем транзакцию
+            
+            // Определение таблицы в зависимости от типа игры
+            std::string tableName;
+            if (gameTables.find(bookings_[0].name_game) != gameTables.end()) {
+                tableName = gameTables.at(bookings_[0].name_game);
+            } else {
+                throw std::runtime_error("Неизвестный тип игры");
             }
 
-            pstmt2->setString(1, clients_.phone);
-            pstmt2->setString(2, booking.place_game);
-            pstmt2->setString(3, booking.name_game);
-            pstmt2->setString(4, booking.type_game);
-            pstmt2->setString(5, booking.date_game);
-            pstmt2->setString(6, booking.time_game);
-            pstmt2->setInt(7, booking.players_count);
-            pstmt2->setInt(8, booking.price);
-            pstmt2->setString(9, booking.comment_game);
-            pstmt2->setString(10, booking.who_reservation);
-            pstmt2->setString(11, booking.book_status);
+            // Добавление клиента
+            insertClient(conn);
 
-            pstmt2->execute();
-        }
-    });
-}
+            // Подготовка запроса на вставку данных о бронировании
+            std::string queryInsert = "INSERT INTO " + tableName +
+                " (client_id, place_game, name_game, type_game, date_game, time_game, players_count, price, comment_game, who_reservation, book_status) " +
+                "VALUES ((SELECT id FROM Clients WHERE phone = ? LIMIT 1), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            std::unique_ptr<sql::PreparedStatement> pstmt2(conn->prepareStatement(queryInsert));
+
+            // Вставка всех данных из массива
+            for (const auto& booking : bookings_) {
+                // Проверка наличия доступных мест
+                if (!checkAvailableSlots(conn, booking)) {
+                    throw std::runtime_error("Недостаточно свободных мест для бронирования");
+                }
+                pstmt2->setString(1, clients_.phone);
+                pstmt2->setString(2, booking.place_game);
+                pstmt2->setString(3, booking.name_game);
+                pstmt2->setString(4, booking.type_game);
+                pstmt2->setString(5, booking.date_game);
+                pstmt2->setString(6, booking.time_game);
+                pstmt2->setInt(7, booking.players_count);
+                pstmt2->setInt(8, booking.price);
+                pstmt2->setString(9, booking.comment_game);
+                pstmt2->setString(10, booking.who_reservation);
+                pstmt2->setString(11, booking.book_status);
+                pstmt2->execute();
+            }
+        });
+    }
+
 
 
 
@@ -522,85 +517,67 @@ namespace vr{
     }
 
 
-    void Booking::executeTransactionCheckAvailabilityArena(std::shared_ptr<sql::Connection> conn, std::string& response){
+    void Booking::executeTransactionCheckAvailabilityArena(sql::Connection* conn, std::string& response) {
         const int max_retries = 5;
         const int base_retry_delay_ms = 500;
-
         for (int attempt = 0; attempt < max_retries; ++attempt) {
             try {
                 conn->setAutoCommit(false);
                 std::unique_ptr<sql::PreparedStatement> pstmtCheckAvailability(conn->prepareStatement(
-                "SELECT time_game, SUM(players_count) AS total_players, "
-                "CASE "
-                "    WHEN COUNT(DISTINCT name_game) = 1 AND MAX(name_game) = ? THEN (10 - SUM(players_count)) "
-                "    ELSE 0 "
-                "END AS available_slots "
-                "FROM gameschedule "
-                "WHERE place_game = ? AND date_game = ? "
-                "GROUP BY time_game"
-            ));
-
-
+                    "SELECT time_game, SUM(players_count) AS total_players, "
+                    "CASE "
+                    "    WHEN COUNT(DISTINCT name_game) = 1 AND MAX(name_game) = ? THEN (10 - SUM(players_count)) "
+                    "    ELSE 0 "
+                    "END AS available_slots "
+                    "FROM gameschedule "
+                    "WHERE place_game = ? AND date_game = ? "
+                    "GROUP BY time_game"
+                ));
                 pstmtCheckAvailability->setString(1, availability_.namegame);
                 pstmtCheckAvailability->setString(2, availability_.placegame);
                 pstmtCheckAvailability->setString(3, availability_.date);
-
                 std::unique_ptr<sql::ResultSet> resSet(pstmtCheckAvailability->executeQuery());
 
-                // Создаем JSON объект для хранения результатов
                 boost::json::array jsonResponse;
-
-                // Перебираем результаты и добавляем их в JSON массив
                 while (resSet->next()) {
                     boost::json::object gameInfo;
                     gameInfo["time_game"] = std::string(resSet->getString("time_game"));
                     gameInfo["total_players"] = resSet->getInt("total_players");
                     gameInfo["available_slots"] = resSet->getInt("available_slots");
-
-                    // Добавляем в массив
                     jsonResponse.push_back(gameInfo);
                 }
-
-                // Преобразуем JSON в строку
-                 response = boost::json::serialize(jsonResponse);
-                conn->commit();  // Завершаем транзакцию
-                return;          // Успешный выход из функции
-
+                response = boost::json::serialize(jsonResponse);
+                conn->commit();
+                return;
             }
             catch (const sql::SQLException& e) {
                 handleSQLException(e, attempt, max_retries, base_retry_delay_ms, conn);
-            } 
+            }
             catch (const std::exception& e) {
                 handleStdException(e, conn);
             }
-            
-
         }
     }
 
-    void Booking::executeTransactionCheckAvailabilityCubes(std::shared_ptr<sql::Connection> conn, std::string& response){
+   void Booking::executeTransactionCheckAvailabilityCubes(sql::Connection* conn, std::string& response) {
         const int max_retries = 5;
         const int base_retry_delay_ms = 500;
-
         for (int attempt = 0; attempt < max_retries; ++attempt) {
             try {
                 conn->setAutoCommit(false);
                 std::unique_ptr<sql::PreparedStatement> pstmtCheckAvailability(conn->prepareStatement(
-                "SELECT time_game, SUM(players_count) AS total_players, "
-                "CASE "
-                "    WHEN COUNT(DISTINCT name_game) = 1 AND MAX(name_game) = ? THEN (4 - SUM(players_count)) "
-                "    ELSE 0 "
-                "END AS available_slots "
-                "FROM Cubes "
-                "WHERE place_game = ? AND date_game = ? "
-                "GROUP BY time_game"
-            ));
-
-
+                    "SELECT time_game, SUM(players_count) AS total_players, "
+                    "CASE "
+                    "    WHEN COUNT(DISTINCT name_game) = 1 AND MAX(name_game) = ? THEN (4 - SUM(players_count)) "
+                    "    ELSE 0 "
+                    "END AS available_slots "
+                    "FROM Cubes "
+                    "WHERE place_game = ? AND date_game = ? "
+                    "GROUP BY time_game"
+                ));
                 pstmtCheckAvailability->setString(1, availability_.namegame);
                 pstmtCheckAvailability->setString(2, availability_.placegame);
                 pstmtCheckAvailability->setString(3, availability_.date);
-
                 std::unique_ptr<sql::ResultSet> resSet(pstmtCheckAvailability->executeQuery());
 
                 // Создаем JSON объект для хранения результатов
@@ -612,27 +589,24 @@ namespace vr{
                     gameInfo["time_game"] = std::string(resSet->getString("time_game"));
                     gameInfo["total_players"] = resSet->getInt("total_players");
                     gameInfo["available_slots"] = resSet->getInt("available_slots");
-
                     // Добавляем в массив
                     jsonResponse.push_back(gameInfo);
                 }
 
                 // Преобразуем JSON в строку
                 response = boost::json::serialize(jsonResponse);
-                conn->commit();  // Завершаем транзакцию
-                return;          // Успешный выход из функции
 
-            }
-            catch (const sql::SQLException& e) {
+                conn->commit();  // Завершаем транзакцию
+                return;  // Успешный выход из функции
+            } catch (const sql::SQLException& e) {
                 handleSQLException(e, attempt, max_retries, base_retry_delay_ms, conn);
-            } 
-            catch (const std::exception& e) {
+            } catch (const std::exception& e) {
                 handleStdException(e, conn);
             }
-            
-
         }
     }
+
+
 
     std::unordered_map<std::string, std::string> Booking::LoadGameTables(const std::string& filename){
         std::unordered_map<std::string, std::string> gameTableMap;

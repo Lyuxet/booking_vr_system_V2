@@ -42,7 +42,7 @@ namespace vr{
     // Класс для управления ресурсами соединения
     class ConnectionGuard {
     public:
-        ConnectionGuard(std::shared_ptr<sql::Connection> conn, ConnectionPool& pool)
+        ConnectionGuard(std::unique_ptr<sql::Connection> conn, ConnectionPool& pool)
             : conn_(std::move(conn)), pool_(pool) {}
 
         ~ConnectionGuard() {
@@ -51,10 +51,16 @@ namespace vr{
             }
         }
 
+        sql::Connection* getConnection() const {
+            return conn_.get();
+        }
+
     private:
-        std::shared_ptr<sql::Connection> conn_;
+        std::unique_ptr<sql::Connection> conn_;
         ConnectionPool& pool_;
     };
+
+
 
     // Класс для управления ресурсами бронирования и клиента
     class ScopeGuard {
@@ -125,9 +131,9 @@ private:
         //void Delete();
 
     protected:
-        void executeTransactionCheckAvailabilityArena(std::shared_ptr<sql::Connection> conn, std::string& response);
-        void executeTransactionCheckAvailabilityCubes(std::shared_ptr<sql::Connection> conn, std::string& response);
-        void executeTransactionInsert(std::shared_ptr<sql::Connection> conn);
+        void executeTransactionCheckAvailabilityArena(sql::Connection* conn, std::string& response);
+        void executeTransactionCheckAvailabilityCubes(sql::Connection* conn, std::string& response);
+        void executeTransactionInsert(sql::Connection* conn);
         //void executeTransactionDelete(std::shared_ptr<sql::Connection> conn);
         //void executeTransactionUpdate(std::shared_ptr<sql::Connection> conn);
         void PrintInsertBooking();
@@ -142,36 +148,32 @@ private:
 
         // Добавление метода для выполнения транзакции с повтором
         template <typename Func>
-        void executeTransactionWithRetry(std::shared_ptr<sql::Connection> conn, Func&& func) {
+        void executeTransactionWithRetry(sql::Connection* conn, Func&& func) {
             const int max_retries = 5;
             const int base_retry_delay_ms = 500;
-
             for (int attempt = 0; attempt < max_retries; ++attempt) {
                 try {
                     Transaction transaction(conn); // Создаем транзакцию
-
                     func(conn); // Выполняем нужную логику транзакции
-
                     transaction.commit(); // Коммит транзакции, если все прошло успешно
                     return;
-                } 
-                catch (const sql::SQLException& e) {
+                } catch (const sql::SQLException& e) {
                     handleSQLException(e, attempt, max_retries, base_retry_delay_ms, conn);
-                } 
-                catch (const std::exception& e) {
+                } catch (const std::exception& e) {
                     handleStdException(e, conn);
                 }
             }
         }
 
+
     private:
         std::unordered_map<std::string, std::string> gameTables;
         std::unordered_map<std::string, std::string> LoadGameTables(const std::string& filename);
         std::string urlEncode(const std::string &value);
-        bool checkAvailableSlots(std::shared_ptr<sql::Connection> conn, const Booking_data& booking);
-        void insertClient(std::shared_ptr<sql::Connection> conn);
-        void handleSQLException(const sql::SQLException& e, int attempt, int max_retries, int base_retry_delay_ms, std::shared_ptr<sql::Connection> conn);
-        void handleStdException(const std::exception& e, std::shared_ptr<sql::Connection> conn);
+        bool checkAvailableSlots(sql::Connection* conn, const Booking_data& booking);
+        void insertClient(sql::Connection* conn);
+        void handleSQLException(const sql::SQLException& e, int attempt, int max_retries, int base_retry_delay_ms, sql::Connection* conn);
+        void handleStdException(const std::exception& e, sql::Connection* conn);
     };
 
 
