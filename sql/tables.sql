@@ -1,5 +1,5 @@
 use booking_vr;
--- Создание таблицы GameSchedule
+
 CREATE TABLE GameSchedule (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     client_id BIGINT UNSIGNED NOT NULL,
@@ -17,10 +17,9 @@ CREATE TABLE GameSchedule (
 	date_add_book TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
--- Создание индекса для внешнего ключа в таблице GameSchedule
 CREATE INDEX idx_game_schedule ON GameSchedule (name_game, date_game, time_game);
 
--- Создание таблицы ArenaShooterStats
+
 CREATE TABLE ArenaShooterStats (
 	id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     client_id BIGINT UNSIGNED NOT NULL,
@@ -38,10 +37,10 @@ CREATE TABLE ArenaShooterStats (
 	date_add_book TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CONSTRAINT fk_shooter_schedule FOREIGN KEY (name_game, date_game, time_game)
     REFERENCES GameSchedule(name_game, date_game, time_game)
-    ON DELETE CASCADE  -- Каскадное удаление для обеспечения целостности данных
+    ON DELETE CASCADE 
 );
 
--- Создание таблицы ArenaShooterStats
+
 CREATE TABLE ArenaQuestStats (
 	id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     client_id BIGINT UNSIGNED NOT NULL,
@@ -59,7 +58,7 @@ CREATE TABLE ArenaQuestStats (
 	date_add_book TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CONSTRAINT fk_quest_schedule FOREIGN KEY (name_game, date_game, time_game)
     REFERENCES GameSchedule(name_game, date_game, time_game)
-    ON DELETE CASCADE  -- Каскадное удаление для обеспечения целостности данных
+    ON DELETE CASCADE  
 );
 
 CREATE TABLE Cubes(
@@ -79,17 +78,17 @@ CREATE TABLE Cubes(
 	date_add_book TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CONSTRAINT fk_cubes_schedule FOREIGN KEY (name_game, date_game, time_game)
     REFERENCES GameSchedule(name_game, date_game, time_game)
-    ON DELETE CASCADE  -- Каскадное удаление для обеспечения целостности данных
+    ON DELETE CASCADE  
 );
 
--- Созадние таблицы для персольных данных клиентов
+
 CREATE TABLE Clients (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     phone VARCHAR(20) NOT NULL,
     email VARCHAR(100) NOT NULL,
-    UNIQUE (phone, email)  -- уникальность телефона и почты для предотвращения дублирования
+    UNIQUE (phone, email)  
 );
 
 

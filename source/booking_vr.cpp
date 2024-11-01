@@ -10,15 +10,6 @@
 #include <cstdlib>
 #include <sstream>
 
-#include <windows.h>
-#include <psapi.h>
-
-void printMemoryUsage() {
-    PROCESS_MEMORY_COUNTERS_EX pmc;
-    GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
-    SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
-    std::cout << "Используемая память: " << physMemUsedByMe / 1024 << " KB\n";
-}
 
 std::mutex mtxtest;
 
@@ -51,7 +42,7 @@ namespace vr{
             std::cerr << operationName << " Exception: " << e.what() << std::endl;
             Logger::getInstance().log(operationName + " Exception: " + std::string(e.what()) +
                 " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
-                "../../logs/error_transaction.log");
+                "../logs/error_transaction.log");
             throw;
         }
     }
@@ -74,7 +65,7 @@ namespace vr{
         } catch (const std::exception& e) {
             Logger::getInstance().log("Avalibality Exception: " + std::string(e.what()) +
                 " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
-                "../../logs/error_transaction.log");
+                "../logs/error_transaction.log");
             return "";
         }
     }
@@ -91,7 +82,7 @@ namespace vr{
         } catch (const std::exception& e) {
             Logger::getInstance().log("Avalibality Exception: " + std::string(e.what()) +
                 " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
-                "../../logs/error_transaction.log");
+                "../logs/error_transaction.log");
             return "";
         }
     }
@@ -147,7 +138,7 @@ namespace vr{
             std::lock_guard<std::mutex> lock(mtxtest);
             Logger::getInstance().log("Cubes Exception: " + std::string(e.what()) +
                 " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
-                "../../logs/error_transaction.log");
+                "../logs/error_transaction.log");
             throw;
         }
     }
@@ -156,15 +147,15 @@ namespace vr{
     void Booking::handleSQLException(const sql::SQLException& e, int attempt, int max_retries, int base_retry_delay_ms, sql::Connection* conn) {
         Logger::getInstance().log("Attempt " + std::to_string(attempt + 1) + " - SQLException: " + std::string(e.what()) +
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
-            "../../logs/error_transaction.log");
+            "../logs/error_transaction.log");
         Logger::getInstance().log("Error code: " + std::to_string(e.getErrorCode()) + ", SQLState: " + e.getSQLState() +
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
-            "../../logs/error_transaction.log");
+            "../logs/error_transaction.log");
 
         if (e.getErrorCode() == 1213) { // Deadlock
             if (attempt < max_retries - 1) {
                 int delay = base_retry_delay_ms * (attempt + 1) + rand() % 1000;
-                Logger::getInstance().log("Retrying after " + std::to_string(delay) + " ms", "../../logs/error_transaction.log");
+                Logger::getInstance().log("Retrying after " + std::to_string(delay) + " ms", "../logs/error_transaction.log");
                 std::this_thread::sleep_for(std::chrono::milliseconds(delay));
             } else {
                 conn->rollback();
@@ -178,7 +169,7 @@ namespace vr{
 
     void Booking::handleStdException(const std::exception& e, sql::Connection* conn) {
         std::cerr << "Exception: " << e.what() << std::endl;
-        Logger::getInstance().log("Exception: " + std::string(e.what()), "../../logs/error_transaction.log");
+        Logger::getInstance().log("Exception: " + std::string(e.what()), "../logs/error_transaction.log");
         conn->rollback();
         throw;
     }
@@ -193,7 +184,7 @@ namespace vr{
                 "    WHEN COUNT(DISTINCT name_game) = 1 AND MAX(name_game) = ? THEN (10 - SUM(players_count)) "
                 "    ELSE 0 "
                 "END AS available_slots "
-                "FROM gameschedule "
+                "FROM GameSchedule "
                 "WHERE place_game = ? AND date_game = ? AND time_game = ? "
                 "GROUP BY time_game"
             ));
@@ -277,7 +268,7 @@ namespace vr{
 
             // Добавление клиента
             insertClient(conn);
-
+        
             // Подготовка запроса на вставку данных о бронировании
             std::string queryInsert = "INSERT INTO " + tableName +
                 " (client_id, place_game, name_game, type_game, date_game, time_game, players_count, price, comment_game, who_reservation, book_status) " +
@@ -529,7 +520,7 @@ namespace vr{
                     "    WHEN COUNT(DISTINCT name_game) = 1 AND MAX(name_game) = ? THEN (10 - SUM(players_count)) "
                     "    ELSE 0 "
                     "END AS available_slots "
-                    "FROM gameschedule "
+                    "FROM GameSchedule "
                     "WHERE place_game = ? AND date_game = ? "
                     "GROUP BY time_game"
                 ));

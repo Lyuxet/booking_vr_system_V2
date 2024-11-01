@@ -2,7 +2,6 @@
 #include "logger.h"
 
 
-
 namespace vr{
 
 

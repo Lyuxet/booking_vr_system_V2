@@ -13,6 +13,7 @@ export function initializeWebSocket(place, currentDate, bookingButtons) {
     socket.addEventListener('open', function() {
         const data = JSON.stringify({ place: place, date: currentDate });
         socket.send(data);
+        
         checkAvailability(bookingButtons, place);
         hidePriceDisplay();
     });

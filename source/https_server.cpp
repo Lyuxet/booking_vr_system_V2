@@ -16,7 +16,7 @@ void HttpSession::on_read(beast::error_code ec, std::size_t bytes_transferred){
     if (ec) {
         Logger::getInstance().log("Ошибка чтения: " + ec.message() + "(" + std::to_string(ec.value()) + ")" + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-        "../../logs/error_read.log");
+        "../logs/error_read.log");
         return;
     }
 
@@ -114,7 +114,7 @@ void HttpSession::on_write(beast::error_code ec, std::size_t){
     if (ec) {
         Logger::getInstance().log("Ошибка чтения: " + ec.message() + "(" + std::to_string(ec.value()) + ")" + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-        "../../logs/error_read.log");
+        "../logs/error_read.log");
 
         return;
     }
@@ -142,7 +142,7 @@ void HttpServer::do_accept() {
         } else {
             Logger::getInstance().log("Ошибка чтения: " + ec.message() + "(" + std::to_string(ec.value()) + ")" + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-            "../../logs/error_read.log"); 
+            "../logs/error_read.log"); 
         }
         do_accept();
     });

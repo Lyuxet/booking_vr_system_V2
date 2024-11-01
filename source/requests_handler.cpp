@@ -74,7 +74,7 @@ namespace vr{
         } catch (const std::exception& e) {
             Logger::getInstance().log("Error: " + std::string(e.what()) + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-            "../../logs/error_transaction.log");
+            "../logs/error_transaction.log");
             res.result(http::status::internal_server_error);
             res.set(http::field::content_type, "application/json");
             res.body() = std::string(e.what());
@@ -111,7 +111,7 @@ namespace vr{
             // Логируем ошибки
             Logger::getInstance().log("Error: " + std::string(e.what()) + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-            "../../logs/error_transaction.log");
+            "../logs/error_transaction.log");
             res.result(http::status::internal_server_error);
             res.set(http::field::content_type, "text/plain");
             res.body() = e.what(); // Устанавливаем тело ответа в сообщении об ошибке
@@ -178,7 +178,7 @@ namespace vr{
         } catch (const std::exception& e) {
             Logger::getInstance().log("Error: " + std::string(e.what()) + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-            "../../logs/error_transaction.log");
+            "../logs/error_transaction.log");
             res.result(http::status::internal_server_error);
             res.set(http::field::content_type, "application/json");
             res.body() = std::string(e.what());

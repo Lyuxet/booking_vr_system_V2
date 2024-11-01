@@ -28,7 +28,7 @@ std::string WebSocketSession::GetDate() {
 void WebSocketSession::on_accept(beast::error_code ec) {
     if (ec) {
         Logger::getInstance().log("Ошибка при принятии: " + ec.message() + "(" + std::to_string(ec.value()) + ")" +
-                                  " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), "../../logs/error_accept.log");
+                                  " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), "../logs/error_accept.log");
         return;
     }
     do_read();
@@ -45,7 +45,7 @@ void WebSocketSession::on_read(beast::error_code ec, std::size_t bytes_transferr
         return;
     } else if (ec) {
         Logger::getInstance().log("Ошибка при чтении: " + ec.message() + "(" + std::to_string(ec.value()) + ")" +
-                                  " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), "../../logs/error_read.log");
+                                  " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), "../logs/error_read.log");
         close_session();
         return;
     }
@@ -59,7 +59,7 @@ void WebSocketSession::on_read(beast::error_code ec, std::size_t bytes_transferr
         // Сохранение данных в сессии
         UpdateGameInfo(place, date);
     } catch (const std::exception& e) {
-        Logger::getInstance().log("Ошибка при обработке сообщения: " + std::string(e.what()), "../../logs/error_read.log");
+        Logger::getInstance().log("Ошибка при обработке сообщения: " + std::string(e.what()), "../logs/error_read.log");
     }
     do_read(); // Ожидание следующего сообщения
 }
@@ -67,7 +67,7 @@ void WebSocketSession::on_read(beast::error_code ec, std::size_t bytes_transferr
 void WebSocketSession::on_write(beast::error_code ec, std::size_t) {
     if (ec) {
         Logger::getInstance().log("Ошибка при записи: " + ec.message() + "(" + std::to_string(ec.value()) + ")" +
-                                  " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), "../../logs/error_write.log");
+                                  " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), "../logs/error_write.log");
         if (ec != websocket::error::closed) {
             close_session(); // Закрываем сессию при ошибке записи, если это не ошибка закрытия
         }
@@ -99,7 +99,7 @@ void WebSocketServer::do_accept() {
             sessions_.insert(ws_session); // Добавление сессии в набор
         } else {
             Logger::getInstance().log("Ошибка при принятии сессии: " + ec.message() + "(" + std::to_string(ec.value()) + ")" +
-                                      " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), "../../logs/error_accept.log");
+                                      " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), "../logs/error_accept.log");
         }
         do_accept(); // Продолжаем ожидать новых соединений
     });

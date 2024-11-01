@@ -117,8 +117,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const xhr = new XMLHttpRequest();
         const url = placegame === 'ARENA' 
-            ? 'http://cmsvrdevelopment.ru/api/addBookingOpenArena'
-            : 'http://cmsvrdevelopment.ru/api/addBookingCubes';
+            ? 'http://localhost:8081/addBookingOpenArena'
+            : 'http://localhost:8081/addBookingCubes';
         xhr.open('POST', url, true);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.onload = function () {
@@ -150,8 +150,8 @@ function updateBookingContainer() {
 
     const xhr = new XMLHttpRequest();
     const url = placegame === 'ARENA' 
-        ? `http://cmsvrdevelopment.ru/api/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}` 
-        : `http://cmsvrdevelopment.ru/api/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`;
+        ? `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}` 
+        : `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`;
 
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');

@@ -121,7 +121,7 @@ private:
     // Базовый класс для управления бронированиями
     class Booking {
     public:
-        Booking(ConnectionPool& pool) : pool_(pool) { gameTables = LoadGameTables("../../games/games.conf");}
+        Booking(ConnectionPool& pool) : pool_(pool) { gameTables = LoadGameTables("../games/games.conf");}
         virtual ~Booking() = default;
 
         void AddDataByCheckAvailability(const AvailabilityData& data);

@@ -5,6 +5,7 @@
 #include "https_server.h"
 #include "logger.h"  // Подключаем логгер
 
+
 int main() {
 
     ConnectionPool pool(10, "db_config.conf"); // Инициализация пула соединений с базой данных
@@ -19,7 +20,7 @@ int main() {
             } catch (const std::exception& e) {
                 Logger::getInstance().log("Ошибка HTTP сервера: " + std::string(e.what()) + 
                 " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-                "../../logs/error_connect.log");
+                "../logs/error_connect.log");
             }
         });
         std::cout << "HttpServer на порту 8081 запущен..." << std::endl;
@@ -32,7 +33,7 @@ int main() {
             } catch (const std::exception& e) {
                 Logger::getInstance().log("Ошибка WebSocket сервера: " + std::string(e.what()) + 
                 " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
-                "../../logs/error_connect.log");
+                "../logs/error_connect.log");
             }
         });
         std::cout << "WebSocketServer на порту 8082 запущен..." << std::endl << std::endl;

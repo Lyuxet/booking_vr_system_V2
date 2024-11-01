@@ -21,7 +21,7 @@ void ConnectionPool::Init_pool() {
     } catch (const std::exception& e) {
         Logger::getInstance().log("Ошибка инициализации пула соединений: " + std::string(e.what()) +
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
-            "../../logs/error_connect.log");
+            "../logs/error_connect.log");
     }
 }
 
@@ -107,12 +107,12 @@ Transaction::~Transaction() {
             Logger::getInstance().log(
                 "Ошибка отката транзакции в файле " + std::string(__FILE__) +
                 " на строке " + std::to_string(__LINE__),
-                "../../logs/error_transaction.log"
+                "../logs/error_transaction.log"
             );
         } catch (const sql::SQLException& e) {
             Logger::getInstance().log("Ошибка отката изменений: " + std::string(e.what()) +
                 " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
-                "../../logs/error_transaction.log");
+                "../logs/error_transaction.log");
         }
     }
 }
@@ -125,7 +125,7 @@ void Transaction::commit() {
     } catch (const sql::SQLException& e) {
         Logger::getInstance().log("Ошибка коммита изменений: " + std::string(e.what()) +
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
-            "../../logs/error_transaction.log");
+            "../logs/error_transaction.log");
         throw; // Перебрасываем исключение дальше
     }
 }
