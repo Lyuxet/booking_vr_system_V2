@@ -56,7 +56,7 @@ namespace vr{
                 body = generate_email_body(booking, clients_);
             }
 
-            std::string subject = "Подтверждение бронирования";
+            std::string subject = "Уведомление о заказе https://vr-real.ru";
             email_sender->send(subject, body);
         });
 
@@ -161,7 +161,7 @@ namespace vr{
             ConnectionGuard conn_guard(std::move(conn), pool_);
             executeTransactionInsert(conn_guard.getConnection());
             std::lock_guard<std::mutex> lock(mtxtest);
-                
+
             auto email_task = std::async(std::launch::async, [this]() {
             std::shared_ptr<AsyncEmailSender> email_sender;
             std::string body;
@@ -176,7 +176,7 @@ namespace vr{
                 body = generate_email_body(booking, clients_);
             }
 
-            std::string subject = "Подтверждение бронирования";
+            std::string subject = "Уведомление о заказе https://vr-real.ru";
             email_sender->send(subject, body);
         });
             PrintInsertBooking();
@@ -665,88 +665,96 @@ namespace vr{
 
     }
 
-    std::string Booking::generate_email_body(const Booking_data& booking, const Client_data& client){
-        return R"(
-    <html lang="ru">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Подтверждение бронирования</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #333;
-                color: #fff;
-                margin: 0;
-                padding: 20px;
-            }
-            .container {
-                max-width: 600px;
-                margin: 0 auto;
-                background-color: #444;
-                padding: 20px;
-                border-radius: 10px;
-            }
-            .row {
-                display: flex;
-                justify-content: space-between;
-                margin-bottom: 10px;
-            }
-            .row div {
-                flex: 1;
-            }
-            .row div:first-child {
-                font-weight: bold;
-            }
-            .comment {
-                margin-top: 20px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="row">
-                <div>Название:</div>
-                <div>Командная игра м. Новокосино</div>
-            </div>
-            <div class="row">
-                <div>Дата:</div>
-                <div>)" + booking.date_game + R"(</div>
-            </div>
-            <div class="row">
-                <div>Время:</div>
-                <div>)" + booking.time_game + R"(</div>
-            </div>
-            <div class="row">
-                <div>Стоимость:</div>
-                <div>)" + std::to_string(booking.price) + R"( RUB</div>
-            </div>
-            <div class="row">
-                <div>Имя:</div>
-                <div>)" + client.first_name+ R"(</div>
-            </div>
-            <div class="row">
-                <div>E-mail:</div>
-                <div><a href="mailto:)" + client.email + R"(" style="color: #1e90ff;">)" + client.email + R"(</a></div>
-            </div>
-            <div class="row">
-                <div>Телефон:</div>
-                <div>)" + client.phone+ R"(</div>
-            </div>
-            <div class="row comment">
-                <div>Комментарий:</div>
-                <div>)" + booking.comment_game+ R"(</div>
-            </div>
-            <div class="row">
-                <div>Статус:</div>
-                <div>Принят</div>
-            </div>
-        </div>
-    </body>
-    </html>
-    )";
+    std::string Booking::generate_email_body(const Booking_data& booking, const Client_data& client) {
+    std::ostringstream html;
 
-    }
+    html << "<!DOCTYPE html>\n";
+    html << "<html lang=\"ru\">\n";
+    html << "<head>\n";
+    html << "    <meta charset=\"UTF-8\">\n";
+    html << "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
+    html << "    <title>Новое бронирование</title>\n";
+    html << "    <style>\n";
+    html << "        table {\n";
+    html << "            width: 100%;\n";
+    html << "            border-collapse: collapse;\n";
+    html << "        }\n";
+    html << "        table, th, td {\n";
+    html << "            border: 1px solid black;\n";
+    html << "        }\n";
+    html << "        th, td {\n";
+    html << "            padding: 10px;\n";
+    html << "            text-align: left;\n";
+    html << "        }\n";
+    html << "        th {\n";
+    html << "            background-color: #f2f2f2;\n";
+    html << "        }\n";
+    html << "        td {\n";
+    html << "            background-color: #e6f7ff;\n";  // Добавлено цвет фона для ячеек
+    html << "        }\n";
+    html << "    </style>\n";
+    html << "</head>\n";
+    html << "<body>\n";
+    html << "    <h2>Детали бронирования</h2>\n";
+    html << "    <table>\n";
+    html << "        <tr>\n";
+    html << "            <th>Игровая площадка</th>\n";
+    html << "            <td><b>" << booking.place_game << "</b></td>\n";
+    html << "        </tr>\n";  
+    html << "        <tr>\n";
+    html << "            <th>Тип игры</th>\n";
+    html << "            <td><b>" << booking.type_game << "</b></td>\n";
+    html << "        </tr>\n";
+    html << "        <tr>\n";
+    html << "            <th>Название игры</th>\n";
+    html << "            <td><b>" << booking.name_game << "</b></td>\n";
+    html << "        </tr>\n";
+    html << "        <tr>\n";
+    html << "            <th>Дата</th>\n";
+    html << "            <td><b>" << booking.date_game << "</b></td>\n";
+    html << "        </tr>\n";
+    html << "        <tr>\n";
+    html << "            <th>Время игры</th>\n";
+    html << "            <td><b>" << booking.time_game << "</b></td>\n";
+    html << "        </tr>\n";
+    html << "        <tr>\n";
+    html << "            <th>Количество игроков</th>\n";
+    html << "            <td><b>" << booking.players_count << "</b></td>\n";
+    html << "        </tr>\n";
+    html << "        <tr>\n";
+    html << "            <th>Стоимость</th>\n";
+    html << "            <td><b>" << booking.price << " RUB</b></td>\n";
+    html << "        </tr>\n";
+    html << "        <tr>\n";
+    html << "            <th>Имя</th>\n";
+    html << "            <td>" << client.first_name << "</td>\n";
+    html << "        </tr>\n";
+    html << "        <tr>\n";
+    html << "            <th>Фамилия</th>\n";
+    html << "            <td>" << client.last_name << "</td>\n";
+    html << "        </tr>\n";
+    html << "        <tr>\n";
+    html << "            <th>Телефон</th>\n";
+    html << "            <td>" << client.phone << "</td>\n";
+    html << "        </tr>\n";
+    html << "        <tr>\n";
+    html << "            <th>E-mail</th>\n";
+    html << "            <td>" << client.email << "</td>\n";
+    html << "        </tr>\n";
+    html << "        <tr>\n";
+    html << "            <th>Комментарий</th>\n";
+    html << "            <td>" << booking.comment_game << "</td>\n";
+    html << "        </tr>\n";
+    html << "        <tr>\n";
+    html << "            <th>Статус</th>\n";
+    html << "            <td><b>" << booking.book_status << "</b></td>\n";
+    html << "        </tr>\n";
+    html << "    </table>\n";
+    html << "</body>\n";
+    html << "</html>";
+
+    return html.str();
+}
 
 
 

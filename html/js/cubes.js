@@ -11,6 +11,10 @@ const place = 'CUBES';
 document.addEventListener('DOMContentLoaded', function () {
     SetDate();
     storedDate = document.getElementById('date').value;
+    
+    bookingButtons.forEach(button => {
+        initializeBookingButton(button, place);
+    });
 
     initializeWebSocket(place, storedDate, bookingButtons);
 
@@ -29,10 +33,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    bookingButtons.forEach(button => {
-        initializeBookingButton(button, place);
-    });
-
     $('#date').on('change', function () {
         const selectedDate = $('#date').datepicker('getDate');
         const year = selectedDate.getFullYear();
@@ -43,7 +43,6 @@ document.addEventListener('DOMContentLoaded', function () {
             socket.close();
         }
         initializeWebSocket(place, storedDate, bookingButtons);
-        updatePricesArena(selectedDate, bookingButtons);
         hidePriceDisplay();
     });
 });

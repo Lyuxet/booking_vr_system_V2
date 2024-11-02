@@ -9,10 +9,7 @@ export function updatePricesArena(date, bookingButtons) {
     bookingButtons.forEach(button => {
         const priceElement = button.querySelector('.price'); 
         let basePrice = priceElement.dataset.price; 
-
-       
         basePrice = isSpecialDay ? (isCloseType ? 15000 : 1600) : basePrice;
-        
         priceElement.textContent = `${basePrice} ₽`;
     });
 }
