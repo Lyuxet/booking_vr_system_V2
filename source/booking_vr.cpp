@@ -1,6 +1,7 @@
 #include "booking_vr.h"
 #include "logger.h"
 #include <boost/json.hpp>
+#include <boost/asio.hpp>
 #include <cppconn/prepared_statement.h>
 #include <cppconn/exception.h>
 #include <fstream>
@@ -9,6 +10,11 @@
 #include <thread>
 #include <cstdlib>
 #include <sstream>
+#include <email.h>
+
+#include <thread>
+
+#include "log_duration.h"
 
 
 std::mutex mtxtest;
@@ -28,24 +34,46 @@ namespace vr{
         availability_ = std::move(data);
     }
 
-    void Arena::ProcessArenaTransaction(const std::string& operationName) {
-        ScopeGuard guard(bookings_, clients_);
-        try {
-            std::unique_ptr<sql::Connection> conn = pool_.GetConnection();
-            ConnectionGuard conn_guard(std::move(conn), pool_);
-            
-            executeTransactionInsert(conn_guard.getConnection());
-            std::lock_guard<std::mutex> lock(mtxtest);
-            PrintInsertBooking();
-        } catch (const std::exception& e) {
-            std::lock_guard<std::mutex> lock(mtxtest);
-            std::cerr << operationName << " Exception: " << e.what() << std::endl;
-            Logger::getInstance().log(operationName + " Exception: " + std::string(e.what()) +
-                " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
-                "../logs/error_transaction.log");
-            throw;
-        }
+   void Arena::ProcessArenaTransaction(const std::string& operationName) {
+    ScopeGuard guard(bookings_, clients_);
+    try {
+        std::unique_ptr<sql::Connection> conn = pool_.GetConnection();
+        ConnectionGuard conn_guard(std::move(conn), pool_);
+
+        executeTransactionInsert(conn_guard.getConnection());
+
+        auto email_task = std::async(std::launch::async, [this]() {
+            std::shared_ptr<AsyncEmailSender> email_sender;
+            std::string body;
+
+            email_sender = std::make_shared<AsyncEmailSender>();
+            email_sender->add_recipient(clients_.email);
+
+            auto client_ptr = std::make_shared<vr::Client_data>(clients_);
+
+            for (const auto& booking : bookings_) {
+                auto booking_ptr = std::make_shared<vr::Booking_data>(booking);
+                body = generate_email_body(booking, clients_);
+            }
+
+            std::string subject = "Подтверждение бронирования";
+            email_sender->send(subject, body);
+        });
+
+        PrintInsertBooking();
+
+    } catch (const std::exception& e) {
+        std::lock_guard<std::mutex> lock(mtxtest);
+        std::cerr << operationName << " Exception: " << e.what() << std::endl;
+        Logger::getInstance().log(operationName + " Exception: " + std::string(e.what()) +
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
+            "../logs/error_transaction.log");
+        throw;
     }
+}
+
+
+
 
     void Arena::Open_arena() {
         ProcessArenaTransaction("Open_Arena");
@@ -133,6 +161,24 @@ namespace vr{
             ConnectionGuard conn_guard(std::move(conn), pool_);
             executeTransactionInsert(conn_guard.getConnection());
             std::lock_guard<std::mutex> lock(mtxtest);
+                
+            auto email_task = std::async(std::launch::async, [this]() {
+            std::shared_ptr<AsyncEmailSender> email_sender;
+            std::string body;
+
+            email_sender = std::make_shared<AsyncEmailSender>();
+            email_sender->add_recipient(clients_.email);
+
+            auto client_ptr = std::make_shared<vr::Client_data>(clients_);
+
+            for (const auto& booking : bookings_) {
+                auto booking_ptr = std::make_shared<vr::Booking_data>(booking);
+                body = generate_email_body(booking, clients_);
+            }
+
+            std::string subject = "Подтверждение бронирования";
+            email_sender->send(subject, body);
+        });
             PrintInsertBooking();
         } catch (const std::exception& e) {
             std::lock_guard<std::mutex> lock(mtxtest);
@@ -618,5 +664,91 @@ namespace vr{
         return gameTableMap;
 
     }
+
+    std::string Booking::generate_email_body(const Booking_data& booking, const Client_data& client){
+        return R"(
+    <html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Подтверждение бронирования</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #333;
+                color: #fff;
+                margin: 0;
+                padding: 20px;
+            }
+            .container {
+                max-width: 600px;
+                margin: 0 auto;
+                background-color: #444;
+                padding: 20px;
+                border-radius: 10px;
+            }
+            .row {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 10px;
+            }
+            .row div {
+                flex: 1;
+            }
+            .row div:first-child {
+                font-weight: bold;
+            }
+            .comment {
+                margin-top: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div>Название:</div>
+                <div>Командная игра м. Новокосино</div>
+            </div>
+            <div class="row">
+                <div>Дата:</div>
+                <div>)" + booking.date_game + R"(</div>
+            </div>
+            <div class="row">
+                <div>Время:</div>
+                <div>)" + booking.time_game + R"(</div>
+            </div>
+            <div class="row">
+                <div>Стоимость:</div>
+                <div>)" + std::to_string(booking.price) + R"( RUB</div>
+            </div>
+            <div class="row">
+                <div>Имя:</div>
+                <div>)" + client.first_name+ R"(</div>
+            </div>
+            <div class="row">
+                <div>E-mail:</div>
+                <div><a href="mailto:)" + client.email + R"(" style="color: #1e90ff;">)" + client.email + R"(</a></div>
+            </div>
+            <div class="row">
+                <div>Телефон:</div>
+                <div>)" + client.phone+ R"(</div>
+            </div>
+            <div class="row comment">
+                <div>Комментарий:</div>
+                <div>)" + booking.comment_game+ R"(</div>
+            </div>
+            <div class="row">
+                <div>Статус:</div>
+                <div>Принят</div>
+            </div>
+        </div>
+    </body>
+    </html>
+    )";
+
+    }
+
+
+
 
 }

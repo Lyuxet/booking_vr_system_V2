@@ -28,6 +28,7 @@ add_executable(Booking_vr_server ${SOURCES})
 
 # Ищем библиотеки MySQL Connector
 find_library(C_Connector_LIB NAMES mysqlcppconn PATHS /usr/lib/x86_64-linux-gnu)
+find_package(CURL REQUIRED)
 
 # Проверяем, что библиотека найдена
 if (NOT C_Connector_LIB)
@@ -35,7 +36,7 @@ if (NOT C_Connector_LIB)
 endif()
 
 # Линкуем MySQL Connector, Boost и Mailio с нашим проектом
-target_link_libraries(Booking_vr_server ${C_Connector_LIB} Boost::system Boost::thread Boost::json Boost::container)
+target_link_libraries(Booking_vr_server ${C_Connector_LIB} Boost::system Boost::thread Boost::json Boost::container CURL::libcurl)
 
 # Копируем файл конфигурации в папку с исполняемым файлом после сборки
 add_custom_command(TARGET Booking_vr_server POST_BUILD

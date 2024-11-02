@@ -201,6 +201,30 @@ source/booking_vr_print.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Booking_vr_server.dir/build.make CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.s
 .PHONY : source/booking_vr_print.cpp.s
 
+source/email.o: source/email.cpp.o
+.PHONY : source/email.o
+
+# target to build an object file
+source/email.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Booking_vr_server.dir/build.make CMakeFiles/Booking_vr_server.dir/source/email.cpp.o
+.PHONY : source/email.cpp.o
+
+source/email.i: source/email.cpp.i
+.PHONY : source/email.i
+
+# target to preprocess a source file
+source/email.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Booking_vr_server.dir/build.make CMakeFiles/Booking_vr_server.dir/source/email.cpp.i
+.PHONY : source/email.cpp.i
+
+source/email.s: source/email.cpp.s
+.PHONY : source/email.s
+
+# target to generate assembly for a file
+source/email.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Booking_vr_server.dir/build.make CMakeFiles/Booking_vr_server.dir/source/email.cpp.s
+.PHONY : source/email.cpp.s
+
 source/https_server.o: source/https_server.cpp.o
 .PHONY : source/https_server.o
 
@@ -363,6 +387,9 @@ help:
 	@echo "... source/booking_vr_print.o"
 	@echo "... source/booking_vr_print.i"
 	@echo "... source/booking_vr_print.s"
+	@echo "... source/email.o"
+	@echo "... source/email.i"
+	@echo "... source/email.s"
 	@echo "... source/https_server.o"
 	@echo "... source/https_server.i"
 	@echo "... source/https_server.s"

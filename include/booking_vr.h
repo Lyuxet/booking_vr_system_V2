@@ -140,6 +140,8 @@ private:
         void PrintDeleteBooking();
         void PrintUpdateBooking();
         void PrintInsertClient();
+        std::string generate_email_body(const Booking_data& booking, const Client_data& client);
+
     
         Client_data clients_;
         std::vector<Booking_data> bookings_;
@@ -174,6 +176,7 @@ private:
         void insertClient(sql::Connection* conn);
         void handleSQLException(const sql::SQLException& e, int attempt, int max_retries, int base_retry_delay_ms, sql::Connection* conn);
         void handleStdException(const std::exception& e, sql::Connection* conn);
+
     };
 
 

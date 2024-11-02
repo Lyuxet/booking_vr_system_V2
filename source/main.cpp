@@ -6,11 +6,11 @@
 #include "logger.h"  // Подключаем логгер
 
 
+
 int main() {
 
     ConnectionPool pool(10, "db_config.conf"); // Инициализация пула соединений с базой данных
     std::set<std::shared_ptr<WebSocketSession>> sessions; // Набор активных WebSocket-сессий
-
     try {
         // Запуск HTTP сервера на порту 8080
         HttpServer http_server(8081, pool, sessions);

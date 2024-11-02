@@ -7,6 +7,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/Booking_vr_server.dir/source/booking_vr.cpp.o.d"
   "CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.o"
   "CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.o.d"
+  "CMakeFiles/Booking_vr_server.dir/source/email.cpp.o"
+  "CMakeFiles/Booking_vr_server.dir/source/email.cpp.o.d"
   "CMakeFiles/Booking_vr_server.dir/source/https_server.cpp.o"
   "CMakeFiles/Booking_vr_server.dir/source/https_server.cpp.o.d"
   "CMakeFiles/Booking_vr_server.dir/source/logger.cpp.o"
