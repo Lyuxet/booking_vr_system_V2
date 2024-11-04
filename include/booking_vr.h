@@ -44,8 +44,7 @@ namespace vr{
         std::string_view type_game;
         std::string_view name_game;
         std::string_view date_game;
-        std::string_view times_game;
-        std::string_view players_count;
+        std::string_view times_game_and_players_count;
         int price;
         std::string_view client_first_name;
         std::string_view client_last_name;

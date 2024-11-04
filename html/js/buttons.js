@@ -71,7 +71,7 @@ function updateButtonState(button, place) {
         button.classList.add('disabled');
         button.removeEventListener('click', handleClick.bind(button, place));
 
-        if (!isCloseType) {
+        if (place !== 'VR Арена' || !isCloseType) {
             button.querySelector('.player-input').disabled = true;
             button.querySelector('.player-input').value = '';
         }
@@ -80,7 +80,7 @@ function updateButtonState(button, place) {
         button.classList.remove('disabled');
         button.addEventListener('click', handleClick.bind(button, place));
 
-        if (place !== 'ARENA' || !isCloseType) {
+        if (place !== 'VR Арена' || !isCloseType) {
             button.querySelector('.player-input').disabled = false;
         }
     }

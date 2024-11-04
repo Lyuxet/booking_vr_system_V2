@@ -678,11 +678,7 @@ namespace vr{
         html << "        </tr>\n";
         html << "        <tr>\n";
         html << "            <th>Время игры</th>\n";
-        html << "            <td><b>" << email_data.times_game << "</b></td>\n";
-        html << "        </tr>\n";
-        html << "        <tr>\n";
-        html << "            <th>Количество игроков</th>\n";
-        html << "            <td><b>" << email_data.players_count << "</b></td>\n";
+        html << "            <td><b>" << email_data.times_game_and_players_count << "</b></td>\n";
         html << "        </tr>\n";
         html << "        <tr>\n";
         html << "            <th>Стоимость</th>\n";
@@ -723,20 +719,19 @@ namespace vr{
 
         auto email_task = std::async(std::launch::async, [this]() {
             std::shared_ptr<AsyncEmailSender> email_sender;
-            std::string times_game;
-            std::string players_count;
+            std::string times_game_and_players_count;
             int price = 0;
             
 
             for (const auto& booking : bookings_){
-                times_game += booking.time_game + "<br>";
-                players_count += std::to_string(booking.players_count) + "<br>";
+                times_game_and_players_count += booking.time_game + " (";
+                times_game_and_players_count += std::to_string(booking.players_count) + " игроков)<br>";
                 price += booking.price;
             }
 
             info_by_email email_data{bookings_[0].place_game, bookings_[0].type_game,
                                bookings_[0].name_game, bookings_[0].date_game,
-                               times_game, players_count, price, 
+                               times_game_and_players_count, price, 
                                clients_.first_name, clients_.last_name,
                                clients_.phone, clients_.email, 
                                bookings_[0].comment_game, bookings_[0].book_status};
