@@ -12,7 +12,7 @@ function updateSeats(button, availableSeats, maxPlayers, place) {
     const playerInput = button.querySelector('.player-input');
     const maxAvailableSeats = availableSeats !== undefined ? availableSeats : maxPlayers;
 
-    if (place === "ARENA" && isCloseType) {
+    if (place === "VR Арена" && isCloseType) {
         if (availableSeats < maxPlayers) {
             button.classList.add('disabled');
             seatsCount.textContent = 0;
@@ -45,11 +45,11 @@ function updateSeats(button, availableSeats, maxPlayers, place) {
 }
 
 export function updateSeatsArena(button, availableSeats) {
-    updateSeats(button, availableSeats, maxPlayersArena, "ARENA");
+    updateSeats(button, availableSeats, maxPlayersArena, "VR Арена");
 }
 
 export function updateSeatsCubes(button, availableSeats) {
-    updateSeats(button, availableSeats, maxPlayersCubes, "CUBES");
+    updateSeats(button, availableSeats, maxPlayersCubes, "VR Кубы");
 }
 
 
@@ -71,7 +71,7 @@ function updateButtonState(button, place) {
         button.classList.add('disabled');
         button.removeEventListener('click', handleClick.bind(button, place));
 
-        if (place !== 'ARENA' || !isCloseType) {
+        if (!isCloseType) {
             button.querySelector('.player-input').disabled = true;
             button.querySelector('.player-input').value = '';
         }
@@ -88,11 +88,11 @@ function updateButtonState(button, place) {
 
 
 export function updateButtonStateArena(button) {
-    updateButtonState(button, 'ARENA');
+    updateButtonState(button, 'VR Арена');
 }
 
 export function updateButtonStateCubes(button) {
-    updateButtonState(button, 'CUBES');
+    updateButtonState(button, 'VR Кубы');
 }
 
 
@@ -100,10 +100,10 @@ export function handleInput(event, place) {
     const input = event.target;
     const button = input.closest('.booking-button');
     let maxAvailableSeats;
-    if (place === "ARENA"){
+    if (place === "VR Арена"){
         maxAvailableSeats = parseInt(input.getAttribute('max'), 10) || maxPlayersArena;
     }
-    else if (place === "CUBES"){
+    else if (place === "VR Кубы"){
         maxAvailableSeats = parseInt(input.getAttribute('max'), 10) || maxPlayersCubes;
     }
     else{
@@ -118,7 +118,7 @@ export function handleClick(event, place) {
     if (!event.target) return;
     if (this.classList.contains('disabled')) return;
 
-    if (place === 'ARENA') {
+    if (place === 'VR Арена') {
         if (isCloseType) {
             this.classList.toggle('selected');
             updateSeatsArena(this, maxPlayersArena);
@@ -134,7 +134,7 @@ export function handleClick(event, place) {
             }
             updateSeatsArena(this, maxAvailableSeats);
         }
-    } else if (place === "CUBES") {
+    } else if (place === "VR Кубы") {
         const playerInput = this.querySelector('.player-input');
         if (event.target.closest('.player-input') && this.classList.contains('selected')) return;
         const maxAvailableSeats = parseInt(playerInput.getAttribute('max'), 10) || maxPlayersCubes;
@@ -155,9 +155,9 @@ export function handleClick(event, place) {
 
 
 export function updateButtonsState(availability, bookingButtons, place) {
-    const updateSeatsFn = place === 'ARENA' ? updateSeatsArena : updateSeatsCubes;
-    const updateButtonStateFn = place === 'ARENA' ? updateButtonStateArena : updateButtonStateCubes;
-    const maxPlayers = place === 'ARENA' ? maxPlayersArena : maxPlayersCubes;
+    const updateSeatsFn = place === 'VR Арена' ? updateSeatsArena : updateSeatsCubes;
+    const updateButtonStateFn = place === 'VR Арена' ? updateButtonStateArena : updateButtonStateCubes;
+    const maxPlayers = place === 'VR Арена' ? maxPlayersArena : maxPlayersCubes;
 
     bookingButtons.forEach(button => {
         const playerInput = button.querySelector('.player-input');
@@ -190,7 +190,7 @@ export function initializeBookingButton(button, place, isCloseType) {
 
     const buttonId = button.id;
     const playerInput = button.querySelector('.player-input');
-    const buttonData = place === 'ARENA' ? (isCloseType ? button_data_close_arena : button_data_open_arena) : button_cubes;
+    const buttonData = place === 'VR Арена' ? (isCloseType ? button_data_close_arena : button_data_open_arena) : button_cubes;
     if (buttonData[buttonId]) {
         const data = buttonData[buttonId];
         button.querySelector('.time').textContent = data.time;

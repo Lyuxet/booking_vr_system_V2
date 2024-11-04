@@ -9,17 +9,16 @@ export function checkAvailability(bookingButtons, place) {
     
     
     const gameTitleElement = document.querySelector('.navigation h1');
-    const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : 'CUBES';
+    const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : 'На Ваш выбор';
     
     bookingGrid.style.display = 'none'; 
     pacmanContainer.style.display = 'flex'; 
 
     const xhr = new XMLHttpRequest();
-    const url = place === 'ARENA' ? 
+    const url = place === 'VR Арена' ? 
         `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(place)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}` :
         `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(place)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`;
 
-    
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 

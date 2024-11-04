@@ -6,7 +6,7 @@ import { initializeWebSocket, socket } from "./websocket.js";
 
 const bookingButtons = document.querySelectorAll('.booking-button');
 let storedDate = null;
-const place = 'ARENA';
+const place = 'VR Арена';
 
 document.addEventListener('DOMContentLoaded', function () {
     SetDate();

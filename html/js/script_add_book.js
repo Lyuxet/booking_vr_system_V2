@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!selectedTimes.length) return;
 
         const gameTitleElement = document.querySelector('.navigation h1');
-        const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : 'CUBES';
+        const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : 'На Ваш выбор';
         const isCloseType = document.querySelector('.booking-container-close') !== null;
 
         let selectedPlayersCount = [];
@@ -93,9 +93,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        let placegame = 'ARENA';
+        let placegame = 'VR Арена';
         if (document.querySelector('.booking-container-close') == null && document.querySelector('.booking-container-open') == null) {
-            placegame = 'CUBES';
+            placegame = 'VR Кубы';
         }
 
         const postData = {
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
             phone,
             email,
             placegame,
-            typegame: isCloseType ? 'CLOSE' : 'OPEN',
+            typegame: isCloseType ? 'Закрытая игра' : 'Открытая игра',
             namegame,
             date,
             times: selectedTimes,
@@ -140,13 +140,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function updateBookingContainer() {
     const date = document.getElementById('date').value;
-    let placegame = 'ARENA';
+    let placegame = 'VR Арена';
         if (document.querySelector('.booking-container-close') == null && document.querySelector('.booking-container-open') == null){
-            placegame = 'CUBES';
+            placegame = 'VR Кубы';
     }
     const bookingButtons = document.querySelectorAll('.booking-button');
     const gameTitleElement = document.querySelector('.navigation h1');
-    const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : 'CUBES';
+    const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : 'На Ваш выбор';
 
     const xhr = new XMLHttpRequest();
     const url = placegame === 'ARENA' 

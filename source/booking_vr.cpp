@@ -57,11 +57,11 @@ namespace vr{
 
 
     void Arena::Open_arena() {
-        ProcessArenaTransaction("Open_Arena");
+        ProcessArenaTransaction("Открытая игра");
     }
 
     void Arena::Close_arena() {
-        ProcessArenaTransaction("Close_Arena");
+        ProcessArenaTransaction("Закрытая игра");
     }
 
     std::string Arena::CheckAvailabilityPlace() {
@@ -187,7 +187,7 @@ namespace vr{
 
    bool Booking::checkAvailableSlots(sql::Connection* conn, const Booking_data& booking) {
         std::unique_ptr<sql::PreparedStatement> pstmtCheck;
-        if (booking.place_game == "ARENA") {
+        if (booking.place_game == "VR Арена") {
             pstmtCheck.reset(conn->prepareStatement(
                 "SELECT time_game, SUM(players_count) AS total_players, "
                 "CASE "
@@ -202,7 +202,7 @@ namespace vr{
             pstmtCheck->setString(2, booking.place_game);
             pstmtCheck->setString(3, booking.date_game);
             pstmtCheck->setString(4, booking.time_game);
-        } else if (booking.place_game == "CUBES") {
+        } else if (booking.place_game == "VR Кубы") {
             pstmtCheck.reset(conn->prepareStatement(
                 "SELECT time_game, SUM(players_count) AS total_players, "
                 "CASE "
@@ -268,12 +268,11 @@ namespace vr{
         executeTransactionWithRetry(conn, [&](sql::Connection* conn) {
             conn->setAutoCommit(false); // Начинаем транзакцию
             
-            // Определение таблицы в зависимости от типа игры
             std::string tableName;
             if (gameTables.find(bookings_[0].name_game) != gameTables.end()) {
                 tableName = gameTables.at(bookings_[0].name_game);
             } else {
-                throw std::runtime_error("Неизвестный тип игры");
+                throw std::runtime_error("Неизвестное имя игры");
             }
 
             // Добавление клиента

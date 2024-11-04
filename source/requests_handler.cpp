@@ -60,9 +60,9 @@ namespace vr{
             arena.AddDataByInsertAndUpdate(client, bookings);
 
             // Открываем или закрываем арену в зависимости от типа игры
-            if (typegame == "OPEN") {
+            if (typegame == "Открытая игра") {
                 arena.Open_arena();
-            } else if (typegame == "CLOSE") {
+            } else if (typegame == "Закрытая игра") {
                 arena.Close_arena();
             }
 
@@ -92,11 +92,11 @@ namespace vr{
             AvailabilityData data = {date, namegame, placegame};
             std::string response;
 
-            if (placegame == "ARENA") {
+            if (placegame == "VR Арена") {
                 Arena arena(pool);
                 arena.AddDataByCheckAvailability(data);
                 response = arena.CheckAvailabilityPlace();
-            } else if (placegame == "CUBES") {
+            } else if (placegame == "VR Кубы") {
                 Cubes cubes(pool);
                 cubes.AddDataByCheckAvailability(data);
                 response = cubes.CheckAvailabilityPlace();

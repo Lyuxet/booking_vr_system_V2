@@ -1,0 +1,16 @@
+2024-11-04 17:29:11 Ошибка отката транзакции в файле /home/lyuxet/Рабочий стол/Project/booking_system_vr/source/Connect_to_DB.cpp на строке 109
+2024-11-04 17:29:11 Exception: Неизвестное имя игры
+2024-11-04 17:29:11 Cubes Exception: Неизвестное имя игры в файле /home/lyuxet/Рабочий стол/Project/booking_system_vr/source/booking_vr.cpp строке 150
+2024-11-04 17:29:11 Error: Неизвестное имя игры в файле /home/lyuxet/Рабочий стол/Project/booking_system_vr/source/requests_handler.cpp строке 180
+2024-11-04 17:30:25 Ошибка отката транзакции в файле /home/lyuxet/Рабочий стол/Project/booking_system_vr/source/Connect_to_DB.cpp на строке 109
+2024-11-04 17:30:25 Exception: Неизвестное имя игры
+2024-11-04 17:30:25 Cubes Exception: Неизвестное имя игры в файле /home/lyuxet/Рабочий стол/Project/booking_system_vr/source/booking_vr.cpp строке 150
+2024-11-04 17:30:25 Error: Неизвестное имя игры в файле /home/lyuxet/Рабочий стол/Project/booking_system_vr/source/requests_handler.cpp строке 180
+2024-11-04 17:33:47 Ошибка отката транзакции в файле /home/lyuxet/Рабочий стол/Project/booking_system_vr/source/Connect_to_DB.cpp на строке 109
+2024-11-04 17:33:47 Exception: Неизвестное имя игры
+2024-11-04 17:33:47 Cubes Exception: Неизвестное имя игры в файле /home/lyuxet/Рабочий стол/Project/booking_system_vr/source/booking_vr.cpp строке 150
+2024-11-04 17:33:47 Error: Неизвестное имя игры в файле /home/lyuxet/Рабочий стол/Project/booking_system_vr/source/requests_handler.cpp строке 180
+2024-11-04 17:35:18 Ошибка отката транзакции в файле /home/lyuxet/Рабочий стол/Project/booking_system_vr/source/Connect_to_DB.cpp на строке 109
+2024-11-04 17:35:18 Exception: Неизвестное имя игры
+2024-11-04 17:35:18 Cubes Exception: Неизвестное имя игры в файле /home/lyuxet/Рабочий стол/Project/booking_system_vr/source/booking_vr.cpp строке 150
+2024-11-04 17:35:18 Error: Неизвестное имя игры в файле /home/lyuxet/Рабочий стол/Project/booking_system_vr/source/requests_handler.cpp строке 180

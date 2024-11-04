@@ -1,12 +1,11 @@
 import { SetDate } from "./date.js";
-import { updatePricesArena } from "./price.js";
 import { initializeBookingButton } from "./buttons.js";
 import { hidePriceDisplay } from "./priceDisplay.js";
 import { initializeWebSocket, socket } from "./websocket.js";
 
 const bookingButtons = document.querySelectorAll('.booking-button');
 let storedDate = null;
-const place = 'CUBES';
+const place = 'VR Кубы';
 
 document.addEventListener('DOMContentLoaded', function () {
     SetDate();
