@@ -1,26 +1,47 @@
 #include "email.h"
 #include "booking_vr.h"
+#include "logger.h"
+
+#include <fstream>
+#include <string>
+
 
 AsyncEmailSender::AsyncEmailSender() {
-    curl_global_init(CURL_GLOBAL_DEFAULT);
-    curl_ = curl_easy_init();
+    initEmail();
+}
 
-    if (curl_) {
-        curl_easy_setopt(curl_, CURLOPT_USERNAME, smtp_user_.c_str());
-        curl_easy_setopt(curl_, CURLOPT_PASSWORD, smtp_password_.c_str());
-        curl_easy_setopt(curl_, CURLOPT_URL, smtp_url_.c_str());
-        curl_easy_setopt(curl_, CURLOPT_USE_SSL, CURLUSESSL_ALL);
-        curl_easy_setopt(curl_, CURLOPT_MAIL_FROM, email_from_.c_str());
+void AsyncEmailSender::initEmail(){
+    try
+    {
+        readConfigEmailFile();
+        curl_global_init(CURL_GLOBAL_DEFAULT);
+        curl_ = curl_easy_init();
 
-        recipients_ = curl_slist_append(nullptr, email_from_.c_str());
-        if (!recipients_) {
-            std::cerr << "Не удалось инициализировать список получателей." << std::endl;
-            return;
-        }
-        curl_easy_setopt(curl_, CURLOPT_MAIL_RCPT, recipients_);
-    } else {
-        std::cerr << "Failed to initialize email connection.\n";
+        if (curl_) {
+            curl_easy_setopt(curl_, CURLOPT_USERNAME, smtp_user_.c_str());
+            curl_easy_setopt(curl_, CURLOPT_PASSWORD, smtp_password_.c_str());
+            curl_easy_setopt(curl_, CURLOPT_URL, smtp_url_.c_str());
+            curl_easy_setopt(curl_, CURLOPT_USE_SSL, CURLUSESSL_ALL);
+            curl_easy_setopt(curl_, CURLOPT_MAIL_FROM, email_from_.c_str());
+
+            recipients_ = curl_slist_append(nullptr, email_from_.c_str());
+            if (!recipients_) {
+                throw std::runtime_error("Не удалось инициализировать список получателей");
+                
+            }
+            curl_easy_setopt(curl_, CURLOPT_MAIL_RCPT, recipients_);
+        } else {
+            throw std::runtime_error("Не удалось ининицалихировать email соединения");
+        }       
+
     }
+    catch(const std::exception& e)
+    {
+        Logger::getInstance().log("Ошибка инициализации подключения к smtp серверу " + std::string(e.what()) +
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
+            "../logs/error_connect.log");
+    }
+    
 }
 
 AsyncEmailSender::~AsyncEmailSender() {
@@ -68,4 +89,38 @@ size_t AsyncEmailSender::payload_source(void* ptr, size_t size, size_t nmemb, vo
 void AsyncEmailSender::add_recipient(const std::string& email) {
     recipients_ = curl_slist_append(recipients_, email.c_str());
     curl_easy_setopt(curl_, CURLOPT_MAIL_RCPT, recipients_);
+}
+
+
+void AsyncEmailSender::readConfigEmailFile(){
+    std::fstream file(configFilePath);
+    if(!file.is_open()){
+        throw std::runtime_error("Файл конфигурации почты не найден");
+    }
+
+    std::string line;
+    while (std::getline(file, line))
+    {
+        size_t delimiter_pos = line.find('=');
+        if (delimiter_pos != std::string::npos){
+            std::string key = line.substr(0,delimiter_pos);
+            std::string value = line.substr(delimiter_pos + 1);
+            if (key == "smtp_url"){
+                smtp_url_ = value;
+            }
+            else if(key == "email_from"){
+                email_from_ = value;
+            }
+            else if (key == "smtp_user"){
+                smtp_user_ = value;
+            }
+            else if(key == "smtp_password"){
+                smtp_password_ = value;
+            }
+
+        }
+    }
+
+    file.close();
+    
 }

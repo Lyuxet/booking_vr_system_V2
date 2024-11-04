@@ -1,5 +1,8 @@
 #include "booking_vr.h"
 #include "logger.h"
+#include "domain.h"
+#include "email.h"
+
 #include <boost/json.hpp>
 #include <boost/asio.hpp>
 #include <cppconn/prepared_statement.h>
@@ -10,11 +13,8 @@
 #include <thread>
 #include <cstdlib>
 #include <sstream>
-#include <email.h>
-
 #include <thread>
 
-#include "log_duration.h"
 
 
 std::mutex mtxtest;
@@ -39,29 +39,10 @@ namespace vr{
     try {
         std::unique_ptr<sql::Connection> conn = pool_.GetConnection();
         ConnectionGuard conn_guard(std::move(conn), pool_);
-
         executeTransactionInsert(conn_guard.getConnection());
-
-        auto email_task = std::async(std::launch::async, [this]() {
-            std::shared_ptr<AsyncEmailSender> email_sender;
-            std::string body;
-
-            email_sender = std::make_shared<AsyncEmailSender>();
-            email_sender->add_recipient(clients_.email);
-
-            auto client_ptr = std::make_shared<vr::Client_data>(clients_);
-
-            for (const auto& booking : bookings_) {
-                auto booking_ptr = std::make_shared<vr::Booking_data>(booking);
-                body = generate_email_body(booking, clients_);
-            }
-
-            std::string subject = "Уведомление о заказе https://vr-real.ru";
-            email_sender->send(subject, body);
-        });
-
+        std::lock_guard<std::mutex> lock(mtxtest);
+        sendToEmail();
         PrintInsertBooking();
-
     } catch (const std::exception& e) {
         std::lock_guard<std::mutex> lock(mtxtest);
         std::cerr << operationName << " Exception: " << e.what() << std::endl;
@@ -161,24 +142,7 @@ namespace vr{
             ConnectionGuard conn_guard(std::move(conn), pool_);
             executeTransactionInsert(conn_guard.getConnection());
             std::lock_guard<std::mutex> lock(mtxtest);
-
-            auto email_task = std::async(std::launch::async, [this]() {
-            std::shared_ptr<AsyncEmailSender> email_sender;
-            std::string body;
-
-            email_sender = std::make_shared<AsyncEmailSender>();
-            email_sender->add_recipient(clients_.email);
-
-            auto client_ptr = std::make_shared<vr::Client_data>(clients_);
-
-            for (const auto& booking : bookings_) {
-                auto booking_ptr = std::make_shared<vr::Booking_data>(booking);
-                body = generate_email_body(booking, clients_);
-            }
-
-            std::string subject = "Уведомление о заказе https://vr-real.ru";
-            email_sender->send(subject, body);
-        });
+            sendToEmail();
             PrintInsertBooking();
         } catch (const std::exception& e) {
             std::lock_guard<std::mutex> lock(mtxtest);
@@ -665,98 +629,129 @@ namespace vr{
 
     }
 
-    std::string Booking::generate_email_body(const Booking_data& booking, const Client_data& client) {
-    std::ostringstream html;
+    std::string Booking::generate_email_body(const info_by_email& email_data) {
+        std::ostringstream html;
 
-    html << "<!DOCTYPE html>\n";
-    html << "<html lang=\"ru\">\n";
-    html << "<head>\n";
-    html << "    <meta charset=\"UTF-8\">\n";
-    html << "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
-    html << "    <title>Новое бронирование</title>\n";
-    html << "    <style>\n";
-    html << "        table {\n";
-    html << "            width: 100%;\n";
-    html << "            border-collapse: collapse;\n";
-    html << "        }\n";
-    html << "        table, th, td {\n";
-    html << "            border: 1px solid black;\n";
-    html << "        }\n";
-    html << "        th, td {\n";
-    html << "            padding: 10px;\n";
-    html << "            text-align: left;\n";
-    html << "        }\n";
-    html << "        th {\n";
-    html << "            background-color: #f2f2f2;\n";
-    html << "        }\n";
-    html << "        td {\n";
-    html << "            background-color: #e6f7ff;\n";  // Добавлено цвет фона для ячеек
-    html << "        }\n";
-    html << "    </style>\n";
-    html << "</head>\n";
-    html << "<body>\n";
-    html << "    <h2>Детали бронирования</h2>\n";
-    html << "    <table>\n";
-    html << "        <tr>\n";
-    html << "            <th>Игровая площадка</th>\n";
-    html << "            <td><b>" << booking.place_game << "</b></td>\n";
-    html << "        </tr>\n";  
-    html << "        <tr>\n";
-    html << "            <th>Тип игры</th>\n";
-    html << "            <td><b>" << booking.type_game << "</b></td>\n";
-    html << "        </tr>\n";
-    html << "        <tr>\n";
-    html << "            <th>Название игры</th>\n";
-    html << "            <td><b>" << booking.name_game << "</b></td>\n";
-    html << "        </tr>\n";
-    html << "        <tr>\n";
-    html << "            <th>Дата</th>\n";
-    html << "            <td><b>" << booking.date_game << "</b></td>\n";
-    html << "        </tr>\n";
-    html << "        <tr>\n";
-    html << "            <th>Время игры</th>\n";
-    html << "            <td><b>" << booking.time_game << "</b></td>\n";
-    html << "        </tr>\n";
-    html << "        <tr>\n";
-    html << "            <th>Количество игроков</th>\n";
-    html << "            <td><b>" << booking.players_count << "</b></td>\n";
-    html << "        </tr>\n";
-    html << "        <tr>\n";
-    html << "            <th>Стоимость</th>\n";
-    html << "            <td><b>" << booking.price << " RUB</b></td>\n";
-    html << "        </tr>\n";
-    html << "        <tr>\n";
-    html << "            <th>Имя</th>\n";
-    html << "            <td>" << client.first_name << "</td>\n";
-    html << "        </tr>\n";
-    html << "        <tr>\n";
-    html << "            <th>Фамилия</th>\n";
-    html << "            <td>" << client.last_name << "</td>\n";
-    html << "        </tr>\n";
-    html << "        <tr>\n";
-    html << "            <th>Телефон</th>\n";
-    html << "            <td>" << client.phone << "</td>\n";
-    html << "        </tr>\n";
-    html << "        <tr>\n";
-    html << "            <th>E-mail</th>\n";
-    html << "            <td>" << client.email << "</td>\n";
-    html << "        </tr>\n";
-    html << "        <tr>\n";
-    html << "            <th>Комментарий</th>\n";
-    html << "            <td>" << booking.comment_game << "</td>\n";
-    html << "        </tr>\n";
-    html << "        <tr>\n";
-    html << "            <th>Статус</th>\n";
-    html << "            <td><b>" << booking.book_status << "</b></td>\n";
-    html << "        </tr>\n";
-    html << "    </table>\n";
-    html << "</body>\n";
-    html << "</html>";
+        html << "<!DOCTYPE html>\n";
+        html << "<html lang=\"ru\">\n";
+        html << "<head>\n";
+        html << "    <meta charset=\"UTF-8\">\n";
+        html << "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
+        html << "    <title>Новое бронирование</title>\n";
+        html << "    <style>\n";
+        html << "        table {\n";
+        html << "            width: 100%;\n";
+        html << "            border-collapse: collapse;\n";
+        html << "        }\n";
+        html << "        table, th, td {\n";
+        html << "            border: 1px solid black;\n";
+        html << "        }\n";
+        html << "        th, td {\n";
+        html << "            padding: 10px;\n";
+        html << "            text-align: left;\n";
+        html << "        }\n";
+        html << "        th {\n";
+        html << "            background-color: #f2f2f2;\n";
+        html << "        }\n";
+        html << "        td {\n";
+        html << "            background-color: #e6f7ff;\n";  // Добавлено цвет фона для ячеек
+        html << "        }\n";
+        html << "    </style>\n";
+        html << "</head>\n";
+        html << "<body>\n";
+        html << "    <h2>Детали бронирования</h2>\n";
+        html << "    <table>\n";
+        html << "        <tr>\n";
+        html << "            <th>Игровая площадка</th>\n";
+        html << "            <td><b>" << email_data.place_game << "</b></td>\n";
+        html << "        </tr>\n";  
+        html << "        <tr>\n";
+        html << "            <th>Тип игры</th>\n";
+        html << "            <td><b>" << email_data.type_game << "</b></td>\n";
+        html << "        </tr>\n";
+        html << "        <tr>\n";
+        html << "            <th>Название игры</th>\n";
+        html << "            <td><b>" << email_data.name_game << "</b></td>\n";
+        html << "        </tr>\n";
+        html << "        <tr>\n";
+        html << "            <th>Дата</th>\n";
+        html << "            <td><b>" << convertDate(email_data.date_game) << "</b></td>\n";
+        html << "        </tr>\n";
+        html << "        <tr>\n";
+        html << "            <th>Время игры</th>\n";
+        html << "            <td><b>" << email_data.times_game << "</b></td>\n";
+        html << "        </tr>\n";
+        html << "        <tr>\n";
+        html << "            <th>Количество игроков</th>\n";
+        html << "            <td><b>" << email_data.players_count << "</b></td>\n";
+        html << "        </tr>\n";
+        html << "        <tr>\n";
+        html << "            <th>Стоимость</th>\n";
+        html << "            <td><b>" << email_data.price << " RUB</b></td>\n";
+        html << "        </tr>\n";
+        html << "        <tr>\n";
+        html << "            <th>Имя</th>\n";
+        html << "            <td>" << email_data.client_first_name << "</td>\n";
+        html << "        </tr>\n";
+        html << "        <tr>\n";
+        html << "            <th>Фамилия</th>\n";
+        html << "            <td>" << email_data.client_last_name << "</td>\n";
+        html << "        </tr>\n";
+        html << "        <tr>\n";
+        html << "            <th>Телефон</th>\n";
+        html << "            <td>" << email_data.client_phone << "</td>\n";
+        html << "        </tr>\n";
+        html << "        <tr>\n";
+        html << "            <th>E-mail</th>\n";
+        html << "            <td>" << email_data.client_email << "</td>\n";
+        html << "        </tr>\n";
+        html << "        <tr>\n";
+        html << "            <th>Комментарий</th>\n";
+        html << "            <td>" << email_data.comment_game << "</td>\n";
+        html << "        </tr>\n";
+        html << "        <tr>\n";
+        html << "            <th>Статус</th>\n";
+        html << "            <td><b>" << email_data.status_book << "</b></td>\n";
+        html << "        </tr>\n";
+        html << "    </table>\n";
+        html << "</body>\n";
+        html << "</html>";
 
-    return html.str();
-}
+        return html.str();
+    }
 
+    void Booking::sendToEmail(){
 
+        auto email_task = std::async(std::launch::async, [this]() {
+            std::shared_ptr<AsyncEmailSender> email_sender;
+            std::string times_game;
+            std::string players_count;
+            int price = 0;
+            
 
+            for (const auto& booking : bookings_){
+                times_game += booking.time_game + "<br>";
+                players_count += std::to_string(booking.players_count) + "<br>";
+                price += booking.price;
+            }
+
+            info_by_email email_data{bookings_[0].place_game, bookings_[0].type_game,
+                               bookings_[0].name_game, bookings_[0].date_game,
+                               times_game, players_count, price, 
+                               clients_.first_name, clients_.last_name,
+                               clients_.phone, clients_.email, 
+                               bookings_[0].comment_game, bookings_[0].book_status};
+
+            email_sender = std::make_shared<AsyncEmailSender>();
+            email_sender->add_recipient(clients_.email);
+
+            std::string body{generate_email_body(email_data)};
+            
+
+            std::string subject = "Уведомление о заказе https://vr-real.ru";
+            email_sender->send(subject, body);
+        });
+
+    }
 
 }

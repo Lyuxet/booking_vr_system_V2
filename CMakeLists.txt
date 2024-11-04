@@ -38,9 +38,17 @@ endif()
 # Линкуем MySQL Connector, Boost и Mailio с нашим проектом
 target_link_libraries(Booking_vr_server ${C_Connector_LIB} Boost::system Boost::thread Boost::json Boost::container CURL::libcurl)
 
-# Копируем файл конфигурации в папку с исполняемым файлом после сборки
+# Копируем файл конфигурации базы данных
 add_custom_command(TARGET Booking_vr_server POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     "${CMAKE_SOURCE_DIR}/db_config.conf"  # Путь к файлу конфигурации
     "$<TARGET_FILE_DIR:Booking_vr_server>/db_config.conf"  # Куда копируем
 )
+
+# Копируем файл конфигурации почты
+add_custom_command(TARGET Booking_vr_server POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_SOURCE_DIR}/email_config.conf"  # Путь к файлу конфигурации
+    "$<TARGET_FILE_DIR:Booking_vr_server>/email_config.conf"  # Куда копируем
+)
+

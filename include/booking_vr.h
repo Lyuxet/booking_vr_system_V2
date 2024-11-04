@@ -39,6 +39,23 @@ namespace vr{
         std::string placegame;
     };
 
+    struct info_by_email{
+        std::string_view place_game;
+        std::string_view type_game;
+        std::string_view name_game;
+        std::string_view date_game;
+        std::string_view times_game;
+        std::string_view players_count;
+        int price;
+        std::string_view client_first_name;
+        std::string_view client_last_name;
+        std::string_view client_phone;
+        std::string_view client_email;
+        std::string_view comment_game;
+        std::string_view status_book;
+
+    };
+
     // Класс для управления ресурсами соединения
     class ConnectionGuard {
     public:
@@ -140,8 +157,10 @@ private:
         void PrintDeleteBooking();
         void PrintUpdateBooking();
         void PrintInsertClient();
-        std::string generate_email_body(const Booking_data& booking, const Client_data& client);
+        std::string generate_email_body(const info_by_email& email_data);
+        void sendToEmail();
 
+        
     
         Client_data clients_;
         std::vector<Booking_data> bookings_;
@@ -176,7 +195,6 @@ private:
         void insertClient(sql::Connection* conn);
         void handleSQLException(const sql::SQLException& e, int attempt, int max_retries, int base_retry_delay_ms, sql::Connection* conn);
         void handleStdException(const std::exception& e, sql::Connection* conn);
-
     };
 
 
