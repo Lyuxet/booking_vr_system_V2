@@ -620,7 +620,7 @@ namespace vr{
 
     }
 
-    std::string Booking::generate_email_body(const info_by_email& email_data) {
+    std::string  Booking::generate_email_body(const info_by_email& email_data) {
         std::ostringstream html;
 
         html << "<!DOCTYPE html>\n";
@@ -640,6 +640,9 @@ namespace vr{
         html << "        th, td {\n";
         html << "            padding: 10px;\n";
         html << "            text-align: left;\n";
+        html << "            white-space: nowrap;\n";  // Добавлено свойство для предотвращения переноса текста
+        html << "            overflow: hidden;\n";    // Добавлено свойство для предотвращения переноса текста
+        html << "            text-overflow: ellipsis;\n"; // Обрезка текста с добавлением многоточия
         html << "        }\n";
         html << "        th {\n";
         html << "            background-color: #f2f2f2;\n";
@@ -706,6 +709,7 @@ namespace vr{
 
         return html.str();
     }
+
 
     void Booking::sendToEmail(){
 
