@@ -52,6 +52,11 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        if (!isValidPhoneNumber(phone)){
+            showNotification("Пожалуйста, введите корректный номер телефона", true);
+            return;
+        }
+
         if (!isValidEmailDomain(email)){
             showNotification("Пожалуйста, введите корректную почту",true);
             return;
@@ -220,4 +225,10 @@ function isValidEmailDomain(email) {
     ];
 
     return emailDomains.some(domain => email.endsWith(domain)); 
+}
+
+
+function isValidPhoneNumber(phone) { 
+    const phoneRegex = /^\d{5,}$/;
+    return phoneRegex.test(phone);
 }
