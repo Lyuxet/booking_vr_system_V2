@@ -20,7 +20,7 @@ CREATE TABLE GameSchedule (
 CREATE INDEX idx_game_schedule ON GameSchedule (name_game, date_game, time_game);
 
 
-CREATE TABLE ArenaShooterStats (
+CREATE TABLE CombatSquad (
 	id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     client_id BIGINT UNSIGNED NOT NULL,
     place_game VARCHAR(50) NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE ArenaShooterStats (
 );
 
 
-CREATE TABLE ArenaQuestStats (
+CREATE TABLE MedievalJourney (
 	id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     client_id BIGINT UNSIGNED NOT NULL,
     place_game VARCHAR(50) NOT NULL,

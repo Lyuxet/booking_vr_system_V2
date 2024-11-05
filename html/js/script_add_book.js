@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
             phone,
             email,
             placegame,
-            typegame: isCloseType ? 'Закрытая игра' : 'Открытая игра',
+            typegame: (placegame == 'VR Арена' ? (isCloseType ? 'Закрытая игра' : 'Открытая игра') : ''),
             namegame,
             date,
             times: selectedTimes,

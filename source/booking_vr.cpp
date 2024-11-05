@@ -725,7 +725,8 @@ namespace vr{
 
             for (const auto& booking : bookings_){
                 times_game_and_players_count += booking.time_game + " (";
-                times_game_and_players_count += std::to_string(booking.players_count) + " игроков)<br>";
+                times_game_and_players_count += booking.type_game == "Закрытая игра" ? "до 10 игроков)<br>" 
+                                                : "игроков " + std::to_string(booking.players_count) + ")<br>";
                 price += booking.price;
             }
 
