@@ -44,23 +44,18 @@ void WebSocketSession::on_read(beast::error_code ec, std::size_t bytes_transferr
         close_session(); // Закрываем и удаляем сессию
         return;
     } else if (ec) {
-        Logger::getInstance().log("Ошибка при чтении: " + ec.message() + "(" + std::to_string(ec.value()) + ")" +
-                                  " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), "../logs/error_read.log");
         close_session();
         return;
     }
     // Парсинг JSON-данных от клиента
     std::string message = beast::buffers_to_string(buffer_.data());
     buffer_.consume(buffer_.size()); // Очищаем буфер после чтения
-    try {
-        auto json_data = json::parse(message);
-        std::string place = json_data.at("place").as_string().c_str();
-        std::string date = json_data.at("date").as_string().c_str();
-        // Сохранение данных в сессии
-        UpdateGameInfo(place, date);
-    } catch (const std::exception& e) {
-        Logger::getInstance().log("Ошибка при обработке сообщения: " + std::string(e.what()), "../logs/error_read.log");
-    }
+    
+    auto json_data = json::parse(message);
+    std::string place = json_data.at("place").as_string().c_str();
+    std::string date = json_data.at("date").as_string().c_str();
+    // Сохранение данных в сессии
+    UpdateGameInfo(place, date);
     do_read(); // Ожидание следующего сообщения
 }
 

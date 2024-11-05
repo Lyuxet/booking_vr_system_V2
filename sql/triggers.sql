@@ -1,7 +1,7 @@
 -- Триггеры для шутера на арене____________________________________________________________________________________________
 DELIMITER $$
-CREATE TRIGGER check_and_update_shooter_stats
-BEFORE INSERT ON ArenaShooterStats
+CREATE TRIGGER check_and_update_CombatSquad
+BEFORE INSERT ON CombatSquad
 FOR EACH ROW
 BEGIN
     -- Проверяем, что количество игроков не превышает максимальное количество
@@ -12,8 +12,8 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE TRIGGER check_and_insert_shooter_schedule
-BEFORE INSERT ON ArenaShooterStats
+CREATE TRIGGER check_and_insert_CombatSquad_schedule
+BEFORE INSERT ON CombatSquad
 FOR EACH ROW
 BEGIN
     -- Проверяем, занято ли время для другой игры в это же время
@@ -39,8 +39,8 @@ DELIMITER ;
 
 DELIMITER $$
 
-CREATE TRIGGER check_and_update_shooter_stats_before_update
-BEFORE UPDATE ON ArenaShooterStats
+CREATE TRIGGER check_and_update_CombatSquad_before_update
+BEFORE UPDATE ON CombatSquad
 FOR EACH ROW
 BEGIN
     -- Проверяем, что количество игроков не превышает максимальное количество
@@ -107,8 +107,8 @@ DELIMITER ;
 
 
 DELIMITER $$
-CREATE TRIGGER 	delete_shooter_schedule
-BEFORE DELETE ON ArenaShooterStats
+CREATE TRIGGER 	delete_CombatSquadr_schedule
+BEFORE DELETE ON CombatSquad
 FOR EACH ROW
 BEGIN
 	DELETE FROM GameSchedule
@@ -120,8 +120,8 @@ DELIMITER ;
 
 -- Тригреры для квеста на арене_____________________________________________________________________________________________________
 DELIMITER $$
-CREATE TRIGGER check_and_update_quest_stats
-BEFORE INSERT ON ArenaQuestStats
+CREATE TRIGGER check_and_update_MedievalJourney
+BEFORE INSERT ON MedievalJourney
 FOR EACH ROW
 BEGIN
     -- Проверяем, что количество игроков не превышает максимальное количество
@@ -133,8 +133,8 @@ DELIMITER ;
 
 
 DELIMITER $$
-CREATE TRIGGER check_and_insert_quest_schedule
-BEFORE INSERT ON ArenaQuestStats
+CREATE TRIGGER check_and_insert_MedievalJourney_schedule
+BEFORE INSERT ON MedievalJourney
 FOR EACH ROW
 BEGIN
     -- Проверяем, занято ли время для другой игры в это же время
@@ -159,8 +159,8 @@ DELIMITER ;
 
 DELIMITER $$
 
-CREATE TRIGGER check_and_update_quest_stats_before_update
-BEFORE UPDATE ON ArenaQuestStats
+CREATE TRIGGER check_and_update_MedievalJourney_before_update
+BEFORE UPDATE ON MedievalJourney
 FOR EACH ROW
 BEGIN
     -- Проверяем, что количество игроков не превышает максимальное количество
@@ -227,8 +227,8 @@ DELIMITER ;
 
 
 DELIMITER $$
-CREATE TRIGGER 	delete_quest_schedule
-BEFORE DELETE ON ArenaQuestStats
+CREATE TRIGGER 	delete_MedievalJourney_schedule
+BEFORE DELETE ON MedievalJourney
 FOR EACH ROW
 BEGIN
 	DELETE FROM GameSchedule

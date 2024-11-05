@@ -155,7 +155,6 @@ private:
         void PrintInsertBooking();
         void PrintDeleteBooking();
         void PrintUpdateBooking();
-        void PrintInsertClient();
         std::string generate_email_body(const info_by_email& email_data);
         void sendToEmail();
 

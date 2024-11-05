@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         const xhr = new XMLHttpRequest();
-        const url = placegame === 'ARENA' 
+        const url = placegame === 'VR Арена' 
             ? 'http://localhost:8081/addBookingOpenArena'
             : 'http://localhost:8081/addBookingCubes';
         xhr.open('POST', url, true);

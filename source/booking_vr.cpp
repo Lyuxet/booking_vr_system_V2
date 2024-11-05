@@ -44,8 +44,6 @@ namespace vr{
         sendToEmail();
         PrintInsertBooking();
     } catch (const std::exception& e) {
-        std::lock_guard<std::mutex> lock(mtxtest);
-        std::cerr << operationName << " Exception: " << e.what() << std::endl;
         Logger::getInstance().log(operationName + " Exception: " + std::string(e.what()) +
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
             "../logs/error_transaction.log");
@@ -145,8 +143,7 @@ namespace vr{
             sendToEmail();
             PrintInsertBooking();
         } catch (const std::exception& e) {
-            std::lock_guard<std::mutex> lock(mtxtest);
-            Logger::getInstance().log("Cubes Exception: " + std::string(e.what()) +
+            Logger::getInstance().log("Кубы Исключение: " + std::string(e.what()) +
                 " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
                 "../logs/error_transaction.log");
             throw;
@@ -178,8 +175,7 @@ namespace vr{
     }
 
     void Booking::handleStdException(const std::exception& e, sql::Connection* conn) {
-        std::cerr << "Exception: " << e.what() << std::endl;
-        Logger::getInstance().log("Exception: " + std::string(e.what()), "../logs/error_transaction.log");
+        Logger::getInstance().log("Исключение: " + std::string(e.what()), "../logs/error_transaction.log");
         conn->rollback();
         throw;
     }
@@ -250,13 +246,9 @@ namespace vr{
             ));
             pstmt->setString(1, clients_.first_name);
             pstmt->setString(2, clients_.last_name);
-            pstmt->setString(3, clients_.phone);
+            pstmt->setString(3, clients_.phone); 
             pstmt->setString(4, clients_.email);
-            
-            int affectedRows = pstmt->executeUpdate();  // Получаем количество затронутых строк
-            if (affectedRows > 0) {
-                PrintInsertClient();
-            }
+            pstmt->executeUpdate();
         }
     }
 

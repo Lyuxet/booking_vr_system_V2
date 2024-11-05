@@ -4,20 +4,6 @@
 
 namespace vr{
 
-
-    void Booking::PrintInsertClient(){
-    std::cout << "\n================ НОВЫЙ КЛИЕНТ ================" << std::endl;
-    std::cout << "++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
-    std::cout << "Имя:               " << clients_.first_name << std::endl;
-    std::cout << "Фамилия:           " << clients_.last_name << std::endl;
-    std::cout << "Телефон:           " << clients_.phone << std::endl;
-    std::cout << "Почта:             " << clients_.email << std::endl;
-    std::string datetime = currentDateTime();
-    std::cout << "Время регистрации: " << datetime << std::endl;      
-    std::cout << "++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
-    std::cout << "================ Конец списка ================\n" << std::endl;
-    }
-
     void Booking::PrintInsertBooking() {
         if (bookings_.empty()) {
             std::cout << "Нет бронирований для вставки." << std::endl;

@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <string>
+#include <sstream>
 
 
 AsyncEmailSender::AsyncEmailSender() {
@@ -39,7 +40,7 @@ void AsyncEmailSender::initEmail(){
     {
         Logger::getInstance().log("Ошибка инициализации подключения к smtp серверу " + std::string(e.what()) +
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
-            "../logs/error_connect.log");
+            "../logs/error_send_email.log");
     }
     
 }
@@ -53,23 +54,34 @@ AsyncEmailSender::~AsyncEmailSender() {
 }
 
 void AsyncEmailSender::send(const std::string& subject, const std::string& body) {
-    auto self = shared_from_this();
-    std::thread([self, subject, body]() {
-        struct upload_status upload_ctx;
-        upload_ctx.lines_read = 0;
-        std::string email_data = "Subject: " + subject + "\r\nContent-Type: text/html\r\n\r\n" + body;
+    try
+    {
+        auto self = shared_from_this();
+            std::thread([self, subject, body]() {
+            struct upload_status upload_ctx;
+            upload_ctx.lines_read = 0;
+            std::string email_data = "Subject: " + subject + "\r\nContent-Type: text/html\r\n\r\n" + body;
 
-        curl_easy_setopt(self->curl_, CURLOPT_READFUNCTION, payload_source);
-        curl_easy_setopt(self->curl_, CURLOPT_READDATA, &email_data);
-        curl_easy_setopt(self->curl_, CURLOPT_UPLOAD, 1L);
+            curl_easy_setopt(self->curl_, CURLOPT_READFUNCTION, payload_source);
+            curl_easy_setopt(self->curl_, CURLOPT_READDATA, &email_data);
+            curl_easy_setopt(self->curl_, CURLOPT_UPLOAD, 1L);
 
-        CURLcode res = curl_easy_perform(self->curl_);
-        if (res != CURLE_OK) {
-            std::cerr << "Error sending email: " << curl_easy_strerror(res) << "\n";
-        } else {
-            std::cout << "Email sent successfully.\n";
-        }
-    }).detach();
+            CURLcode res = curl_easy_perform(self->curl_);
+            if (res != CURLE_OK) {
+                std::stringstream errorStream; errorStream << "Ошибка отправки email: " << curl_easy_strerror(res); 
+                std::string errorMessage = errorStream.str();
+                throw std::runtime_error(errorMessage);
+            } 
+        }).detach();
+    }
+    catch(const std::exception& e)
+    {
+        Logger::getInstance().log("Ошибка инициализации подключения к smtp серверу " + std::string(e.what()) +
+            " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
+            "../logs/error_send_email.log");
+    }
+    
+    
 }
 
 size_t AsyncEmailSender::payload_source(void* ptr, size_t size, size_t nmemb, void* userp) {
