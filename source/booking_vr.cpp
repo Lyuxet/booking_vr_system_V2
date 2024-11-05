@@ -738,8 +738,10 @@ namespace vr{
                                bookings_[0].comment_game, bookings_[0].book_status};
 
             email_sender = std::make_shared<AsyncEmailSender>();
-            email_sender->add_recipient(clients_.email);
 
+            if(!clients_.email.empty()){
+                email_sender->add_recipient(clients_.email);
+            }
             std::string body{generate_email_body(email_data)};
             
 

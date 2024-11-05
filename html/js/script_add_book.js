@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const lastname_admin = document.getElementById('lastname_admin') ? document.getElementById('lastname_admin').value : 'Клиент';
         const book_status = document.getElementById('book_status') ? document.getElementById('book_status').value : 'Принят';
 
-        if (!firstname || !phone || !email) {
+        if (!firstname || !phone) {
             showNotification("Пожалуйста, заполните все обязательные поля", true);
             return;
         }
@@ -49,6 +49,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!document.getElementById('checkbox').checked) {
             showNotification('Пожалуйста, примите соглашение на обработку персональных данных', true);
+            return;
+        }
+
+        if (!isValidEmailDomain(email)){
+            showNotification("Пожалуйста, введите корректную почту",true);
             return;
         }
 
@@ -192,4 +197,27 @@ function updateBookingContainer() {
     };
 
     xhr.send();
+}
+
+
+function isValidEmailDomain(email) { 
+    if (!email || email.trim() === "") { 
+        return true; 
+    }
+
+    const emailDomains = [ 
+        "@gmail.com", 
+        "@yahoo.com", 
+        "@hotmail.com", 
+        "@utlook.com", 
+        "@icloud.com", 
+        "@mail.ru", 
+        "@aol.com", 
+        "@yandex.ru", 
+        "@mail.com", 
+        "@protonmail.com",
+        "@inbox.ru"
+    ];
+
+    return emailDomains.some(domain => email.endsWith(domain)); 
 }
