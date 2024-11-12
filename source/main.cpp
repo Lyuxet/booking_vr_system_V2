@@ -13,7 +13,7 @@ HttpServer* http_server_ptr = nullptr;
 WebSocketServer* websocket_server_ptr = nullptr;
 
 void handle_sigint(int sig) { 
-    std::cout << "Caught signal " << sig << ", exiting cleanly..." << std::endl; 
+    std::cout << "Пойман сигнал: " << sig << ", очищение ресурсов..." << std::endl; 
     if (http_server_ptr) {
         http_server_ptr->stop();
     }

@@ -337,7 +337,12 @@ namespace vr{
                 for (const auto& item : button_data_) {
                     ButtonData button = item.second;
                     if (availability_map.find(button.time) != availability_map.end()) {
-                        button.availability_place = availability_map[button.time];
+                        if (availability_.typegame == "Закрытая игра"){
+                            button.availability_place = 0;   
+                        }
+                        else{
+                            button.availability_place = availability_map[button.time];
+                        }
                     } else {
                         button.availability_place = 10; // Все места свободны
                     }
@@ -350,11 +355,7 @@ namespace vr{
                         {"availability_place", button.availability_place}
                     };
                 }
-                std::cout << std::endl;
-                
-
                 response = boost::json::serialize(response_data); 
-                std::cout << response << std::endl;
                
                 conn->commit();
                 return;
@@ -374,6 +375,17 @@ namespace vr{
         for (int attempt = 0; attempt < max_retries; ++attempt) {
             try {
                 conn->setAutoCommit(false);
+
+                std::unique_ptr<sql::PreparedStatement> pstmtIninButton(conn->prepareStatement("SELECT * FROM CubesButtonData"));
+                std::unique_ptr<sql::ResultSet> res_set_data(pstmtIninButton->executeQuery());
+                
+                while (res_set_data->next()) {
+                    // Исправляем ошибку с точкой с запятой в имени столбца
+                    button_data_.emplace(
+                        res_set_data->getString("button_id"),
+                        ButtonData{ res_set_data->getString("button_time"), res_set_data->getInt("button_price") }
+                    );
+                }
                 std::unique_ptr<sql::PreparedStatement> pstmtCheckAvailability(conn->prepareStatement(
                     "SELECT time_game, SUM(players_count) AS total_players, "
                     "CASE "
@@ -387,26 +399,40 @@ namespace vr{
                 pstmtCheckAvailability->setString(1, availability_.namegame);
                 pstmtCheckAvailability->setString(2, availability_.placegame);
                 pstmtCheckAvailability->setString(3, availability_.date);
-                std::unique_ptr<sql::ResultSet> resSet(pstmtCheckAvailability->executeQuery());
+                std::unique_ptr<sql::ResultSet> res_set_avaliability(pstmtCheckAvailability->executeQuery());
 
-                // Создаем JSON объект для хранения результатов
-                boost::json::array jsonResponse;
+                std::unordered_map<std::string, int> availability_map;
+                while (res_set_avaliability->next()) {
+                    // Извлечение данных из результата запроса
+                    std::string time_game = res_set_avaliability->getString("time_game");
+                    int available_slots = res_set_avaliability->getInt("available_slots");
 
-                // Перебираем результаты и добавляем их в JSON массив
-                while (resSet->next()) {
-                    boost::json::object gameInfo;
-                    gameInfo["time_game"] = std::string(resSet->getString("time_game"));
-                    gameInfo["total_players"] = resSet->getInt("total_players");
-                    gameInfo["available_slots"] = resSet->getInt("available_slots");
-                    // Добавляем в массив
-                    jsonResponse.push_back(gameInfo);
+                    // Заполнение словаря, используя time_game в качестве ключа и available_slots в качестве значения
+                    availability_map[time_game] = available_slots;
                 }
 
-                // Преобразуем JSON в строку
-                response = boost::json::serialize(jsonResponse);
+                std::vector<ButtonData> button_data_list;
+                boost::json::object response_data;
+                for (const auto& item : button_data_) {
+                    ButtonData button = item.second;
+                    if (availability_map.find(button.time) != availability_map.end()) {
+                        button.availability_place = availability_map[button.time];
+                    } else {
+                        button.availability_place = 4; // Все места свободны
+                    }
+                    button_data_list.push_back(button);
 
-                conn->commit();  // Завершаем транзакцию
-                return;  // Успешный выход из функции
+                    // Добавление данных в response_data с использованием ключей button11, button12 и т.д.
+                    response_data[item.first] = boost::json::object{
+                        {"time", button.time},
+                        {"price", button.price},
+                        {"availability_place", button.availability_place}
+                    };
+                }
+                response = boost::json::serialize(response_data); 
+               
+                conn->commit();
+                return;
             } catch (const sql::SQLException& e) {
                 handleSQLException(e, attempt, max_retries, base_retry_delay_ms, conn);
             } catch (const std::exception& e) {

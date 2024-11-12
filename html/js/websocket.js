@@ -13,7 +13,6 @@ export function initializeWebSocket(place, currentDate, bookingButtons, isCloseT
     socket.addEventListener('open', function() {
         const data = JSON.stringify({ place: place, date: currentDate });
         socket.send(data);
-        
         checkAvailability(bookingButtons, place, isCloseType);
         hidePriceDisplay();
     });
@@ -22,7 +21,7 @@ export function initializeWebSocket(place, currentDate, bookingButtons, isCloseT
         if (event.code === 1006) {
             setTimeout(function() {
                 if (!socket || socket.readyState !== WebSocket.OPEN) {
-                    initializeWebSocket(place, currentDate, bookingButtons);
+                    initializeWebSocket(place, currentDate, bookingButtons, isCloseType);
                 }
             }, 3000);
         }
@@ -30,7 +29,7 @@ export function initializeWebSocket(place, currentDate, bookingButtons, isCloseT
 
     socket.addEventListener('message', function() {
         try {
-            checkAvailability(bookingButtons, place);
+            checkAvailability(bookingButtons, place, isCloseType);
             hidePriceDisplay();
         } catch (error) {
             console.error('Ошибка при обработке сообщения:', error);

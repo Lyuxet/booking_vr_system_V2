@@ -75,7 +75,7 @@ namespace vr{
             Logger::getInstance().log("Error: " + std::string(e.what()) + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
             "../logs/error_transaction.log");
-            res.result(http::status::internal_server_error);
+            res.result(http::status::bad_request);
             res.set(http::field::content_type, "application/json");
             res.body() = std::string(e.what());
         }
@@ -88,9 +88,8 @@ namespace vr{
             std::string date = formData.at("date");
             std::string namegame = formData.at("namegame");
             std::string placegame = formData.at("placegame");
-            std::string typegame = formData.at("typegame") == "false" ? "Открытая игра" : "Закрытая игра";
+            std::string typegame = formData.at("typegame") == "undefined" ? "" : (formData.at("typegame") == "false" ? "Открытая игра" : "Закрытая игра");
             //Дальше по коду дополнять 
-            std::cout << date << " " << namegame << " " << placegame << " " << typegame << std::endl;
             AvailabilityData data = {date, namegame, placegame, typegame};
             std::string response;
 
@@ -181,7 +180,7 @@ namespace vr{
             Logger::getInstance().log("Error: " + std::string(e.what()) + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
             "../logs/error_transaction.log");
-            res.result(http::status::internal_server_error);
+            res.result(http::status::bad_request);
             res.set(http::field::content_type, "application/json");
             res.body() = std::string(e.what());
         }

@@ -14,8 +14,7 @@ export function checkAvailability(bookingButtons, place, isCloseType) {
     bookingGrid.style.display = 'none'; 
     pacmanContainer.style.display = 'flex'; 
 
-    console.log(isCloseType);
-    const xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();   
     const url = place === 'VR Арена' ? 
         `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(place)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}&typegame=${encodeURIComponent(isCloseType)}` :
         `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(place)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}&typegame=${encodeURIComponent(isCloseType)}`;

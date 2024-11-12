@@ -1,5 +1,5 @@
 import { calculateTotalPrice } from "./price.js";
-import { button_data_open_arena, button_data_close_arena,button_cubes } from "./button_data.js";
+import { button_data } from "./button_data.js";
 
 const maxPlayersArena = 10;
 const maxPlayersCubes = 4;
@@ -9,39 +9,40 @@ const isCloseType = document.querySelector('.booking-container-close') !== null;
 
 function updateSeats(button, availableSeats, maxPlayers, place) {
     const seatsCount = button.querySelector('.seats span');
-    const playerInput = button.querySelector('.player-input');
-    const maxAvailableSeats = availableSeats !== undefined ? availableSeats : maxPlayers;
-
-    if (place === "VR Арена" && isCloseType) {
-        if (availableSeats < maxPlayers) {
-            button.classList.add('disabled');
-            seatsCount.textContent = 0;
-        } else {
-            button.classList.remove('disabled');
-            seatsCount.textContent = button.classList.contains('selected') ? 0 : maxPlayers;
-        }
+   
+    if (availableSeats == 0) {
+        button.classList.add('disabled');
+        seatsCount.textContent = 0;
     } else {
-        const currentPlayers = parseInt(playerInput.value, 10) || 0;
-
-        if (currentPlayers > maxAvailableSeats) {
-            playerInput.value = maxAvailableSeats;
-        }
-        if (currentPlayers < minPlayers && playerInput.value !== '') {
-            playerInput.value = minPlayers;
-            playerInput.focus();
-            playerInput.select();
-        }
-
-        seatsCount.textContent = maxAvailableSeats - playerInput.value;
-
-        if (playerInput.value === '') {
-            button.classList.remove('selected');
-        } else {
-            button.classList.add('selected');
-        }
-
-        playerInput.setAttribute('max', maxAvailableSeats);
+        button.classList.remove('disabled');
+        seatsCount.textContent = button.classList.contains('selected') ? 0 : maxPlayers;
     }
+    
+    if (isCloseType){
+        return;
+    }
+    const playerInput = button.querySelector('.player-input');
+    const currentPlayers = parseInt(playerInput.value, 10) || 0;
+
+    if (currentPlayers > availableSeats) {
+        playerInput.value = availableSeats;
+    }
+    if (currentPlayers < minPlayers && playerInput.value !== '') {
+        playerInput.value = minPlayers;
+        playerInput.focus();
+        playerInput.select();
+    }
+
+    seatsCount.textContent = availableSeats - playerInput.value;
+
+    if (playerInput.value === '') {
+        button.classList.remove('selected');
+    } else {
+        button.classList.add('selected');
+    }
+
+    playerInput.setAttribute('max', availableSeats);
+    
 }
 
 export function updateSeatsArena(button, availableSeats) {
@@ -170,16 +171,21 @@ export function updateButtonsState(data, bookingButtons, place) {
     });
 
     const availability = typeof data === 'string' ? JSON.parse(data) : data; // Проверка, является ли data строкой или объектом
-
     bookingButtons.forEach(button => {  
         const buttonId = button.getAttribute('id');
         const slotData = availability[buttonId];
 
         if (slotData) {
-            button.querySelector('.time').textContent = slotData.time;
-            button.querySelector('.price').textContent = `${slotData.price} ₽`;
-            button.querySelector('.price').setAttribute('data-price', slotData.price);
-            const availableSeats = slotData.availability_place;
+            button_data[buttonId] = {
+                time: slotData.time,
+                price: slotData.price,
+                availability: slotData.availability_place
+            };
+            //В последствии доработать, что бы количествои мест расчитывалось на серевере и прайс на выходные и праздничные дни долнжен быть на сервере 
+            button.querySelector('.time').textContent = button_data[buttonId].time;
+            button.querySelector('.price').textContent = `${button_data[buttonId].price} ₽`;
+            button.querySelector('.price').setAttribute('data-price', button_data[buttonId].price);
+            const availableSeats = button_data[buttonId].availability;
             updateSeatsFn(button, availableSeats);
             updateButtonStateFn(button);
         }
@@ -190,16 +196,8 @@ export function initializeBookingButton(button, place, isCloseType) {
         handleClick.call(this, event, place);
     });
 
-    const buttonId = button.id;
     const playerInput = button.querySelector('.player-input');
-    const buttonData = place === 'VR Арена' ? (isCloseType ? button_data_close_arena : button_data_open_arena) : button_cubes;
-    if (buttonData[buttonId]) {
-        const data = buttonData[buttonId];
-        button.querySelector('.time').textContent = data.time;
-        button.querySelector('.price').textContent = `${data.price} ₽`;
-        button.querySelector('.price').setAttribute('data-price', data.price);
-    }
-
+    
     if (!isCloseType) {
         playerInput.setAttribute('maxlength', '2');
         restrictNonNumericInput(playerInput);

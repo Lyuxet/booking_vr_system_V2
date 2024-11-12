@@ -1,5 +1,6 @@
 import { updateButtonsState } from "./buttons.js";
 import { hidePriceDisplay } from "./priceDisplay.js";
+import { button_data } from "./button_data.js";
 
 const addButton = document.getElementById('add');
 function showNotification(message, isError = false) {
@@ -64,7 +65,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
         let selectedTimes = [];
         for (let button of selectedButtons) {
-            const timeText = button.querySelector('.time').textContent.trim();
+            const buttonId = button.getAttribute('id');
+            const slotData = button_data[buttonId];
+
+            if (!slotData) {
+                showNotification(`Данные для кнопки ${buttonId} отсутствуют`, true);
+                return;
+            }
+
+            const timeText = slotData.time;
             const [startTime] = timeText.split(' - ').map(time => time.trim());
             const [startHours, startMinutes] = startTime.split(':').map(Number);
 
@@ -91,7 +100,10 @@ document.addEventListener('DOMContentLoaded', function () {
         let selectedPrice = [];
 
         selectedButtons.forEach(function (button) {
-            const priceButton = parseInt(button.querySelector('.price').textContent, 10);
+            const buttonId = button.getAttribute('id');
+            const slotData = button_data[buttonId];
+            const priceButton = slotData.price;
+
             if (!isCloseType) {
                 const playersCount = parseInt(button.querySelector('.player-input').value, 10);
                 selectedPlayersCount.push(playersCount);
@@ -134,10 +146,10 @@ document.addEventListener('DOMContentLoaded', function () {
         xhr.onload = function () {
             if (xhr.status >= 200 && xhr.status < 300) {
                 showNotification('Бронирование успешно отправлено');
-                updateBookingContainer();
+                updateBookingContainer(isCloseType);
             } else {
                 showNotification(`Ошибка отправки бронирования: ${xhr.responseText}`, true);
-                updateBookingContainer();
+                updateBookingContainer(isCloseType);
             }
         };
         xhr.onerror = function () {
@@ -147,8 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
-function updateBookingContainer() {
+function updateBookingContainer(isCloseType) {
     const date = document.getElementById('date').value;
     let placegame = 'VR Арена';
         if (document.querySelector('.booking-container-close') == null && document.querySelector('.booking-container-open') == null){
@@ -159,9 +170,9 @@ function updateBookingContainer() {
     const namegame = gameTitleElement ? gameTitleElement.textContent.trim() : 'На Ваш выбор';
 
     const xhr = new XMLHttpRequest();
-    const url = placegame === 'ARENA' 
-        ? `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}` 
-        : `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`;
+    const url = placegame === 'VR Арена' 
+        ? `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}&typegame=${isCloseType}` 
+        : `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(placegame)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}&typegame=${isCloseType}`;
 
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');

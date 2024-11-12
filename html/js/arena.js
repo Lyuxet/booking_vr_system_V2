@@ -12,7 +12,9 @@ document.addEventListener('DOMContentLoaded', function () {
     SetDate();
     storedDate = document.getElementById('date').value;
     const isCloseType = document.querySelector('.booking-container-close') !== null;
-    
+    bookingButtons.forEach(button => {
+        initializeBookingButton(button, place, isCloseType);
+    });
     initializeWebSocket(place, storedDate, bookingButtons, isCloseType);
     const currentDate = $('#date').datepicker('getDate');
     updatePricesArena(currentDate, bookingButtons);
@@ -29,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (socket) {
                 socket.close();
             }
-            initializeWebSocket(place, storedDate, bookingButtons);
+            initializeWebSocket(place, storedDate, bookingButtons, isCloseType);
         }
     });
 
@@ -44,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (socket) {
             socket.close();
         }
-        initializeWebSocket(place, storedDate, bookingButtons);
+        initializeWebSocket(place, storedDate, bookingButtons, isCloseType);
         updatePricesArena(selectedDate, bookingButtons);
        
     });

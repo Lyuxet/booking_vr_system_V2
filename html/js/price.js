@@ -1,6 +1,7 @@
 import { showPriceDisplay } from "./priceDisplay.js";
 import { hidePriceDisplay } from "./priceDisplay.js";
 import { isWeekendOrHoliday } from "./date.js";
+import { button_data } from "./button_data.js";
 
 const isCloseType = document.querySelector('.booking-container-close') !== null;
 
@@ -30,7 +31,8 @@ export function calculateTotalPrice() {
         document.querySelectorAll('.booking-button.selected').forEach(button => {
             const playerInput = button.querySelector('.player-input');
             const playerCount = parseInt(playerInput.value, 10) || 0;
-            const pricePerPlayer = parseInt(button.querySelector('.price').textContent);
+            const buttonId = button.getAttribute('id');
+            const pricePerPlayer = button_data[buttonId].price;
 
           
             totalPrice += playerCount * pricePerPlayer;
