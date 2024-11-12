@@ -88,8 +88,10 @@ namespace vr{
             std::string date = formData.at("date");
             std::string namegame = formData.at("namegame");
             std::string placegame = formData.at("placegame");
-
-            AvailabilityData data = {date, namegame, placegame};
+            std::string typegame = formData.at("typegame") == "false" ? "Открытая игра" : "Закрытая игра";
+            //Дальше по коду дополнять 
+            std::cout << date << " " << namegame << " " << placegame << " " << typegame << std::endl;
+            AvailabilityData data = {date, namegame, placegame, typegame};
             std::string response;
 
             if (placegame == "VR Арена") {

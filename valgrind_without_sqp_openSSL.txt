@@ -1,0 +1,13 @@
+{
+   OpenSSL_Memory_Leak
+   Memcheck:Leak
+   fun:malloc
+   obj:/usr/lib/x86_64-linux-gnu/libssl.so.*
+}
+
+{
+   MySQL_Memory_Leak
+   Memcheck:Leak
+   fun:malloc
+   obj:/usr/lib/x86_64-linux-gnu/libmysqlclient.so.*
+}

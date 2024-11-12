@@ -154,7 +154,7 @@ export function handleClick(event, place) {
 }
 
 
-export function updateButtonsState(availability, bookingButtons, place) {
+export function updateButtonsState(data, bookingButtons, place) {
     const updateSeatsFn = place === 'VR Арена' ? updateSeatsArena : updateSeatsCubes;
     const updateButtonStateFn = place === 'VR Арена' ? updateButtonStateArena : updateButtonStateCubes;
     const maxPlayers = place === 'VR Арена' ? maxPlayersArena : maxPlayersCubes;
@@ -169,20 +169,22 @@ export function updateButtonsState(availability, bookingButtons, place) {
         updateButtonStateFn(button);
     });
 
-    if (Array.isArray(availability)) {
-        bookingButtons.forEach(button => {
-            const timeText = button.querySelector('.time').textContent.trim();
-            const availableSlotData = availability.find(slot => slot.time_game === timeText);
+    const availability = typeof data === 'string' ? JSON.parse(data) : data; // Проверка, является ли data строкой или объектом
 
-            if (availableSlotData) {
-                const availableSeats = availableSlotData.available_slots;
-                updateSeatsFn(button, availableSeats);
-                updateButtonStateFn(button);
-            }
-        });
-    }
+    bookingButtons.forEach(button => {  
+        const buttonId = button.getAttribute('id');
+        const slotData = availability[buttonId];
+
+        if (slotData) {
+            button.querySelector('.time').textContent = slotData.time;
+            button.querySelector('.price').textContent = `${slotData.price} ₽`;
+            button.querySelector('.price').setAttribute('data-price', slotData.price);
+            const availableSeats = slotData.availability_place;
+            updateSeatsFn(button, availableSeats);
+            updateButtonStateFn(button);
+        }
+    });
 }
-
 export function initializeBookingButton(button, place, isCloseType) {
     button.addEventListener('click', function(event) {
         handleClick.call(this, event, place);

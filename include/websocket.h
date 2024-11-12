@@ -31,13 +31,14 @@ public:
     std::string GetPlace();
     std::string GetDate();
     void UpdateGameInfo(const std::string& place, const std::string& date); // Новый метод для обновления данных
+    void close_session();
 
 private:
     void on_accept(beast::error_code ec);
     void do_read();
     void on_read(beast::error_code ec, std::size_t bytes_transferred);
     void on_write(beast::error_code ec, std::size_t);
-    void close_session();
+    
 
     websocket::stream<tcp::socket> ws_;
     beast::flat_buffer buffer_;
@@ -51,7 +52,7 @@ class WebSocketServer{
 public:
     WebSocketServer(int port, std::set<std::shared_ptr<WebSocketSession>>& sessions);
     void run();
-
+    void stop();
 private:
     void do_accept();
 

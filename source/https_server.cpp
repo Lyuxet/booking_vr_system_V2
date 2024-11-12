@@ -132,7 +132,9 @@ void HttpServer::run() {
 }
 
 
-
+void HttpServer::stop() { 
+    io_context_.stop(); 
+}
 void HttpServer::do_accept() {
     acceptor_.async_accept([this](beast::error_code ec, tcp::socket socket) {
         if (!ec) {

@@ -94,45 +94,6 @@ namespace vr{
         }
     }
 
-
-    /*
-    void Booking::Update(){
-        ScopeGuard guard(booking_);
-        try
-        {
-        std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
-        ConnectionGuard conn_guard(conn, pool_);
-            executeTransactionUpdate(conn);
-            std::lock_guard<std::mutex> lock(mtxtest);
-            PrintUpdateBooking();
-        }
-        catch(const std::exception& e)
-        {
-            std::lock_guard<std::mutex> lock(mtxtest);
-            std::cerr << "Update arena Exception: " << e.what() << std::endl;
-            throw;
-        }
-    }
-
-    void Booking::Delete(){
-        ScopeGuard guard(booking_);
-        try
-        {
-        std::shared_ptr<sql::Connection> conn = pool_.GetConnection();
-        ConnectionGuard conn_guard(conn, pool_);
-            executeTransactionDelete(conn);
-            std::lock_guard<std::mutex> lock(mtxtest);
-            PrintDeleteBooking();
-        }
-        catch(const std::exception& e)
-        {
-            std::lock_guard<std::mutex> lock(mtxtest);
-            std::cerr << "Delete Exception: " << e.what() << std::endl;
-            throw;
-        }
-        
-    }
-    */
     void Cubes::Open_cubes() {
         ScopeGuard guard(bookings_, clients_);
         try {
@@ -216,7 +177,7 @@ namespace vr{
         } else {
             throw std::runtime_error("Неизвестная площадка игры");
         }
-        
+
         std::unique_ptr<sql::ResultSet> res(pstmtCheck->executeQuery());
         if (res->next()) {
             int available_slots = res->getInt("available_slots");
@@ -229,15 +190,15 @@ namespace vr{
 
 
 
-    void Booking::insertClient(sql::Connection* conn) {
-        // Проверяем, существует ли клиент с таким телефоном или почтой
+
+   void Booking::insertClient(sql::Connection* conn) {
         std::unique_ptr<sql::PreparedStatement> checkStmt(conn->prepareStatement(
             "SELECT id FROM Clients WHERE phone = ? AND email = ?"
         ));
         checkStmt->setString(1, clients_.phone);
         checkStmt->setString(2, clients_.email);
         std::unique_ptr<sql::ResultSet> res(checkStmt->executeQuery());
-        
+
         if (res->next()) {
             return;
         } else {
@@ -298,199 +259,6 @@ namespace vr{
         });
     }
 
-
-
-
-    /*
-    void Booking::executeTransactionDelete(std::shared_ptr<sql::Connection> conn) {
-        const int max_retries = 5;
-        const int base_retry_delay_ms = 500;
-        std::string tableName;
-
-        // Определение таблицы в зависимости от типа игры
-        if (booking_.name_game == "SHOOTER") {
-            tableName = "ArenaShooterStats";
-        } else if (booking_.name_game == "QUEST") {
-            tableName = "ArenaQuestStats";
-        } else if (booking_.name_game == "CUBES") {
-            tableName = "Cubes";
-        } else {
-            throw std::runtime_error("Unknown game type.");
-        }
-
-        for (int attempt = 0; attempt < max_retries; ++attempt) {
-            try {
-                conn->setAutoCommit(false);
-
-                // Проверка на наличие уже забронированного слота
-                std::string queryCheck = "SELECT 1 FROM " + tableName + " WHERE name_game = ? AND date_game = ? AND time_game = ?";
-                std::unique_ptr<sql::PreparedStatement> pstmtCheck(conn->prepareStatement(queryCheck));
-                pstmtCheck->setString(1, booking_.name_game);
-                pstmtCheck->setString(2, booking_.date_game);
-                pstmtCheck->setString(3, booking_.time_game);
-                std::unique_ptr<sql::ResultSet> res(pstmtCheck->executeQuery());
-
-                if (!res->next()) {
-                    std::string error_message = booking_.name_game + " with time " + booking_.time_game + " not found"; 
-                    throw std::runtime_error(error_message);
-                }
-
-                // Удаление данных из соответствующей таблицы
-                std::string queryDelete = "DELETE FROM " + tableName + " WHERE name_game = ? AND date_game = ? AND time_game = ?";
-                std::unique_ptr<sql::PreparedStatement> pstmtDelete(conn->prepareStatement(queryDelete));
-                pstmtDelete->setString(1, booking_.name_game);
-                pstmtDelete->setString(2, booking_.date_game);
-                pstmtDelete->setString(3, booking_.time_game);
-                pstmtDelete->execute();
-
-                // Удаление данных о бронировании из таблицы Bookings
-                std::unique_ptr<sql::PreparedStatement> pstmtBookings(conn->prepareStatement(
-                    "DELETE FROM Bookings "
-                    "WHERE client_id = (SELECT id FROM Clients WHERE phone = ? LIMIT 1) "
-                    "AND game_id = (SELECT id FROM GameSchedule WHERE name_game = ? AND date_game = ? AND time_game = ? LIMIT 1)"
-                ));
-                pstmtBookings->setString(1, clients_.phone);
-                pstmtBookings->setString(2, booking_.name_game);
-                pstmtBookings->setString(3, booking_.date_game);
-                pstmtBookings->setString(4, booking_.time_game);
-                pstmtBookings->execute();
-
-                conn->commit();
-                return; 
-            } catch (const sql::SQLException& e) {
-                std::cerr << "Attempt " << (attempt + 1) << " - SQLException: " << e.what() << std::endl;
-                std::cerr << "Error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << std::endl;
-
-                if (e.getErrorCode() == 1213) { // Deadlock
-                    if (attempt < max_retries - 1) {
-                        int delay = base_retry_delay_ms * (attempt + 1) + rand() % 1000;
-                        std::cerr << "Retrying after " << delay << " ms" << std::endl;
-                        std::this_thread::sleep_for(std::chrono::milliseconds(delay));
-                    } else {
-                        conn->rollback();
-                        throw;
-                    }
-                } else {
-                    conn->rollback();
-                    throw;
-                }
-            } catch (const std::exception& e) {
-                std::cerr << "Exception: " << e.what() << std::endl;
-                conn->rollback();
-                throw;
-            }
-        }
-    }
-
-    void Booking::executeTransactionUpdate(std::shared_ptr<sql::Connection> conn){
-        const int max_retries = 5;
-        const int base_retry_delay_ms = 500;
-        std::string tableName;
-
-        // Определение таблицы в зависимости от типа игры
-        if (booking_.name_game == "SHOOTER") {
-            tableName = "ArenaShooterStats";
-        } else if (booking_.name_game == "QUEST") {
-            tableName = "ArenaQuestStats";
-        } else if (booking_.name_game == "CUBES") {
-            tableName = "Cubes";
-        } else {
-            throw std::runtime_error("Unknown game type.");
-        }
-
-        for (int attempt = 0; attempt < max_retries; ++attempt) {
-            try {
-                conn->setAutoCommit(false);
-
-                // Проверка на наличие записи для обновления по текущим времени и дате
-                std::string queryCheck = "SELECT 1 FROM " + tableName + " WHERE name_game = ? AND date_game = ? AND time_game = ?";
-                std::unique_ptr<sql::PreparedStatement> pstmtCheck(conn->prepareStatement(queryCheck));
-                pstmtCheck->setString(1, booking_.name_game);
-                pstmtCheck->setString(2, booking_.current_date_game);  // Текущая дата
-                pstmtCheck->setString(3, booking_.current_time_game);  // Текущее время
-                std::unique_ptr<sql::ResultSet> res(pstmtCheck->executeQuery());
-
-                if (!res->next()) {
-                    std::string error_message = booking_.name_game + " with time " + booking_.current_time_game + " and date " + booking_.current_date_game + " not found";
-                    throw std::runtime_error(error_message);
-                }
-
-                if (clients_.current_phone != clients_.phone){
-                    // Обновление данных о клиенте (если нужно обновить данные клиента)
-                    std::unique_ptr<sql::PreparedStatement> pstmtUpdateClient(conn->prepareStatement(
-                        "UPDATE Clients SET first_name = ?, last_name = ?, email = ?, phone = ? WHERE phone = ?"
-                    ));
-                    pstmtUpdateClient->setString(1, clients_.first_name);
-                    pstmtUpdateClient->setString(2, clients_.last_name);
-                    pstmtUpdateClient->setString(3, clients_.email);
-                    pstmtUpdateClient->setString(4, clients_.phone);
-                    pstmtUpdateClient->setString(5, clients_.current_phone);
-                    pstmtUpdateClient->execute();
-                    std::cout << "Клиент обновлен" << std::endl;
-                }
-
-                
-                // Обновление данных о бронировании (включая дату и время)
-                std::string queryUpdate = "UPDATE " + tableName + " SET date_game = ?, time_game = ?, players_count = ?, comment_game = ?, type_game = ?, price = ?, place_game = ?"
-                                        "WHERE name_game = ? AND date_game = ? AND time_game = ?";
-                std::unique_ptr<sql::PreparedStatement> pstmtUpdateBooking(conn->prepareStatement(queryUpdate));
-                pstmtUpdateBooking->setString(1, booking_.date_game);  // Новая дата
-                pstmtUpdateBooking->setString(2, booking_.time_game);  // Новое время
-                pstmtUpdateBooking->setInt(3, booking_.players_count);
-                pstmtUpdateBooking->setString(4, booking_.comment_game);
-                pstmtUpdateBooking->setString(5, booking_.type_game);
-                pstmtUpdateBooking->setInt(6, booking_.price);
-                pstmtUpdateBooking->setString(7, booking_.place_game);
-                pstmtUpdateBooking->setString(8, booking_.name_game);
-                pstmtUpdateBooking->setString(9, booking_.current_date_game);  // Текущая дата
-                pstmtUpdateBooking->setString(10, booking_.current_time_game);  // Текущее время
-                pstmtUpdateBooking->execute();
-
-                // Обновление данных в таблице Bookings
-                std::unique_ptr<sql::PreparedStatement> pstmtUpdateBookings(conn->prepareStatement(
-                    "UPDATE Bookings SET game_id = (SELECT id FROM GameSchedule WHERE name_game = ? AND date_game = ? AND time_game = ?) "
-                    "WHERE client_id = (SELECT id FROM Clients WHERE phone = ? LIMIT 1) "
-                    "AND game_id = (SELECT id FROM GameSchedule WHERE name_game = ? AND date_game = ? AND time_game = ? LIMIT 1)"
-                ));
-                pstmtUpdateBookings->setString(1, booking_.name_game);
-                pstmtUpdateBookings->setString(2, booking_.date_game);  // Новая дата
-                pstmtUpdateBookings->setString(3, booking_.time_game);  // Новое время
-                pstmtUpdateBookings->setString(4, clients_.phone);
-                pstmtUpdateBookings->setString(5, booking_.name_game);
-                pstmtUpdateBookings->setString(6, booking_.current_date_game);  // Текущая дата
-                pstmtUpdateBookings->setString(7, booking_.current_time_game);  // Текущее время
-                pstmtUpdateBookings->execute();
-
-                conn->commit();
-                return;
-            } catch (const sql::SQLException& e) {
-                std::cerr << "Attempt " << (attempt + 1) << " - SQLException: " << e.what() << std::endl;
-                std::cerr << "Error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << std::endl;
-
-                if (e.getErrorCode() == 1213) { // Deadlock
-                    if (attempt < max_retries - 1) {
-                        int delay = base_retry_delay_ms * (attempt + 1) + rand() % 1000;
-                        std::cerr << "Retrying after " << delay << " ms" << std::endl;
-                        std::this_thread::sleep_for(std::chrono::milliseconds(delay));
-                    } else {
-                        conn->rollback();
-                        throw;
-                    }
-                } else {
-                    conn->rollback();
-                    throw;
-                }
-            } catch (const std::exception& e) {
-                std::cerr << "Exception: " << e.what() << std::endl;
-                conn->rollback();
-                throw;
-            }
-        }
-
-
-    }
-    */
-
     std::string Booking::urlEncode(const std::string &value) {
         std::ostringstream escaped;
         escaped.fill('0');
@@ -515,6 +283,30 @@ namespace vr{
         for (int attempt = 0; attempt < max_retries; ++attempt) {
             try {
                 conn->setAutoCommit(false);
+
+                std::unique_ptr<sql::PreparedStatement> pstmtIninButton;
+                std::string request_init_button;
+
+                if (availability_.typegame == "Открытая игра") {
+                    request_init_button = "SELECT * FROM OpenArenaButtonData";
+                } else if (availability_.typegame == "Закрытая игра") {
+                    request_init_button = "SELECT * FROM CloseArenaButtonData";
+                } else {
+                    throw std::runtime_error("Undefined type game");
+                }
+
+                // Используйте метод prepareStatement без std::make_unique
+                pstmtIninButton = std::unique_ptr<sql::PreparedStatement>(conn->prepareStatement(request_init_button));
+                std::unique_ptr<sql::ResultSet> res_set_data(pstmtIninButton->executeQuery());
+                
+                while (res_set_data->next()) {
+                    // Исправляем ошибку с точкой с запятой в имени столбца
+                    button_data_.emplace(
+                        res_set_data->getString("button_id"),
+                        ButtonData{ res_set_data->getString("button_time"), res_set_data->getInt("button_price") }
+                    );
+                }
+
                 std::unique_ptr<sql::PreparedStatement> pstmtCheckAvailability(conn->prepareStatement(
                     "SELECT time_game, SUM(players_count) AS total_players, "
                     "CASE "
@@ -528,17 +320,42 @@ namespace vr{
                 pstmtCheckAvailability->setString(1, availability_.namegame);
                 pstmtCheckAvailability->setString(2, availability_.placegame);
                 pstmtCheckAvailability->setString(3, availability_.date);
-                std::unique_ptr<sql::ResultSet> resSet(pstmtCheckAvailability->executeQuery());
+                std::unique_ptr<sql::ResultSet> res_set_avaliability(pstmtCheckAvailability->executeQuery());
 
-                boost::json::array jsonResponse;
-                while (resSet->next()) {
-                    boost::json::object gameInfo;
-                    gameInfo["time_game"] = std::string(resSet->getString("time_game"));
-                    gameInfo["total_players"] = resSet->getInt("total_players");
-                    gameInfo["available_slots"] = resSet->getInt("available_slots");
-                    jsonResponse.push_back(gameInfo);
+                std::unordered_map<std::string, int> availability_map;
+                while (res_set_avaliability->next()) {
+                    // Извлечение данных из результата запроса
+                    std::string time_game = res_set_avaliability->getString("time_game");
+                    int available_slots = res_set_avaliability->getInt("available_slots");
+
+                    // Заполнение словаря, используя time_game в качестве ключа и available_slots в качестве значения
+                    availability_map[time_game] = available_slots;
                 }
-                response = boost::json::serialize(jsonResponse);
+
+                std::vector<ButtonData> button_data_list;
+                boost::json::object response_data;
+                for (const auto& item : button_data_) {
+                    ButtonData button = item.second;
+                    if (availability_map.find(button.time) != availability_map.end()) {
+                        button.availability_place = availability_map[button.time];
+                    } else {
+                        button.availability_place = 10; // Все места свободны
+                    }
+                    button_data_list.push_back(button);
+
+                    // Добавление данных в response_data с использованием ключей button11, button12 и т.д.
+                    response_data[item.first] = boost::json::object{
+                        {"time", button.time},
+                        {"price", button.price},
+                        {"availability_place", button.availability_place}
+                    };
+                }
+                std::cout << std::endl;
+                
+
+                response = boost::json::serialize(response_data); 
+                std::cout << response << std::endl;
+               
                 conn->commit();
                 return;
             }

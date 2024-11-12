@@ -3,17 +3,46 @@
 #include "requests_handler.h"
 #include "websocket.h"
 #include "https_server.h"
-#include "logger.h"  // Подключаем логгер
+#include "logger.h"
+#include <csignal>
+#include <cstdlib>
+#include <thread>
+#include <chrono>
 
+HttpServer* http_server_ptr = nullptr;
+WebSocketServer* websocket_server_ptr = nullptr;
+
+void handle_sigint(int sig) { 
+    std::cout << "Caught signal " << sig << ", exiting cleanly..." << std::endl; 
+    if (http_server_ptr) {
+        http_server_ptr->stop();
+    }
+    if (websocket_server_ptr) {
+        websocket_server_ptr->stop();
+    }
+    std::this_thread::sleep_for(std::chrono::seconds(2)); // Даем время завершиться всем операциям
+    exit(0);
+}
+
+
+void closeAllConnections(ConnectionPool& pool) {
+    while (!pool.IsEmpty()) {
+        auto conn = pool.GetConnection();
+        if (conn) {
+            conn->close();
+        }
+        pool.ReleaseConnection(std::move(conn));
+    }
+}
 
 
 int main() {
-
-    ConnectionPool pool(10, "db_config.conf"); // Инициализация пула соединений с базой данных
-    std::set<std::shared_ptr<WebSocketSession>> sessions; // Набор активных WebSocket-сессий
+    std::signal(SIGINT, handle_sigint); 
+    ConnectionPool pool(10, "db_config.conf");
+    std::set<std::shared_ptr<WebSocketSession>> sessions;
     try {
-        // Запуск HTTP сервера на порту 8080
         HttpServer http_server(8081, pool, sessions);
+        http_server_ptr = &http_server; 
         std::thread http_thread([&http_server]() { 
             try {
                 http_server.run();
@@ -25,8 +54,8 @@ int main() {
         });
         std::cout << "HttpServer на порту 8081 запущен..." << std::endl;
         
-        // Запуск WebSocket сервера на порту 8082
         WebSocketServer websocket_server(8082, sessions);
+        websocket_server_ptr = &websocket_server; 
         std::thread websocket_thread([&websocket_server]() { 
             try {
                 websocket_server.run(); 
@@ -38,14 +67,15 @@ int main() {
         });
         std::cout << "WebSocketServer на порту 8082 запущен..." << std::endl << std::endl;
 
-        // Ждем завершения потоков
         http_thread.join();
         websocket_thread.join();
    
     } catch (const std::exception& e) {
-        // Логирование критической ошибки
         Logger::getInstance().log("Критическая ошибка в приложении: " + std::string(e.what()) + 
             " в файле " + __FILE__ + " строке " + std::to_string(__LINE__), 
             "../logs/error_connect.log");
     }
+
+    closeAllConnections(pool);
+    return 0;
 }

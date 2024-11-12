@@ -3,7 +3,7 @@ import { updateButtonsState } from "./buttons.js";
 const bookingGrid = document.querySelector('.booking-grid');
 const pacmanContainer = document.querySelector('.pac-man-container');
 
-export function checkAvailability(bookingButtons, place) {
+export function checkAvailability(bookingButtons, place, isCloseType) {
     
     const date = document.getElementById('date').value;
     
@@ -14,10 +14,11 @@ export function checkAvailability(bookingButtons, place) {
     bookingGrid.style.display = 'none'; 
     pacmanContainer.style.display = 'flex'; 
 
+    console.log(isCloseType);
     const xhr = new XMLHttpRequest();
     const url = place === 'VR Арена' ? 
-        `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(place)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}` :
-        `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(place)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}`;
+        `http://localhost:8081/getBookingOpenArena?placegame=${encodeURIComponent(place)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}&typegame=${encodeURIComponent(isCloseType)}` :
+        `http://localhost:8081/getBookingCubes?placegame=${encodeURIComponent(place)}&date=${encodeURIComponent(date)}&namegame=${encodeURIComponent(namegame)}&typegame=${encodeURIComponent(isCloseType)}`;
 
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');

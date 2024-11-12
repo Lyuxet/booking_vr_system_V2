@@ -73,9 +73,17 @@ void WebSocketSession::close_session() {
     if (ws_.is_open()) {
         beast::error_code ec;
         ws_.close(websocket::close_code::normal, ec);
+        if (ec) {
+            Logger::getInstance().log("Ошибка при закрытии WebSocket: " + ec.message() + "(" + std::to_string(ec.value()) + ")", "../logs/error_close.log");
+        }
     }
-    sessions_.erase(shared_from_this());
+    // Удаление сессии из набора
+    auto it = sessions_.find(shared_from_this());
+    if (it != sessions_.end()) {
+        sessions_.erase(it);
+    }
 }
+
 
 WebSocketServer::WebSocketServer(int port, std::set<std::shared_ptr<WebSocketSession>>& sessions)
     : acceptor_(io_context_, tcp::endpoint(tcp::v4(), port)), sessions_(sessions) {
@@ -85,6 +93,23 @@ WebSocketServer::WebSocketServer(int port, std::set<std::shared_ptr<WebSocketSes
 void WebSocketServer::run() {
     io_context_.run();
 }
+
+void WebSocketServer::stop() {
+    io_context_.stop(); // Останавливаем io_context
+
+    // Копируем сессии в временный контейнер
+    std::vector<std::shared_ptr<WebSocketSession>> sessions_to_close;
+    for (const auto& session : sessions_) {
+        sessions_to_close.push_back(session);
+    }
+
+    // Закрываем все активные WebSocket сессии
+    for (const auto& session : sessions_to_close) {
+        session->send("Server is shutting down");
+        session->close_session();
+    }
+}
+
 
 void WebSocketServer::do_accept() {
     acceptor_.async_accept([this](beast::error_code ec, tcp::socket socket) {

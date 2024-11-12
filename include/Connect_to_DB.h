@@ -35,8 +35,12 @@ public:
     void Init_pool();
     std::unique_ptr<sql::Connection> GetConnection();
     void ReleaseConnection(std::unique_ptr<sql::Connection> conn);
+    void CloseAllConnections();
     size_t size(){
         return pool_.size();
+    }
+    bool IsEmpty(){
+        return pool_.empty();
     }
 
 private:

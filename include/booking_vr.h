@@ -7,6 +7,12 @@
 
 namespace vr{
 
+    struct ButtonData {
+        std::string time;
+        int price;
+        int availability_place;
+    };
+
     // Структура для хранения данных клиента
     struct Client_data {
         std::string first_name;
@@ -37,6 +43,7 @@ namespace vr{
         std::string date;
         std::string namegame;
         std::string placegame;
+        std::string typegame;
     };
 
     struct info_by_email{
@@ -125,6 +132,7 @@ public:
             data_->date.clear();
             data_->namegame.clear();
             data_->placegame.clear();
+            data_->typegame.clear();
         }
     }
 
@@ -164,6 +172,8 @@ private:
         std::vector<Booking_data> bookings_;
         ConnectionPool& pool_;
         AvailabilityData availability_;
+        std::map<std::string, ButtonData> button_data_;
+
 
         // Добавление метода для выполнения транзакции с повтором
         template <typename Func>

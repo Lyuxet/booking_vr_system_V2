@@ -3,7 +3,7 @@ import { hidePriceDisplay } from "./priceDisplay.js";
 
 export let socket = null;
 
-export function initializeWebSocket(place, currentDate, bookingButtons) {
+export function initializeWebSocket(place, currentDate, bookingButtons, isCloseType) {
     if (socket && socket.readyState === WebSocket.OPEN) {
         return;
     }
@@ -14,7 +14,7 @@ export function initializeWebSocket(place, currentDate, bookingButtons) {
         const data = JSON.stringify({ place: place, date: currentDate });
         socket.send(data);
         
-        checkAvailability(bookingButtons, place);
+        checkAvailability(bookingButtons, place, isCloseType);
         hidePriceDisplay();
     });
 

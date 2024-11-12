@@ -61,6 +61,7 @@ class HttpServer {
 public:
     HttpServer(int port, ConnectionPool& pool, std::set<std::shared_ptr<WebSocketSession>>& sessions);
     void run();
+    void stop();
 private:
     void do_accept();
     net::io_context io_context_;

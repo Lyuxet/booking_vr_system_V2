@@ -42,12 +42,13 @@ std::unique_ptr<sql::Connection> ConnectionPool::GetConnection() {
 bool ConnectionPool::isConnectionActive(sql::Connection* conn) {
     try {
         std::unique_ptr<sql::Statement> stmt(conn->createStatement());
-        stmt->executeQuery("SELECT 1");
-        return true;
+        std::unique_ptr<sql::ResultSet> res(stmt->executeQuery("SELECT 1"));
+        return res->next();  // Проверьте, есть ли результат
     } catch (const sql::SQLException&) {
         return false;
     }
 }
+
 
 // Возвращение соединения в пул
 void ConnectionPool::ReleaseConnection(std::unique_ptr<sql::Connection> conn) {
@@ -92,6 +93,19 @@ std::unique_ptr<sql::Connection> ConnectionPool::CreateConnection(const DBConfig
     conn->setSchema(config.dbname);
     return conn;
 }
+
+// Закрытие всех соединений перед завершением работы программы
+void ConnectionPool::CloseAllConnections() {
+    while (!pool_.empty()) {
+        auto conn = std::move(pool_.front());
+        pool_.pop();
+        if (conn) {
+            conn->close();
+        }
+    }
+}
+
+
 
 // Конструктор Transaction
 Transaction::Transaction(sql::Connection* conn)
