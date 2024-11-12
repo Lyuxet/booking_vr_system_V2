@@ -1,20 +1,8 @@
 import { showPriceDisplay } from "./priceDisplay.js";
 import { hidePriceDisplay } from "./priceDisplay.js";
-import { isWeekendOrHoliday } from "./date.js";
 import { button_data } from "./button_data.js";
 
 const isCloseType = document.querySelector('.booking-container-close') !== null;
-
-export function updatePricesArena(date, bookingButtons) {
-    const isSpecialDay = isWeekendOrHoliday(date);
-    bookingButtons.forEach(button => {
-        const priceElement = button.querySelector('.price'); 
-        let basePrice = priceElement.dataset.price; 
-        basePrice = isSpecialDay ? (isCloseType ? 15000 : 1600) : basePrice;
-        priceElement.textContent = `${basePrice} ₽`;
-    });
-}
-
 
 export function calculateTotalPrice() {
     let totalPrice = 0;

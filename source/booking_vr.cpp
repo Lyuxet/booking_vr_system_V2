@@ -14,6 +14,8 @@
 #include <cstdlib>
 #include <sstream>
 #include <thread>
+#include <ctime>
+#include <unordered_set>
 
 
 
@@ -300,10 +302,15 @@ namespace vr{
                 std::unique_ptr<sql::ResultSet> res_set_data(pstmtIninButton->executeQuery());
                 
                 while (res_set_data->next()) {
-                    // Исправляем ошибку с точкой с запятой в имени столбца
+                    // Определяем цену в зависимости от типа дня
+                    int price = IsHolidayOrWeekend(availability_.date)
+                        ? res_set_data->getInt("button_price_holidays")
+                        : res_set_data->getInt("button_price");
+
+                    // Добавляем данные кнопки в button_data_
                     button_data_.emplace(
                         res_set_data->getString("button_id"),
-                        ButtonData{ res_set_data->getString("button_time"), res_set_data->getInt("button_price") }
+                        ButtonData{ res_set_data->getString("button_time"), price }
                     );
                 }
 
@@ -380,10 +387,15 @@ namespace vr{
                 std::unique_ptr<sql::ResultSet> res_set_data(pstmtIninButton->executeQuery());
                 
                 while (res_set_data->next()) {
-                    // Исправляем ошибку с точкой с запятой в имени столбца
+                    // Определяем цену в зависимости от типа дня
+                    int price = IsHolidayOrWeekend(availability_.date)
+                        ? res_set_data->getInt("button_price_holidays")
+                        : res_set_data->getInt("button_price");
+
+                    // Добавляем данные кнопки в button_data_
                     button_data_.emplace(
                         res_set_data->getString("button_id"),
-                        ButtonData{ res_set_data->getString("button_time"), res_set_data->getInt("button_price") }
+                        ButtonData{ res_set_data->getString("button_time"), price }
                     );
                 }
                 std::unique_ptr<sql::PreparedStatement> pstmtCheckAvailability(conn->prepareStatement(
@@ -588,6 +600,37 @@ namespace vr{
             email_sender->send(subject, body);
         });
 
+    }
+
+
+    bool Booking::IsHolidayOrWeekend(const std::string& date) {
+        // Парсим дату из строки "ГГГГ.ММ.ДД"
+        std::tm parsed_date = {};
+        std::istringstream ss(date);
+        ss >> std::get_time(&parsed_date, "%Y.%m.%d");
+
+        // Проверяем корректность парсинга
+        if (ss.fail()) {
+            throw std::invalid_argument("Неверный формат даты. Ожидается 'ГГГГ.ММ.ДД'");
+        }
+
+        // Список праздничных дней (формат ММДД, например, 0101 для 1 января)
+        std::unordered_set<int> holidays = {
+            101,   // 1 января
+            1225,  // 25 декабря
+            // Добавьте другие праздники в формате ММДД
+        };
+
+        // Проверка на выходной день (суббота = 6, воскресенье = 0)
+        if (parsed_date.tm_wday == 0 || parsed_date.tm_wday == 6) {
+            return true;
+        }
+
+        // Создаем код для даты в формате ММДД
+        int date_code = (parsed_date.tm_mon + 1) * 100 + parsed_date.tm_mday;
+
+        // Проверка на праздничный день
+        return holidays.count(date_code) > 0;
     }
 
 }

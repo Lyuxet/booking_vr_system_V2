@@ -6,16 +6,3 @@ export function SetDate(){
     }).datepicker("setDate", today);
 }
 
-export function isWeekendOrHoliday(date) {
-    const dayOfWeek = date.getDay(); 
-    const formattedDate = `${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`; // Преобразование даты в 'mm.dd'
-
-    return dayOfWeek === 0 || dayOfWeek === 6 || holidays.includes(formattedDate);
-}
-
-const holidays = [
-    '01.01', // Новый год
-    '01.07', // Рождество
-    '05.01', // День труда
-    // Добавить другие праздники
-];

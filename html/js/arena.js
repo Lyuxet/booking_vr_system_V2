@@ -1,5 +1,4 @@
 import { SetDate } from "./date.js";
-import { updatePricesArena } from "./price.js";
 import { initializeBookingButton } from "./buttons.js";
 import { hidePriceDisplay } from "./priceDisplay.js";
 import { initializeWebSocket, socket } from "./websocket.js";
@@ -16,8 +15,6 @@ document.addEventListener('DOMContentLoaded', function () {
         initializeBookingButton(button, place, isCloseType);
     });
     initializeWebSocket(place, storedDate, bookingButtons, isCloseType);
-    const currentDate = $('#date').datepicker('getDate');
-    updatePricesArena(currentDate, bookingButtons);
 
 
     window.onbeforeunload = function() {
@@ -47,7 +44,6 @@ document.addEventListener('DOMContentLoaded', function () {
             socket.close();
         }
         initializeWebSocket(place, storedDate, bookingButtons, isCloseType);
-        updatePricesArena(selectedDate, bookingButtons);
        
     });
 });

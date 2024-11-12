@@ -159,7 +159,7 @@ export function updateButtonsState(data, bookingButtons, place) {
     const updateSeatsFn = place === 'VR Арена' ? updateSeatsArena : updateSeatsCubes;
     const updateButtonStateFn = place === 'VR Арена' ? updateButtonStateArena : updateButtonStateCubes;
     const maxPlayers = place === 'VR Арена' ? maxPlayersArena : maxPlayersCubes;
-
+    console.log(data);
     bookingButtons.forEach(button => {
         const playerInput = button.querySelector('.player-input');
         if (playerInput) {

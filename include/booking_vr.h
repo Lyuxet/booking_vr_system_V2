@@ -196,6 +196,7 @@ private:
 
 
     private:
+        bool IsHolidayOrWeekend(const std::string& date);
         std::unordered_map<std::string, std::string> gameTables;
         std::unordered_map<std::string, std::string> LoadGameTables(const std::string& filename);
         std::string urlEncode(const std::string &value);

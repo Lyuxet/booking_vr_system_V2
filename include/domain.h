@@ -3,6 +3,7 @@
 #include <vector>
 #include <unordered_map>
 #include <stdexcept> // Не забудем про этот заголовок для std::invalid_argument
+#include <unordered_set>
 
 std::string convertDate(std::string_view date) {
     std::unordered_map<int, std::string> months = {
