@@ -25,17 +25,6 @@ void handle_sigint(int sig) {
 }
 
 
-void closeAllConnections(ConnectionPool& pool) {
-    while (!pool.IsEmpty()) {
-        auto conn = pool.GetConnection();
-        if (conn) {
-            conn->close();
-        }
-        pool.ReleaseConnection(std::move(conn));
-    }
-}
-
-
 int main() {
     std::signal(SIGINT, handle_sigint); 
     ConnectionPool pool(10, "db_config.conf");
@@ -76,6 +65,6 @@ int main() {
             "../logs/error_connect.log");
     }
 
-    closeAllConnections(pool);
+    pool.CloseAllConnections();
     return 0;
 }

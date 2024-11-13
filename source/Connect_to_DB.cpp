@@ -33,6 +33,8 @@ std::unique_ptr<sql::Connection> ConnectionPool::GetConnection() {
     auto conn = std::move(pool_.front());
     pool_.pop();
     if (!isConnectionActive(conn.get())) {
+        conn.get()->close();
+        conn.reset();
         conn = CreateConnection(ReadDBConfig(configFilePath_));
     }
     return conn;
@@ -82,6 +84,7 @@ DBConfig ConnectionPool::ReadDBConfig(const std::string& file_name) {
             }
         }
     }
+    in_file.close();
     return config;
 }
 
@@ -100,7 +103,8 @@ void ConnectionPool::CloseAllConnections() {
         auto conn = std::move(pool_.front());
         pool_.pop();
         if (conn) {
-            conn->close();
+            conn.get()->close();
+            conn.reset();
         }
     }
 }
