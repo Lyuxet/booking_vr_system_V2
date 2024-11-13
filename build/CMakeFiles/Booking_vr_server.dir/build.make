@@ -73,141 +73,141 @@ CMakeFiles/Booking_vr_server.dir/source/Connect_to_DB.cpp.o: CMakeFiles/Booking_
 CMakeFiles/Booking_vr_server.dir/source/Connect_to_DB.cpp.o: /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/source/Connect_to_DB.cpp
 CMakeFiles/Booking_vr_server.dir/source/Connect_to_DB.cpp.o: CMakeFiles/Booking_vr_server.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/lyuxet/Рабочий стол/Project/booking_system_vr/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Booking_vr_server.dir/source/Connect_to_DB.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Booking_vr_server.dir/source/Connect_to_DB.cpp.o -MF CMakeFiles/Booking_vr_server.dir/source/Connect_to_DB.cpp.o.d -o CMakeFiles/Booking_vr_server.dir/source/Connect_to_DB.cpp.o -c "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/Connect_to_DB.cpp"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Booking_vr_server.dir/source/Connect_to_DB.cpp.o -MF CMakeFiles/Booking_vr_server.dir/source/Connect_to_DB.cpp.o.d -o CMakeFiles/Booking_vr_server.dir/source/Connect_to_DB.cpp.o -c "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/Connect_to_DB.cpp"
 
 CMakeFiles/Booking_vr_server.dir/source/Connect_to_DB.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Booking_vr_server.dir/source/Connect_to_DB.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/Connect_to_DB.cpp" > CMakeFiles/Booking_vr_server.dir/source/Connect_to_DB.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/Connect_to_DB.cpp" > CMakeFiles/Booking_vr_server.dir/source/Connect_to_DB.cpp.i
 
 CMakeFiles/Booking_vr_server.dir/source/Connect_to_DB.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Booking_vr_server.dir/source/Connect_to_DB.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/Connect_to_DB.cpp" -o CMakeFiles/Booking_vr_server.dir/source/Connect_to_DB.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/Connect_to_DB.cpp" -o CMakeFiles/Booking_vr_server.dir/source/Connect_to_DB.cpp.s
 
 CMakeFiles/Booking_vr_server.dir/source/booking_vr.cpp.o: CMakeFiles/Booking_vr_server.dir/flags.make
 CMakeFiles/Booking_vr_server.dir/source/booking_vr.cpp.o: /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/source/booking_vr.cpp
 CMakeFiles/Booking_vr_server.dir/source/booking_vr.cpp.o: CMakeFiles/Booking_vr_server.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/lyuxet/Рабочий стол/Project/booking_system_vr/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Booking_vr_server.dir/source/booking_vr.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Booking_vr_server.dir/source/booking_vr.cpp.o -MF CMakeFiles/Booking_vr_server.dir/source/booking_vr.cpp.o.d -o CMakeFiles/Booking_vr_server.dir/source/booking_vr.cpp.o -c "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/booking_vr.cpp"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Booking_vr_server.dir/source/booking_vr.cpp.o -MF CMakeFiles/Booking_vr_server.dir/source/booking_vr.cpp.o.d -o CMakeFiles/Booking_vr_server.dir/source/booking_vr.cpp.o -c "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/booking_vr.cpp"
 
 CMakeFiles/Booking_vr_server.dir/source/booking_vr.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Booking_vr_server.dir/source/booking_vr.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/booking_vr.cpp" > CMakeFiles/Booking_vr_server.dir/source/booking_vr.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/booking_vr.cpp" > CMakeFiles/Booking_vr_server.dir/source/booking_vr.cpp.i
 
 CMakeFiles/Booking_vr_server.dir/source/booking_vr.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Booking_vr_server.dir/source/booking_vr.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/booking_vr.cpp" -o CMakeFiles/Booking_vr_server.dir/source/booking_vr.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/booking_vr.cpp" -o CMakeFiles/Booking_vr_server.dir/source/booking_vr.cpp.s
 
 CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.o: CMakeFiles/Booking_vr_server.dir/flags.make
 CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.o: /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/source/booking_vr_print.cpp
 CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.o: CMakeFiles/Booking_vr_server.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/lyuxet/Рабочий стол/Project/booking_system_vr/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.o -MF CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.o.d -o CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.o -c "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/booking_vr_print.cpp"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.o -MF CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.o.d -o CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.o -c "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/booking_vr_print.cpp"
 
 CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/booking_vr_print.cpp" > CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/booking_vr_print.cpp" > CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.i
 
 CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/booking_vr_print.cpp" -o CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/booking_vr_print.cpp" -o CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.s
 
 CMakeFiles/Booking_vr_server.dir/source/email.cpp.o: CMakeFiles/Booking_vr_server.dir/flags.make
 CMakeFiles/Booking_vr_server.dir/source/email.cpp.o: /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/source/email.cpp
 CMakeFiles/Booking_vr_server.dir/source/email.cpp.o: CMakeFiles/Booking_vr_server.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/lyuxet/Рабочий стол/Project/booking_system_vr/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Booking_vr_server.dir/source/email.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Booking_vr_server.dir/source/email.cpp.o -MF CMakeFiles/Booking_vr_server.dir/source/email.cpp.o.d -o CMakeFiles/Booking_vr_server.dir/source/email.cpp.o -c "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/email.cpp"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Booking_vr_server.dir/source/email.cpp.o -MF CMakeFiles/Booking_vr_server.dir/source/email.cpp.o.d -o CMakeFiles/Booking_vr_server.dir/source/email.cpp.o -c "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/email.cpp"
 
 CMakeFiles/Booking_vr_server.dir/source/email.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Booking_vr_server.dir/source/email.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/email.cpp" > CMakeFiles/Booking_vr_server.dir/source/email.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/email.cpp" > CMakeFiles/Booking_vr_server.dir/source/email.cpp.i
 
 CMakeFiles/Booking_vr_server.dir/source/email.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Booking_vr_server.dir/source/email.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/email.cpp" -o CMakeFiles/Booking_vr_server.dir/source/email.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/email.cpp" -o CMakeFiles/Booking_vr_server.dir/source/email.cpp.s
 
 CMakeFiles/Booking_vr_server.dir/source/https_server.cpp.o: CMakeFiles/Booking_vr_server.dir/flags.make
 CMakeFiles/Booking_vr_server.dir/source/https_server.cpp.o: /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/source/https_server.cpp
 CMakeFiles/Booking_vr_server.dir/source/https_server.cpp.o: CMakeFiles/Booking_vr_server.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/lyuxet/Рабочий стол/Project/booking_system_vr/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/Booking_vr_server.dir/source/https_server.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Booking_vr_server.dir/source/https_server.cpp.o -MF CMakeFiles/Booking_vr_server.dir/source/https_server.cpp.o.d -o CMakeFiles/Booking_vr_server.dir/source/https_server.cpp.o -c "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/https_server.cpp"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Booking_vr_server.dir/source/https_server.cpp.o -MF CMakeFiles/Booking_vr_server.dir/source/https_server.cpp.o.d -o CMakeFiles/Booking_vr_server.dir/source/https_server.cpp.o -c "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/https_server.cpp"
 
 CMakeFiles/Booking_vr_server.dir/source/https_server.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Booking_vr_server.dir/source/https_server.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/https_server.cpp" > CMakeFiles/Booking_vr_server.dir/source/https_server.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/https_server.cpp" > CMakeFiles/Booking_vr_server.dir/source/https_server.cpp.i
 
 CMakeFiles/Booking_vr_server.dir/source/https_server.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Booking_vr_server.dir/source/https_server.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/https_server.cpp" -o CMakeFiles/Booking_vr_server.dir/source/https_server.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/https_server.cpp" -o CMakeFiles/Booking_vr_server.dir/source/https_server.cpp.s
 
 CMakeFiles/Booking_vr_server.dir/source/logger.cpp.o: CMakeFiles/Booking_vr_server.dir/flags.make
 CMakeFiles/Booking_vr_server.dir/source/logger.cpp.o: /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/source/logger.cpp
 CMakeFiles/Booking_vr_server.dir/source/logger.cpp.o: CMakeFiles/Booking_vr_server.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/lyuxet/Рабочий стол/Project/booking_system_vr/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/Booking_vr_server.dir/source/logger.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Booking_vr_server.dir/source/logger.cpp.o -MF CMakeFiles/Booking_vr_server.dir/source/logger.cpp.o.d -o CMakeFiles/Booking_vr_server.dir/source/logger.cpp.o -c "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/logger.cpp"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Booking_vr_server.dir/source/logger.cpp.o -MF CMakeFiles/Booking_vr_server.dir/source/logger.cpp.o.d -o CMakeFiles/Booking_vr_server.dir/source/logger.cpp.o -c "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/logger.cpp"
 
 CMakeFiles/Booking_vr_server.dir/source/logger.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Booking_vr_server.dir/source/logger.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/logger.cpp" > CMakeFiles/Booking_vr_server.dir/source/logger.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/logger.cpp" > CMakeFiles/Booking_vr_server.dir/source/logger.cpp.i
 
 CMakeFiles/Booking_vr_server.dir/source/logger.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Booking_vr_server.dir/source/logger.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/logger.cpp" -o CMakeFiles/Booking_vr_server.dir/source/logger.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/logger.cpp" -o CMakeFiles/Booking_vr_server.dir/source/logger.cpp.s
 
 CMakeFiles/Booking_vr_server.dir/source/main.cpp.o: CMakeFiles/Booking_vr_server.dir/flags.make
 CMakeFiles/Booking_vr_server.dir/source/main.cpp.o: /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/source/main.cpp
 CMakeFiles/Booking_vr_server.dir/source/main.cpp.o: CMakeFiles/Booking_vr_server.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/lyuxet/Рабочий стол/Project/booking_system_vr/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/Booking_vr_server.dir/source/main.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Booking_vr_server.dir/source/main.cpp.o -MF CMakeFiles/Booking_vr_server.dir/source/main.cpp.o.d -o CMakeFiles/Booking_vr_server.dir/source/main.cpp.o -c "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/main.cpp"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Booking_vr_server.dir/source/main.cpp.o -MF CMakeFiles/Booking_vr_server.dir/source/main.cpp.o.d -o CMakeFiles/Booking_vr_server.dir/source/main.cpp.o -c "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/main.cpp"
 
 CMakeFiles/Booking_vr_server.dir/source/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Booking_vr_server.dir/source/main.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/main.cpp" > CMakeFiles/Booking_vr_server.dir/source/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/main.cpp" > CMakeFiles/Booking_vr_server.dir/source/main.cpp.i
 
 CMakeFiles/Booking_vr_server.dir/source/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Booking_vr_server.dir/source/main.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/main.cpp" -o CMakeFiles/Booking_vr_server.dir/source/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/main.cpp" -o CMakeFiles/Booking_vr_server.dir/source/main.cpp.s
 
 CMakeFiles/Booking_vr_server.dir/source/parseInpudData.cpp.o: CMakeFiles/Booking_vr_server.dir/flags.make
 CMakeFiles/Booking_vr_server.dir/source/parseInpudData.cpp.o: /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/source/parseInpudData.cpp
 CMakeFiles/Booking_vr_server.dir/source/parseInpudData.cpp.o: CMakeFiles/Booking_vr_server.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/lyuxet/Рабочий стол/Project/booking_system_vr/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/Booking_vr_server.dir/source/parseInpudData.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Booking_vr_server.dir/source/parseInpudData.cpp.o -MF CMakeFiles/Booking_vr_server.dir/source/parseInpudData.cpp.o.d -o CMakeFiles/Booking_vr_server.dir/source/parseInpudData.cpp.o -c "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/parseInpudData.cpp"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Booking_vr_server.dir/source/parseInpudData.cpp.o -MF CMakeFiles/Booking_vr_server.dir/source/parseInpudData.cpp.o.d -o CMakeFiles/Booking_vr_server.dir/source/parseInpudData.cpp.o -c "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/parseInpudData.cpp"
 
 CMakeFiles/Booking_vr_server.dir/source/parseInpudData.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Booking_vr_server.dir/source/parseInpudData.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/parseInpudData.cpp" > CMakeFiles/Booking_vr_server.dir/source/parseInpudData.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/parseInpudData.cpp" > CMakeFiles/Booking_vr_server.dir/source/parseInpudData.cpp.i
 
 CMakeFiles/Booking_vr_server.dir/source/parseInpudData.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Booking_vr_server.dir/source/parseInpudData.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/parseInpudData.cpp" -o CMakeFiles/Booking_vr_server.dir/source/parseInpudData.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/parseInpudData.cpp" -o CMakeFiles/Booking_vr_server.dir/source/parseInpudData.cpp.s
 
 CMakeFiles/Booking_vr_server.dir/source/requests_handler.cpp.o: CMakeFiles/Booking_vr_server.dir/flags.make
 CMakeFiles/Booking_vr_server.dir/source/requests_handler.cpp.o: /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/source/requests_handler.cpp
 CMakeFiles/Booking_vr_server.dir/source/requests_handler.cpp.o: CMakeFiles/Booking_vr_server.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/lyuxet/Рабочий стол/Project/booking_system_vr/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/Booking_vr_server.dir/source/requests_handler.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Booking_vr_server.dir/source/requests_handler.cpp.o -MF CMakeFiles/Booking_vr_server.dir/source/requests_handler.cpp.o.d -o CMakeFiles/Booking_vr_server.dir/source/requests_handler.cpp.o -c "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/requests_handler.cpp"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Booking_vr_server.dir/source/requests_handler.cpp.o -MF CMakeFiles/Booking_vr_server.dir/source/requests_handler.cpp.o.d -o CMakeFiles/Booking_vr_server.dir/source/requests_handler.cpp.o -c "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/requests_handler.cpp"
 
 CMakeFiles/Booking_vr_server.dir/source/requests_handler.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Booking_vr_server.dir/source/requests_handler.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/requests_handler.cpp" > CMakeFiles/Booking_vr_server.dir/source/requests_handler.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/requests_handler.cpp" > CMakeFiles/Booking_vr_server.dir/source/requests_handler.cpp.i
 
 CMakeFiles/Booking_vr_server.dir/source/requests_handler.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Booking_vr_server.dir/source/requests_handler.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/requests_handler.cpp" -o CMakeFiles/Booking_vr_server.dir/source/requests_handler.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/requests_handler.cpp" -o CMakeFiles/Booking_vr_server.dir/source/requests_handler.cpp.s
 
 CMakeFiles/Booking_vr_server.dir/source/websocket.cpp.o: CMakeFiles/Booking_vr_server.dir/flags.make
 CMakeFiles/Booking_vr_server.dir/source/websocket.cpp.o: /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/source/websocket.cpp
 CMakeFiles/Booking_vr_server.dir/source/websocket.cpp.o: CMakeFiles/Booking_vr_server.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/lyuxet/Рабочий стол/Project/booking_system_vr/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/Booking_vr_server.dir/source/websocket.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Booking_vr_server.dir/source/websocket.cpp.o -MF CMakeFiles/Booking_vr_server.dir/source/websocket.cpp.o.d -o CMakeFiles/Booking_vr_server.dir/source/websocket.cpp.o -c "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/websocket.cpp"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Booking_vr_server.dir/source/websocket.cpp.o -MF CMakeFiles/Booking_vr_server.dir/source/websocket.cpp.o.d -o CMakeFiles/Booking_vr_server.dir/source/websocket.cpp.o -c "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/websocket.cpp"
 
 CMakeFiles/Booking_vr_server.dir/source/websocket.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Booking_vr_server.dir/source/websocket.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/websocket.cpp" > CMakeFiles/Booking_vr_server.dir/source/websocket.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/websocket.cpp" > CMakeFiles/Booking_vr_server.dir/source/websocket.cpp.i
 
 CMakeFiles/Booking_vr_server.dir/source/websocket.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Booking_vr_server.dir/source/websocket.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/websocket.cpp" -o CMakeFiles/Booking_vr_server.dir/source/websocket.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lyuxet/Рабочий стол/Project/booking_system_vr/source/websocket.cpp" -o CMakeFiles/Booking_vr_server.dir/source/websocket.cpp.s
 
 # Object files for target Booking_vr_server
 Booking_vr_server_OBJECTS = \

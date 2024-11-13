@@ -1,0 +1,4 @@
+2024-11-13 14:32:40 Ошибка отката транзакции в файле /home/lyuxet/Рабочий стол/Project/booking_system_vr/source/Connect_to_DB.cpp на строке 127
+2024-11-13 14:32:40 Исключение: Недостаточно свободных мест для бронирования
+2024-11-13 14:32:40 Открытая игра Exception: Недостаточно свободных мест для бронирования в файле /home/lyuxet/Рабочий стол/Project/booking_system_vr/source/booking_vr.cpp строке 50
+2024-11-13 14:32:40 Error: Недостаточно свободных мест для бронирования в файле /home/lyuxet/Рабочий стол/Project/booking_system_vr/source/requests_handler.cpp строке 76

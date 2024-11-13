@@ -96,21 +96,19 @@ export function updateButtonStateCubes(button) {
     updateButtonState(button, 'VR Кубы');
 }
 
-
 export function handleInput(event, place) {
     const input = event.target;
     const button = input.closest('.booking-button');
+    const buttonId = button.getAttribute('id');
+    
     let maxAvailableSeats;
-    if (place === "VR Арена"){
-        maxAvailableSeats = parseInt(input.getAttribute('max'), 10) || maxPlayersArena;
-    }
-    else if (place === "VR Кубы"){
-        maxAvailableSeats = parseInt(input.getAttribute('max'), 10) || maxPlayersCubes;
-    }
-    else{
-        console.log("Неизвестный тип площадки");
+    if (button_data[buttonId]) {
+        maxAvailableSeats = button_data[buttonId].availability;
+    } else {
+        console.log("Неизвестный идентификатор кнопки");
         return;
     }
+    
     updateSeatsArena(button, maxAvailableSeats);
     calculateTotalPrice();
 }
