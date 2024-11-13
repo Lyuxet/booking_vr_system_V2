@@ -64,12 +64,12 @@ namespace vr{
         ProcessArenaTransaction("Закрытая игра");
     }
 
-    std::string Arena::CheckAvailabilityPlace() {
+    std::string Arena::initBunnot() {
         try {
             std::unique_ptr<sql::Connection> conn = pool_.GetConnection();
             ConnectionGuard conn_guard(std::move(conn), pool_);
             std::string response;
-            executeTransactionCheckAvailabilityArena(conn_guard.getConnection(), response);
+            executeTransactionInitButtonArena(conn_guard.getConnection(), response);
             return response;
         } catch (const std::exception& e) {
             Logger::getInstance().log("Avalibality Exception: " + std::string(e.what()) +
@@ -80,13 +80,13 @@ namespace vr{
     }
 
 
-    std::string Cubes::CheckAvailabilityPlace() {
+    std::string Cubes::initBunnot() {
         ScopeGuard guard(availability_);
         try {
             std::unique_ptr<sql::Connection> conn = pool_.GetConnection();
             ConnectionGuard conn_guard(std::move(conn), pool_);
             std::string response;
-            executeTransactionCheckAvailabilityCubes(conn_guard.getConnection(), response);
+            executeTransactionInitButtonCubes(conn_guard.getConnection(), response);
             return response;
         } catch (const std::exception& e) {
             Logger::getInstance().log("Avalibality Exception: " + std::string(e.what()) +
@@ -279,67 +279,114 @@ namespace vr{
     }
 
 
-    void Booking::executeTransactionCheckAvailabilityArena(sql::Connection* conn, std::string& response) {
+    void Booking::checkButtonDataArena(sql::Connection* conn){
+        std::unique_ptr<sql::PreparedStatement> pstmtIninButton;
+        std::string request_init_button;
+
+        if (availability_.typegame == "Открытая игра") {
+            request_init_button = "SELECT * FROM OpenArenaButtonData";
+        } else if (availability_.typegame == "Закрытая игра") {
+            request_init_button = "SELECT * FROM CloseArenaButtonData";
+        } else {
+            throw std::runtime_error("Undefined type game");
+        }
+
+        pstmtIninButton = std::unique_ptr<sql::PreparedStatement>(conn->prepareStatement(request_init_button));
+        std::unique_ptr<sql::ResultSet> res_set_data(pstmtIninButton->executeQuery());
+                
+        while (res_set_data->next()) {
+            int price = IsHolidayOrWeekend(availability_.date)
+                ? res_set_data->getInt("button_price_holidays")
+                : res_set_data->getInt("button_price");
+
+            button_data_.emplace(
+                res_set_data->getString("button_id"),
+                ButtonData{ res_set_data->getString("button_time"), price }
+            );
+        }
+    }
+
+    void Booking::checkButtonDataCubes(sql::Connection* conn){
+        std::unique_ptr<sql::PreparedStatement> pstmtIninButton(conn->prepareStatement("SELECT * FROM CubesButtonData"));
+        std::unique_ptr<sql::ResultSet> res_set_data(pstmtIninButton->executeQuery());
+                
+        while (res_set_data->next()) {
+            int price = IsHolidayOrWeekend(availability_.date)
+                ? res_set_data->getInt("button_price_holidays")
+                : res_set_data->getInt("button_price");
+
+            button_data_.emplace(
+                res_set_data->getString("button_id"),
+                ButtonData{ res_set_data->getString("button_time"), price }
+            );
+        }
+    }
+
+    std::unordered_map<std::string, int> Booking::checkAvailabilityPlaceArena(sql::Connection* conn){
+        std::unique_ptr<sql::PreparedStatement> pstmtCheckAvailability(conn->prepareStatement(
+            "SELECT time_game, SUM(players_count) AS total_players, "
+            "CASE "
+            "    WHEN COUNT(DISTINCT name_game) = 1 AND MAX(name_game) = ? THEN (10 - SUM(players_count)) "
+            "    ELSE 0 "
+            "END AS available_slots "
+            "FROM GameSchedule "
+            "WHERE place_game = ? AND date_game = ? "
+            "GROUP BY time_game"
+        ));
+        pstmtCheckAvailability->setString(1, availability_.namegame);
+        pstmtCheckAvailability->setString(2, availability_.placegame);
+        pstmtCheckAvailability->setString(3, availability_.date);
+        std::unique_ptr<sql::ResultSet> res_set_avaliability(pstmtCheckAvailability->executeQuery());
+
+        std::unordered_map<std::string, int> availability_map;
+        while (res_set_avaliability->next()) {
+            std::string time_game = res_set_avaliability->getString("time_game");
+            int available_slots = res_set_avaliability->getInt("available_slots");
+
+            availability_map[time_game] = available_slots;
+        }
+        return std::move(availability_map);
+    }
+
+
+    std::unordered_map<std::string, int> Booking::checkAvailabilityPlaceCubes(sql::Connection* conn){
+        std::unique_ptr<sql::PreparedStatement> pstmtCheckAvailability(conn->prepareStatement(
+            "SELECT time_game, SUM(players_count) AS total_players, "
+            "CASE "
+            "    WHEN COUNT(DISTINCT name_game) = 1 AND MAX(name_game) = ? THEN (4 - SUM(players_count)) "
+            "    ELSE 0 "
+            "END AS available_slots "
+            "FROM Cubes "
+            "WHERE place_game = ? AND date_game = ? "
+            "GROUP BY time_game"
+        ));
+        pstmtCheckAvailability->setString(1, availability_.namegame);
+        pstmtCheckAvailability->setString(2, availability_.placegame);
+        pstmtCheckAvailability->setString(3, availability_.date);
+        std::unique_ptr<sql::ResultSet> res_set_avaliability(pstmtCheckAvailability->executeQuery());
+
+        std::unordered_map<std::string, int> availability_map;
+        while (res_set_avaliability->next()) {
+            std::string time_game = res_set_avaliability->getString("time_game");
+            int available_slots = res_set_avaliability->getInt("available_slots");
+
+            availability_map[time_game] = available_slots;
+        }
+        return std::move(availability_map);
+    }
+
+
+    void Booking::executeTransactionInitButtonArena(sql::Connection* conn, std::string& response) {
         const int max_retries = 5;
         const int base_retry_delay_ms = 500;
         for (int attempt = 0; attempt < max_retries; ++attempt) {
             try {
                 conn->setAutoCommit(false);
 
-                std::unique_ptr<sql::PreparedStatement> pstmtIninButton;
-                std::string request_init_button;
-
-                if (availability_.typegame == "Открытая игра") {
-                    request_init_button = "SELECT * FROM OpenArenaButtonData";
-                } else if (availability_.typegame == "Закрытая игра") {
-                    request_init_button = "SELECT * FROM CloseArenaButtonData";
-                } else {
-                    throw std::runtime_error("Undefined type game");
-                }
-
-                // Используйте метод prepareStatement без std::make_unique
-                pstmtIninButton = std::unique_ptr<sql::PreparedStatement>(conn->prepareStatement(request_init_button));
-                std::unique_ptr<sql::ResultSet> res_set_data(pstmtIninButton->executeQuery());
+                checkButtonDataArena(conn);
                 
-                while (res_set_data->next()) {
-                    // Определяем цену в зависимости от типа дня
-                    int price = IsHolidayOrWeekend(availability_.date)
-                        ? res_set_data->getInt("button_price_holidays")
-                        : res_set_data->getInt("button_price");
+                std::unordered_map<std::string, int> availability_map = checkAvailabilityPlaceArena(conn);
 
-                    // Добавляем данные кнопки в button_data_
-                    button_data_.emplace(
-                        res_set_data->getString("button_id"),
-                        ButtonData{ res_set_data->getString("button_time"), price }
-                    );
-                }
-
-                std::unique_ptr<sql::PreparedStatement> pstmtCheckAvailability(conn->prepareStatement(
-                    "SELECT time_game, SUM(players_count) AS total_players, "
-                    "CASE "
-                    "    WHEN COUNT(DISTINCT name_game) = 1 AND MAX(name_game) = ? THEN (10 - SUM(players_count)) "
-                    "    ELSE 0 "
-                    "END AS available_slots "
-                    "FROM GameSchedule "
-                    "WHERE place_game = ? AND date_game = ? "
-                    "GROUP BY time_game"
-                ));
-                pstmtCheckAvailability->setString(1, availability_.namegame);
-                pstmtCheckAvailability->setString(2, availability_.placegame);
-                pstmtCheckAvailability->setString(3, availability_.date);
-                std::unique_ptr<sql::ResultSet> res_set_avaliability(pstmtCheckAvailability->executeQuery());
-
-                std::unordered_map<std::string, int> availability_map;
-                while (res_set_avaliability->next()) {
-                    // Извлечение данных из результата запроса
-                    std::string time_game = res_set_avaliability->getString("time_game");
-                    int available_slots = res_set_avaliability->getInt("available_slots");
-
-                    // Заполнение словаря, используя time_game в качестве ключа и available_slots в качестве значения
-                    availability_map[time_game] = available_slots;
-                }
-
-                std::vector<ButtonData> button_data_list;
                 boost::json::object response_data;
                 for (const auto& item : button_data_) {
                     ButtonData button = item.second;
@@ -353,7 +400,6 @@ namespace vr{
                     } else {
                         button.availability_place = 10; // Все места свободны
                     }
-                    button_data_list.push_back(button);
 
                     // Добавление данных в response_data с использованием ключей button11, button12 и т.д.
                     response_data[item.first] = boost::json::object{
@@ -376,54 +422,16 @@ namespace vr{
         }
     }
 
-   void Booking::executeTransactionCheckAvailabilityCubes(sql::Connection* conn, std::string& response) {
+   void Booking::executeTransactionInitButtonCubes(sql::Connection* conn, std::string& response) {
         const int max_retries = 5;
         const int base_retry_delay_ms = 500;
         for (int attempt = 0; attempt < max_retries; ++attempt) {
             try {
                 conn->setAutoCommit(false);
 
-                std::unique_ptr<sql::PreparedStatement> pstmtIninButton(conn->prepareStatement("SELECT * FROM CubesButtonData"));
-                std::unique_ptr<sql::ResultSet> res_set_data(pstmtIninButton->executeQuery());
+                checkButtonDataCubes(conn);
                 
-                while (res_set_data->next()) {
-                    // Определяем цену в зависимости от типа дня
-                    int price = IsHolidayOrWeekend(availability_.date)
-                        ? res_set_data->getInt("button_price_holidays")
-                        : res_set_data->getInt("button_price");
-
-                    // Добавляем данные кнопки в button_data_
-                    button_data_.emplace(
-                        res_set_data->getString("button_id"),
-                        ButtonData{ res_set_data->getString("button_time"), price }
-                    );
-                }
-                std::unique_ptr<sql::PreparedStatement> pstmtCheckAvailability(conn->prepareStatement(
-                    "SELECT time_game, SUM(players_count) AS total_players, "
-                    "CASE "
-                    "    WHEN COUNT(DISTINCT name_game) = 1 AND MAX(name_game) = ? THEN (4 - SUM(players_count)) "
-                    "    ELSE 0 "
-                    "END AS available_slots "
-                    "FROM Cubes "
-                    "WHERE place_game = ? AND date_game = ? "
-                    "GROUP BY time_game"
-                ));
-                pstmtCheckAvailability->setString(1, availability_.namegame);
-                pstmtCheckAvailability->setString(2, availability_.placegame);
-                pstmtCheckAvailability->setString(3, availability_.date);
-                std::unique_ptr<sql::ResultSet> res_set_avaliability(pstmtCheckAvailability->executeQuery());
-
-                std::unordered_map<std::string, int> availability_map;
-                while (res_set_avaliability->next()) {
-                    // Извлечение данных из результата запроса
-                    std::string time_game = res_set_avaliability->getString("time_game");
-                    int available_slots = res_set_avaliability->getInt("available_slots");
-
-                    // Заполнение словаря, используя time_game в качестве ключа и available_slots в качестве значения
-                    availability_map[time_game] = available_slots;
-                }
-
-                std::vector<ButtonData> button_data_list;
+                std::unordered_map<std::string, int> availability_map = checkAvailabilityPlaceCubes(conn);
                 boost::json::object response_data;
                 for (const auto& item : button_data_) {
                     ButtonData button = item.second;
@@ -432,7 +440,6 @@ namespace vr{
                     } else {
                         button.availability_place = 4; // Все места свободны
                     }
-                    button_data_list.push_back(button);
 
                     // Добавление данных в response_data с использованием ключей button11, button12 и т.д.
                     response_data[item.first] = boost::json::object{

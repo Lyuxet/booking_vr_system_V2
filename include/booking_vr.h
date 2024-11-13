@@ -155,8 +155,8 @@ private:
         //void Delete();
 
     protected:
-        void executeTransactionCheckAvailabilityArena(sql::Connection* conn, std::string& response);
-        void executeTransactionCheckAvailabilityCubes(sql::Connection* conn, std::string& response);
+        void executeTransactionInitButtonArena(sql::Connection* conn, std::string& response);
+        void executeTransactionInitButtonCubes(sql::Connection* conn, std::string& response);
         void executeTransactionInsert(sql::Connection* conn);
         //void executeTransactionDelete(std::shared_ptr<sql::Connection> conn);
         //void executeTransactionUpdate(std::shared_ptr<sql::Connection> conn);
@@ -204,6 +204,11 @@ private:
         void insertClient(sql::Connection* conn);
         void handleSQLException(const sql::SQLException& e, int attempt, int max_retries, int base_retry_delay_ms, sql::Connection* conn);
         void handleStdException(const std::exception& e, sql::Connection* conn);
+        void checkButtonDataArena(sql::Connection* conn);
+        void checkButtonDataCubes(sql::Connection* conn);
+        std::unordered_map<std::string, int> checkAvailabilityPlaceArena(sql::Connection* conn);
+        std::unordered_map<std::string, int> checkAvailabilityPlaceCubes(sql::Connection* conn);
+
     };
 
 
@@ -212,7 +217,7 @@ private:
     class Arena : public Booking {
     public:
         Arena(ConnectionPool& pool) : Booking(pool) {}
-        std::string CheckAvailabilityPlace();
+        std::string initBunnot();
         void Open_arena();
         void Close_arena();
     private:
@@ -224,7 +229,7 @@ private:
     class Cubes : public Booking {
     public:
         Cubes(ConnectionPool& pool) : Booking(pool) {}
-        std::string CheckAvailabilityPlace();
+        std::string initBunnot();
         void Open_cubes();
     };
 

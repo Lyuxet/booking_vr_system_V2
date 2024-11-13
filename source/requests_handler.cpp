@@ -96,11 +96,11 @@ namespace vr{
             if (placegame == "VR Арена") {
                 Arena arena(pool);
                 arena.AddDataByCheckAvailability(data);
-                response = arena.CheckAvailabilityPlace();
+                response = arena.initBunnot();
             } else if (placegame == "VR Кубы") {
                 Cubes cubes(pool);
                 cubes.AddDataByCheckAvailability(data);
-                response = cubes.CheckAvailabilityPlace();
+                response = cubes.initBunnot();
             }
 
             // Устанавливаем содержимое ответа
