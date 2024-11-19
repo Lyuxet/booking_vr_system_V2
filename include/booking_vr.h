@@ -75,7 +75,7 @@ namespace vr{
         }
 
         sql::Connection* getConnection() const {
-            return conn_.get();
+            return std::move(conn_.get());
         }
 
     private:

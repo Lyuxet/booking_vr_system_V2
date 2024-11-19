@@ -41,7 +41,7 @@ namespace vr{
     try {
         std::unique_ptr<sql::Connection> conn = pool_.GetConnection();
         ConnectionGuard conn_guard(std::move(conn), pool_);
-        executeTransactionInsert(conn_guard.getConnection());
+        executeTransactionInsert(std::move(conn_guard.getConnection()));
         std::lock_guard<std::mutex> lock(mtxtest);
         sendToEmail();
         PrintInsertBooking();
@@ -69,7 +69,7 @@ namespace vr{
             std::unique_ptr<sql::Connection> conn = pool_.GetConnection();
             ConnectionGuard conn_guard(std::move(conn), pool_);
             std::string response;
-            executeTransactionInitButtonArena(conn_guard.getConnection(), response);
+            executeTransactionInitButtonArena(std::move(conn_guard.getConnection()), response);
             return response;
         } catch (const std::exception& e) {
             Logger::getInstance().log("Avalibality Exception: " + std::string(e.what()) +
@@ -86,7 +86,7 @@ namespace vr{
             std::unique_ptr<sql::Connection> conn = pool_.GetConnection();
             ConnectionGuard conn_guard(std::move(conn), pool_);
             std::string response;
-            executeTransactionInitButtonCubes(conn_guard.getConnection(), response);
+            executeTransactionInitButtonCubes(std::move(conn_guard.getConnection()), response);
             return response;
         } catch (const std::exception& e) {
             Logger::getInstance().log("Avalibality Exception: " + std::string(e.what()) +
@@ -220,10 +220,10 @@ namespace vr{
 
 
     void Booking::executeTransactionInsert(sql::Connection* conn) {
-        executeTransactionWithRetry(conn, [&](sql::Connection* conn) {
+        executeTransactionWithRetry(std::move(conn), [&](sql::Connection* conn) {
             conn->setAutoCommit(false); // Начинаем транзакцию
             
-            std::string tableName;
+            std::string tableName;  
             if (gameTables.find(bookings_[0].name_game) != gameTables.end()) {
                 tableName = gameTables.at(bookings_[0].name_game);
             } else {

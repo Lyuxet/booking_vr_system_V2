@@ -4,6 +4,7 @@
 #include <cppconn/exception.h>
 #include <fstream>
 #include <iostream>
+#include <malloc.h>
 
 // Конструктор
 ConnectionPool::ConnectionPool(size_t poolSize, const std::string& configFilePath)
@@ -16,7 +17,7 @@ void ConnectionPool::Init_pool() {
     try {
         DBConfig config = ReadDBConfig(configFilePath_);
         for (size_t i = 0; i < poolSize_; ++i) {
-            pool_.push(CreateConnection(config));
+            pool_.push(std::move(CreateConnection(config)));
         }
     } catch (const std::exception& e) {
         Logger::getInstance().log("Ошибка инициализации пула соединений: " + std::string(e.what()) +
@@ -35,9 +36,10 @@ std::unique_ptr<sql::Connection> ConnectionPool::GetConnection() {
     if (!isConnectionActive(conn.get())) {
         conn.get()->close();
         conn.reset();
+        malloc_trim(0);
         conn = CreateConnection(ReadDBConfig(configFilePath_));
     }
-    return conn;
+    return std::move(conn);
 }
 
 // Проверка активности соединения
@@ -94,7 +96,8 @@ std::unique_ptr<sql::Connection> ConnectionPool::CreateConnection(const DBConfig
     sql::mysql::MySQL_Driver* driver = sql::mysql::get_mysql_driver_instance();
     std::unique_ptr<sql::Connection> conn(driver->connect(tcp_ip, config.user, config.password));
     conn->setSchema(config.dbname);
-    return conn;
+    malloc_trim(0);
+    return std::move(conn);
 }
 
 // Закрытие всех соединений перед завершением работы программы
@@ -107,6 +110,8 @@ void ConnectionPool::CloseAllConnections() {
             conn.reset();
         }
     }
+
+    malloc_trim(0);
 }
 
 

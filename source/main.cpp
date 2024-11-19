@@ -11,23 +11,32 @@
 
 HttpServer* http_server_ptr = nullptr;
 WebSocketServer* websocket_server_ptr = nullptr;
+ConnectionPool* pool_ptr = nullptr;  
 
 void handle_sigint(int sig) { 
-    std::cout << "Пойман сигнал: " << sig << ", очищение ресурсов..." << std::endl; 
-    if (http_server_ptr) {
+    std::cout << "Пойман сигнал: " << sig << ", очищение ресурсов..." << std::endl;
+
+    // Закрытие соединений пула
+    if (pool_ptr) {
+        pool_ptr->CloseAllConnections();
+    }
+
+    // Остановка серверов
+    if (http_server_ptr) {  
         http_server_ptr->stop();
     }
     if (websocket_server_ptr) {
         websocket_server_ptr->stop();
     }
-    std::this_thread::sleep_for(std::chrono::seconds(2)); // Даем время завершиться всем операциям
-    exit(0);
-}
 
+    std::this_thread::sleep_for(std::chrono::seconds(2)); // Даем время завершиться всем операциям
+    exit(0);  // Завершаем приложение
+}
 
 int main() {
     std::signal(SIGINT, handle_sigint); 
     ConnectionPool pool(10, "db_config.conf");
+    
     std::set<std::shared_ptr<WebSocketSession>> sessions;
     try {
         HttpServer http_server(8081, pool, sessions);
