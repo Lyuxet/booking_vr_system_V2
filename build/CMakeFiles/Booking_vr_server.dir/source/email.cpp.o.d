@@ -1,7 +1,7 @@
 CMakeFiles/Booking_vr_server.dir/source/email.cpp.o: \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/source/email.cpp \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/source/email.cpp \
  /usr/include/stdc-predef.h \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/include/email.h \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/include/email.h \
  /usr/include/c++/13/memory /usr/include/c++/13/bits/memoryfwd.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \
@@ -244,8 +244,8 @@ CMakeFiles/Booking_vr_server.dir/source/email.cpp.o: \
  /usr/include/x86_64-linux-gnu/curl/header.h \
  /usr/include/x86_64-linux-gnu/curl/websockets.h \
  /usr/include/x86_64-linux-gnu/curl/mprintf.h \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/include/booking_vr.h \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/include/Connect_to_DB.h \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/include/booking_vr.h \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/include/Connect_to_DB.h \
  /usr/include/mysql_driver.h /usr/include/boost/scoped_ptr.hpp \
  /usr/include/boost/smart_ptr/scoped_ptr.hpp \
  /usr/include/boost/smart_ptr/detail/requires_cxx11.hpp \
@@ -339,7 +339,7 @@ CMakeFiles/Booking_vr_server.dir/source/email.cpp.o: \
  /usr/include/c++/13/bits/deque.tcc /usr/include/c++/13/bits/stl_queue.h \
  /usr/include/c++/13/mutex /usr/include/c++/13/bits/unique_lock.h \
  /usr/include/c++/13/condition_variable \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/include/logger.h \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/include/logger.h \
  /usr/include/c++/13/fstream /usr/include/c++/13/bits/codecvt.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/basic_file.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++io.h \

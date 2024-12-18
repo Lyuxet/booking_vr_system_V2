@@ -1,7 +1,7 @@
 CMakeFiles/Booking_vr_server.dir/source/parseInpudData.cpp.o: \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/source/parseInpudData.cpp \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/source/parseInpudData.cpp \
  /usr/include/stdc-predef.h \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/include/parseInpudData.h \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/include/parseInpudData.h \
  /usr/include/c++/13/unordered_map \
  /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \

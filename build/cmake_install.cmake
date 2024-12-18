@@ -1,4 +1,4 @@
-# Install script for directory: /home/lyuxet/Рабочий стол/Project/booking_system_vr
+# Install script for directory: /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/lyuxet/Рабочий стол/Project/booking_system_vr/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

@@ -6,13 +6,13 @@
 #include <iostream>
 #include <malloc.h>
 
-// Конструктор
+
 ConnectionPool::ConnectionPool(size_t poolSize, const std::string& configFilePath)
     : poolSize_(poolSize), configFilePath_(configFilePath) {
     Init_pool();
 }
 
-// Инициализация пула соединений
+
 void ConnectionPool::Init_pool() {
     try {
         DBConfig config = ReadDBConfig(configFilePath_);
@@ -26,7 +26,6 @@ void ConnectionPool::Init_pool() {
     }
 }
 
-// Получение соединения из пула
 std::unique_ptr<sql::Connection> ConnectionPool::GetConnection() {
     std::unique_lock<std::mutex> lock(mutex_);
     condVar_.wait(lock, [this] { return !pool_.empty(); });
@@ -42,26 +41,26 @@ std::unique_ptr<sql::Connection> ConnectionPool::GetConnection() {
     return std::move(conn);
 }
 
-// Проверка активности соединения
+
 bool ConnectionPool::isConnectionActive(sql::Connection* conn) {
     try {
         std::unique_ptr<sql::Statement> stmt(conn->createStatement());
         std::unique_ptr<sql::ResultSet> res(stmt->executeQuery("SELECT 1"));
-        return res->next();  // Проверьте, есть ли результат
+        return res->next();  
     } catch (const sql::SQLException&) {
         return false;
     }
 }
 
 
-// Возвращение соединения в пул
+
 void ConnectionPool::ReleaseConnection(std::unique_ptr<sql::Connection> conn) {
     std::lock_guard<std::mutex> lock(mutex_);
     pool_.push(std::move(conn));
     condVar_.notify_one();
 }
 
-// Чтение конфигурации из файла
+
 DBConfig ConnectionPool::ReadDBConfig(const std::string& file_name) {
     std::ifstream in_file(file_name);
     if (!in_file.is_open()) {

@@ -1,3 +1,3 @@
-/home/lyuxet/Рабочий стол/Project/booking_system_vr/build/CMakeFiles/Booking_vr_server.dir
-/home/lyuxet/Рабочий стол/Project/booking_system_vr/build/CMakeFiles/edit_cache.dir
-/home/lyuxet/Рабочий стол/Project/booking_system_vr/build/CMakeFiles/rebuild_cache.dir
+/home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/build/CMakeFiles/Booking_vr_server.dir
+/home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/build/CMakeFiles/edit_cache.dir
+/home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/build/CMakeFiles/rebuild_cache.dir

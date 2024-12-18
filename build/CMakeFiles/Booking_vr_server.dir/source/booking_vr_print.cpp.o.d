@@ -1,8 +1,8 @@
 CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.o: \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/source/booking_vr_print.cpp \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/source/booking_vr_print.cpp \
  /usr/include/stdc-predef.h \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/include/booking_vr.h \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/include/Connect_to_DB.h \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/include/booking_vr.h \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/include/Connect_to_DB.h \
  /usr/include/mysql_driver.h /usr/include/boost/scoped_ptr.hpp \
  /usr/include/boost/smart_ptr/scoped_ptr.hpp \
  /usr/include/boost/smart_ptr/detail/requires_cxx11.hpp \
@@ -311,7 +311,7 @@ CMakeFiles/Booking_vr_server.dir/source/booking_vr_print.cpp.o: \
  /usr/include/c++/13/bits/this_thread_sleep.h \
  /usr/include/x86_64-linux-gnu/sys/time.h /usr/include/semaphore.h \
  /usr/include/x86_64-linux-gnu/bits/semaphore.h \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/include/logger.h \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/include/logger.h \
  /usr/include/c++/13/fstream /usr/include/c++/13/bits/codecvt.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/basic_file.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++io.h \

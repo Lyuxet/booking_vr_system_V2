@@ -1,7 +1,7 @@
 CMakeFiles/Booking_vr_server.dir/source/main.cpp.o: \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/source/main.cpp \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/source/main.cpp \
  /usr/include/stdc-predef.h \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/include/Connect_to_DB.h \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/include/Connect_to_DB.h \
  /usr/include/mysql_driver.h /usr/include/boost/scoped_ptr.hpp \
  /usr/include/boost/smart_ptr/scoped_ptr.hpp \
  /usr/include/boost/smart_ptr/detail/requires_cxx11.hpp \
@@ -310,8 +310,8 @@ CMakeFiles/Booking_vr_server.dir/source/main.cpp.o: \
  /usr/include/c++/13/bits/this_thread_sleep.h \
  /usr/include/x86_64-linux-gnu/sys/time.h /usr/include/semaphore.h \
  /usr/include/x86_64-linux-gnu/bits/semaphore.h \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/include/booking_vr.h \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/include/requests_handler.h \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/include/booking_vr.h \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/include/requests_handler.h \
  /usr/include/boost/asio.hpp \
  /usr/include/boost/asio/any_completion_executor.hpp \
  /usr/include/boost/asio/detail/config.hpp /usr/include/boost/version.hpp \
@@ -1839,8 +1839,8 @@ CMakeFiles/Booking_vr_server.dir/source/main.cpp.o: \
  /usr/include/boost/json/detail/value_to.hpp \
  /usr/include/boost/describe/enum_from_string.hpp \
  /usr/include/boost/json/visit.hpp /usr/include/boost/json/impl/visit.hpp \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/include/websocket.h \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/include/requests_handler.h \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/include/websocket.h \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/include/requests_handler.h \
  /usr/include/boost/beast/websocket.hpp \
  /usr/include/boost/beast/websocket/error.hpp \
  /usr/include/boost/beast/websocket/impl/error.hpp \
@@ -1915,8 +1915,8 @@ CMakeFiles/Booking_vr_server.dir/source/main.cpp.o: \
  /usr/include/c++/13/thread /usr/include/c++/13/set \
  /usr/include/c++/13/bits/stl_set.h \
  /usr/include/c++/13/bits/stl_multiset.h \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/include/https_server.h \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/include/logger.h \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/include/https_server.h \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/include/logger.h \
  /usr/include/c++/13/fstream \
  /usr/include/x86_64-linux-gnu/c++/13/bits/basic_file.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++io.h \

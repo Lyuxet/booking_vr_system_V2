@@ -62,7 +62,6 @@ namespace vr{
 
     };
 
-    // Класс для управления ресурсами соединения
     class ConnectionGuard {
     public:
         ConnectionGuard(std::unique_ptr<sql::Connection> conn, ConnectionPool& pool)
@@ -85,10 +84,8 @@ namespace vr{
 
 
 
-    // Класс для управления ресурсами бронирования и клиента
     class ScopeGuard {
 public:
-    // Конструктор для сброса данных через ссылки
     ScopeGuard(AvailabilityData& data)
         : data_(&data), bookings_(nullptr), clients_(nullptr) {}
     
@@ -103,7 +100,6 @@ public:
 
     ~ScopeGuard() {
         if (bookings_) {
-            // Очистка каждого элемента вектора
             for (auto& booking : *bookings_) {
                 booking.comment_game.clear();
                 booking.date_game.clear();
@@ -118,7 +114,7 @@ public:
                 booking.who_reservation.clear();
                 booking.book_status.clear();
             }
-            bookings_->clear(); // Также очищаем сам вектор
+            bookings_->clear(); 
         }
 
         if (clients_) {
@@ -142,7 +138,7 @@ private:
     Client_data* clients_;
 };
 
-    // Базовый класс для управления бронированиями
+    
     class Booking {
     public:
         Booking(ConnectionPool& pool) : pool_(pool) { gameTables = LoadGameTables("../games/games.conf");}
@@ -175,16 +171,15 @@ private:
         std::map<std::string, ButtonData> button_data_;
 
 
-        // Добавление метода для выполнения транзакции с повтором
         template <typename Func>
         void executeTransactionWithRetry(sql::Connection* conn, Func&& func) {
             const int max_retries = 5;
             const int base_retry_delay_ms = 500;
             for (int attempt = 0; attempt < max_retries; ++attempt) {
                 try {
-                    Transaction transaction(conn); // Создаем транзакцию
-                    func(conn); // Выполняем нужную логику транзакции
-                    transaction.commit(); // Коммит транзакции, если все прошло успешно
+                    Transaction transaction(conn); 
+                    func(conn); 
+                    transaction.commit(); 
                     return;
                 } catch (const sql::SQLException& e) {
                     handleSQLException(e, attempt, max_retries, base_retry_delay_ms, conn);

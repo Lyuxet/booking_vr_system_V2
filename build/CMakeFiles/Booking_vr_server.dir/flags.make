@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_CONTAINER_DYN_LINK -DBOOST_CONTAINER_NO_LIB -DBOOST_JSON_DYN_LINK -DBOOST_JSON_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB
 
-CXX_INCLUDES = -I/usr/include/mysql-cppconn -I"/home/lyuxet/Рабочий стол/Project/booking_system_vr/include" -I"/home/lyuxet/Рабочий стол/Project/booking_system_vr/test"
+CXX_INCLUDES = -I/usr/include/mysql-cppconn -I"/home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/include" -I"/home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/test"
 
 CXX_FLAGS = -O3 -DNDEBUG -std=gnu++20
 

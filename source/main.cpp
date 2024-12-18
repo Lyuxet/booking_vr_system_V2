@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <thread>
 #include <chrono>
+#include <set>
 
 HttpServer* http_server_ptr = nullptr;
 WebSocketServer* websocket_server_ptr = nullptr;
@@ -16,21 +17,21 @@ ConnectionPool* pool_ptr = nullptr;
 void handle_sigint(int sig) { 
     std::cout << "Пойман сигнал: " << sig << ", очищение ресурсов..." << std::endl;
 
-    // Закрытие соединений пула
     if (pool_ptr) {
         pool_ptr->CloseAllConnections();
     }
 
-    // Остановка серверов
+   
     if (http_server_ptr) {  
         http_server_ptr->stop();
     }
     if (websocket_server_ptr) {
         websocket_server_ptr->stop();
+        
     }
 
-    std::this_thread::sleep_for(std::chrono::seconds(2)); // Даем время завершиться всем операциям
-    exit(0);  // Завершаем приложение
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    exit(0);  
 }
 
 int main() {

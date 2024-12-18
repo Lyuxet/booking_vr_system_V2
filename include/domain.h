@@ -2,8 +2,24 @@
 #include <sstream>
 #include <vector>
 #include <unordered_map>
-#include <stdexcept> // Не забудем про этот заголовок для std::invalid_argument
+#include <stdexcept> 
 #include <unordered_set>
+
+
+
+int getZellerDayOfWeek(int year, int month, int day) {
+    if (month <= 2) {
+        month += 12;
+        year--;
+    }
+    
+    int k = year % 100;
+    int j = year / 100;
+    
+    int h = (day + 13*(month + 1)/5 + k + k/4 + j/4 - 2*j) % 7;
+    
+    return ((h + 5) % 7 + 7) % 7;
+}
 
 std::string convertDate(std::string_view date) {
     std::unordered_map<int, std::string> months = {

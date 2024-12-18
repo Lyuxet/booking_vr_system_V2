@@ -1,7 +1,7 @@
 CMakeFiles/Booking_vr_server.dir/source/logger.cpp.o: \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/source/logger.cpp \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/source/logger.cpp \
  /usr/include/stdc-predef.h \
- /home/lyuxet/Рабочий\ стол/Project/booking_system_vr/include/logger.h \
+ /home/lyuxet/Рабочий\ стол/Project/booking_vr_system_V2/include/logger.h \
  /usr/include/c++/13/fstream /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \

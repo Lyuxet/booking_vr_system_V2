@@ -230,18 +230,18 @@ namespace vr{
                 throw std::runtime_error("Неизвестное имя игры");
             }
 
-            // Добавление клиента
+            
             insertClient(conn);
         
-            // Подготовка запроса на вставку данных о бронировании
+            
             std::string queryInsert = "INSERT INTO " + tableName +
                 " (client_id, place_game, name_game, type_game, date_game, time_game, players_count, price, comment_game, who_reservation, book_status) " +
                 "VALUES ((SELECT id FROM Clients WHERE phone = ? LIMIT 1), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             std::unique_ptr<sql::PreparedStatement> pstmt2(conn->prepareStatement(queryInsert));
 
-            // Вставка всех данных из массива
+           
             for (const auto& booking : bookings_) {
-                // Проверка наличия доступных мест
+                
                 if (!checkAvailableSlots(conn, booking)) {
                     throw std::runtime_error("Недостаточно свободных мест для бронирования");
                 }
@@ -267,7 +267,7 @@ namespace vr{
         escaped << std::hex;
 
         for (char c : value) {
-            // URL-кодирование для спецсимволов
+            
             if (isalnum(static_cast<unsigned char>(c)) || c == '-' || c == '_' || c == '.' || c == '~') {
                 escaped << c;
             } else {
@@ -283,10 +283,16 @@ namespace vr{
         std::unique_ptr<sql::PreparedStatement> pstmtIninButton;
         std::string request_init_button;
 
+
+        int year = std::stoi(availability_.date.substr(0, 4));
+        int month = std::stoi(availability_.date.substr(5, 2));
+        int day = std::stoi(availability_.date.substr(8, 2));  
+
+    
         if (availability_.typegame == "Открытая игра") {
-            request_init_button = "SELECT * FROM OpenArenaButtonData";
+            request_init_button = "SELECT * FROM OpenArenaButtonData WHERE weekday = " + std::to_string(getZellerDayOfWeek(year, month, day));
         } else if (availability_.typegame == "Закрытая игра") {
-            request_init_button = "SELECT * FROM CloseArenaButtonData";
+            request_init_button = "SELECT * FROM CloseArenaButtonData WHERE weekday = " + std::to_string(getZellerDayOfWeek(year, month, day));
         } else {
             throw std::runtime_error("Undefined type game");
         }
@@ -307,7 +313,15 @@ namespace vr{
     }
 
     void Booking::checkButtonDataCubes(sql::Connection* conn){
-        std::unique_ptr<sql::PreparedStatement> pstmtIninButton(conn->prepareStatement("SELECT * FROM CubesButtonData"));
+
+        
+        int year = std::stoi(availability_.date.substr(0, 4));
+        int month = std::stoi(availability_.date.substr(5, 2));
+        int day = std::stoi(availability_.date.substr(8, 2)); 
+
+
+        std::unique_ptr<sql::PreparedStatement> pstmtIninButton(conn->prepareStatement("SELECT * FROM CubesButtonData WHERE weekday = " 
+                                                                + std::to_string(getZellerDayOfWeek(year, month, day))));
         std::unique_ptr<sql::ResultSet> res_set_data(pstmtIninButton->executeQuery());
                 
         while (res_set_data->next()) {
@@ -401,7 +415,6 @@ namespace vr{
                         button.availability_place = 10; // Все места свободны
                     }
 
-                    // Добавление данных в response_data с использованием ключей button11, button12 и т.д.
                     response_data[item.first] = boost::json::object{
                         {"time", button.time},
                         {"price", button.price},
