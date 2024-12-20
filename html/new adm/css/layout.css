@@ -1,0 +1,20 @@
+.main-content {
+    flex: 1;
+    padding: 20px;
+    margin-left: 250px;
+    transition: margin-left 0.3s ease;
+}
+
+.controls-wrapper {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.bron {
+    display: flex;
+    justify-content: right;    
+}

@@ -391,10 +391,8 @@ namespace vr{
 
 
     void Booking::executeTransactionInitButtonArena(sql::Connection* conn, std::string& response) {
-        const int max_retries = 5;
-        const int base_retry_delay_ms = 500;
-        for (int attempt = 0; attempt < max_retries; ++attempt) {
-            try {
+       
+            executeTransactionWithRetry(conn, [&](sql::Connection* conn) {
                 conn->setAutoCommit(false);
 
                 checkButtonDataArena(conn);
@@ -422,24 +420,12 @@ namespace vr{
                     };
                 }
                 response = boost::json::serialize(response_data); 
-               
-                conn->commit();
-                return;
-            }
-            catch (const sql::SQLException& e) {
-                handleSQLException(e, attempt, max_retries, base_retry_delay_ms, conn);
-            }
-            catch (const std::exception& e) {
-                handleStdException(e, conn);
-            }
-        }
+            });
     }
 
    void Booking::executeTransactionInitButtonCubes(sql::Connection* conn, std::string& response) {
-        const int max_retries = 5;
-        const int base_retry_delay_ms = 500;
-        for (int attempt = 0; attempt < max_retries; ++attempt) {
-            try {
+       
+        executeTransactionWithRetry(conn, [&](sql::Connection* conn) {
                 conn->setAutoCommit(false);
 
                 checkButtonDataCubes(conn);
@@ -461,16 +447,9 @@ namespace vr{
                         {"availability_place", button.availability_place}
                     };
                 }
-                response = boost::json::serialize(response_data); 
-               
-                conn->commit();
-                return;
-            } catch (const sql::SQLException& e) {
-                handleSQLException(e, attempt, max_retries, base_retry_delay_ms, conn);
-            } catch (const std::exception& e) {
-                handleStdException(e, conn);
-            }
-        }
+                response = boost::json::serialize(response_data);
+            });
+        
     }
 
 
@@ -649,8 +628,54 @@ namespace vr{
         // Создаем код для даты в формате ММДД
         int date_code = (parsed_date.tm_mon + 1) * 100 + parsed_date.tm_mday;
 
-        // Проверка на праздничный день
+        // Проверка на праздн��чный день
         return holidays.count(date_code) > 0;
     }
+
+    void Booking::GetAdminBooking(sql::Connection* conn, std::string& date, std::string& place_game, std::string& response) {
+        try {
+            
+            std::string month = date.substr(5, 2);
+            std::string query = "SELECT * FROM GameSchedule WHERE place_game = ? AND MONTH(date_game) = ?";
+            std::unique_ptr<sql::PreparedStatement> get_admin_booking(conn->prepareStatement(query));
+            get_admin_booking->setString(1, place_game);
+            get_admin_booking->setString(2, month);
+
+            std::unique_ptr<sql::ResultSet> res_set_admin_booking(get_admin_booking->executeQuery());
+            boost::json::object response_data;
+            while (res_set_admin_booking->next()){
+                boost::json::object booking_data;
+                booking_data["name_game"] = res_set_admin_booking->getString("name_game").c_str();
+                booking_data["type_game"] = res_set_admin_booking->getString("type_game").c_str();
+                booking_data["date_game"] = res_set_admin_booking->getString("date_game").c_str();
+                booking_data["time_game"] = res_set_admin_booking->getString("time_game").c_str();
+                booking_data["players_count"] = res_set_admin_booking->getString("players_count").c_str();
+                booking_data["price"] = res_set_admin_booking->getString("price").c_str();
+               
+            }
+            
+        }
+        catch (const std::exception& e) {
+            Logger::getInstance().log("Avalibality Exception: " + std::string(e.what()) +
+                " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
+                "../logs/error_transaction.log");       
+        }
+    }
+
+    std::string Booking::GetAdminBooking(std::string& date, std::string& place_game) {
+        ScopeGuard guard(find_data_);
+        try {
+            std::unique_ptr<sql::Connection> conn = pool_.GetConnection();
+            ConnectionGuard conn_guard(std::move(conn), pool_);
+            std::string response;
+            GetAdminBooking(conn_guard.getConnection(), date, place_game, response);
+            return response;
+        } catch (const std::exception& e) {
+            Logger::getInstance().log("Avalibality Exception: " + std::string(e.what()) +
+                " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
+                "../logs/error_transaction.log");
+            return "";
+        }
+    }   
 
 }

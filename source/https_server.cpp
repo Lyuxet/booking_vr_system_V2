@@ -32,9 +32,9 @@ void HttpSession::on_read(beast::error_code ec, std::size_t bytes_transferred){
     } else if (request_.method() == http::verb::post && request_.target() == "/addBookingCubes") {
         handle_add_booking_cubes();
     } else if (request_.method() == http::verb::get && request_.target().starts_with("/getBookingCubes")) {
-        handle_get_booking_cubes();
+        handle_availability_booking_cubes();
     } else if (request_.method() == http::verb::get && request_.target().starts_with("/getBookingOpenArena")) {
-        handle_get_booking_open_arena();
+        handle_availability_booking_arena();
     } else {
         handle_not_found();
     }
@@ -79,17 +79,23 @@ void HttpSession::notify_clients(const std::string& message,
         }
     }
 }
-void HttpSession::handle_get_booking_cubes(){
+void HttpSession::handle_availability_booking_cubes(){
     set_cors_headers();
 
     vr::Availability(request_, response_, pool_);
     do_write();
 }
-void HttpSession::handle_get_booking_open_arena(){
+void HttpSession::handle_availability_booking_arena(){
     set_cors_headers();
 
     vr::Availability(request_, response_, pool_);
     do_write();
+}
+
+void HttpSession::handle_get_admin_booking_arena(){
+    set_cors_headers();
+    
+
 }
 void HttpSession::handle_not_found(){
     response_.result(http::status::not_found);

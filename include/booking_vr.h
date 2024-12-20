@@ -22,8 +22,6 @@ namespace vr{
         std::string current_phone;
     };
 
-    // Структура для хранения данных бронирования
-    //Порядок не менять!!!!
     struct Booking_data {
         std::string place_game;
         std::string type_game;
@@ -44,6 +42,11 @@ namespace vr{
         std::string namegame;
         std::string placegame;
         std::string typegame;
+    };
+
+    struct FindData{
+        std::string place_game;
+        std::string date;
     };
 
     struct info_by_email{
@@ -87,16 +90,20 @@ namespace vr{
     class ScopeGuard {
 public:
     ScopeGuard(AvailabilityData& data)
-        : data_(&data), bookings_(nullptr), clients_(nullptr) {}
+        : data_(&data), bookings_(nullptr), clients_(nullptr), find_data_(nullptr) {}
+
+
+    ScopeGuard(FindData& data)
+        : find_data_(&data), bookings_(nullptr), clients_(nullptr), data_(nullptr) {}
     
     ScopeGuard(std::vector<Booking_data>& bookings)
-        : data_(nullptr), bookings_(&bookings), clients_(nullptr) {}
+        : data_(nullptr), bookings_(&bookings), clients_(nullptr), find_data_(nullptr) {}
 
     ScopeGuard(Client_data& clients)
-        : data_(nullptr), bookings_(nullptr), clients_(&clients) {}
+        : data_(nullptr), bookings_(nullptr), clients_(&clients), find_data_(nullptr) {}
 
     ScopeGuard(std::vector<Booking_data>& bookings, Client_data& clients)
-        : data_(nullptr), bookings_(&bookings), clients_(&clients) {}
+        : data_(nullptr), bookings_(&bookings), clients_(&clients), find_data_(nullptr) {}
 
     ~ScopeGuard() {
         if (bookings_) {
@@ -130,12 +137,19 @@ public:
             data_->placegame.clear();
             data_->typegame.clear();
         }
+
+        if (find_data_) {
+            find_data_->place_game.clear();
+            find_data_->date.clear();
+        }
     }
 
 private:
+    FindData* find_data_;
     AvailabilityData* data_;
     std::vector<Booking_data>* bookings_;
     Client_data* clients_;
+
 };
 
     
@@ -147,6 +161,7 @@ private:
         void AddDataByCheckAvailability(const AvailabilityData& data);
         void AddDataByInsertAndUpdate(const Client_data& client, const std::vector<Booking_data>& bookings);
         void AddDataByDelete(const std::vector<Booking_data>& booking);
+        std::string GetAdminBooking(std::string& date, std::string& place_game);
         //void Update();
         //void Delete();
 
@@ -154,6 +169,7 @@ private:
         void executeTransactionInitButtonArena(sql::Connection* conn, std::string& response);
         void executeTransactionInitButtonCubes(sql::Connection* conn, std::string& response);
         void executeTransactionInsert(sql::Connection* conn);
+        void GetAdminBooking(sql::Connection* conn, std::string& date, std::string& place_game, std::string& response);
         //void executeTransactionDelete(std::shared_ptr<sql::Connection> conn);
         //void executeTransactionUpdate(std::shared_ptr<sql::Connection> conn);
         void PrintInsertBooking();
@@ -168,6 +184,7 @@ private:
         std::vector<Booking_data> bookings_;
         ConnectionPool& pool_;
         AvailabilityData availability_;
+        FindData find_data_;
         std::map<std::string, ButtonData> button_data_;
 
 

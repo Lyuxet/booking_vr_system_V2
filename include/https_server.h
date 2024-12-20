@@ -40,8 +40,9 @@ private:
     void handle_add_booking_cubes();
     void notify_clients(const std::string& message, 
                                 const std::string& place_game, const std::string& date_game);
-    void handle_get_booking_cubes();
-    void handle_get_booking_open_arena();
+    void handle_availability_booking_cubes();
+    void handle_availability_booking_arena();
+    void handle_get_admin_booking_arena();
     void handle_not_found();
     void set_cors_headers();
     void do_write();

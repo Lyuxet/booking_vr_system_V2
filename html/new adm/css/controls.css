@@ -1,0 +1,110 @@
+.icon-button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: var(--primary-color);
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.icon-button:hover {
+    background-color: var(--secondary-color);
+}
+
+.icon-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+.table-controls {
+    margin: 1rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.rows-and-pagination {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rows-per-page-wrapper {
+    position: relative;
+}
+
+#rowsPerPage {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 30px 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#rowsPerPage::-ms-expand {
+    display: none;
+}
+
+.rows-per-page-wrapper::after {
+    content: '\25BC';
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: white;
+    pointer-events: none;
+}
+
+#rowsPerPage:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pagination-button {
+    background-color: transparent;
+    color: var(--primary-color);
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.pagination-button:hover {
+    color: var(--secondary-color);
+}
+
+.pagination-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination-button svg {
+    width: 24px;
+    height: 24px;
+}
+
+#currentPage {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.bron {
+    margin-left: auto;
+}
