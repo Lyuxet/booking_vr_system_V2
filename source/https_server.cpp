@@ -35,7 +35,10 @@ void HttpSession::on_read(beast::error_code ec, std::size_t bytes_transferred){
         handle_availability_booking_cubes();
     } else if (request_.method() == http::verb::get && request_.target().starts_with("/getBookingOpenArena")) {
         handle_availability_booking_arena();
-    } else {
+    } else if (request_.method() == http::verb::get && request_.target().starts_with("/getAdminBooking")){
+        handle_get_admin_booking();
+    }
+    else {
         handle_not_found();
     }
 }
@@ -92,9 +95,10 @@ void HttpSession::handle_availability_booking_arena(){
     do_write();
 }
 
-void HttpSession::handle_get_admin_booking_arena(){
+void HttpSession::handle_get_admin_booking(){
     set_cors_headers();
-    
+    vr::GetAdminBooking(request_, response_, pool_);
+    do_write();
 
 }
 void HttpSession::handle_not_found(){

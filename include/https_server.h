@@ -42,7 +42,7 @@ private:
                                 const std::string& place_game, const std::string& date_game);
     void handle_availability_booking_cubes();
     void handle_availability_booking_arena();
-    void handle_get_admin_booking_arena();
+    void handle_get_admin_booking();
     void handle_not_found();
     void set_cors_headers();
     void do_write();

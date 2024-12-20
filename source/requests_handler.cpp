@@ -193,7 +193,7 @@ namespace vr{
         std::string date = formData.at("date");
         std::string place_game = formData.at("place_game");
         std::string response;
-        Arena arena(pool);
+        Booking arena(pool);
         response = arena.GetAdminBooking(date, place_game);
         res.set(http::field::content_type, "application/json");
         res.body() = response;

@@ -634,9 +634,17 @@ namespace vr{
 
     void Booking::GetAdminBooking(sql::Connection* conn, std::string& date, std::string& place_game, std::string& response) {
         try {
-            
+
+           
             std::string month = date.substr(5, 2);
-            std::string query = "SELECT * FROM GameSchedule WHERE place_game = ? AND MONTH(date_game) = ?";
+            std::cout << "month: " << month << std::endl;
+            std::cout << "place_game: " << place_game << std::endl;
+            std::string query = 
+                "SELECT g.*, c.first_name, c.last_name, c.phone, c.email "
+                "FROM GameSchedule g "
+                "LEFT JOIN Clients c ON g.client_id = c.id "
+                "WHERE g.place_game = ? AND MONTH(g.date_game) = ?";
+
             std::unique_ptr<sql::PreparedStatement> get_admin_booking(conn->prepareStatement(query));
             get_admin_booking->setString(1, place_game);
             get_admin_booking->setString(2, month);
@@ -651,9 +659,23 @@ namespace vr{
                 booking_data["time_game"] = res_set_admin_booking->getString("time_game").c_str();
                 booking_data["players_count"] = res_set_admin_booking->getString("players_count").c_str();
                 booking_data["price"] = res_set_admin_booking->getString("price").c_str();
-               
+                
+                // Добавляем информацию о клиенте
+                booking_data["client_name"] = res_set_admin_booking->getString("first_name").c_str() + 
+                                            std::string(" ") + 
+                                            res_set_admin_booking->getString("last_name").c_str();
+                booking_data["client_phone"] = res_set_admin_booking->getString("phone").c_str();
+                booking_data["client_email"] = res_set_admin_booking->getString("email").c_str();
+
+                // Добавляем данные бронирования в общий ответ
+                std::string key = res_set_admin_booking->getString("date_game") + "_" + 
+                                res_set_admin_booking->getString("time_game");
+                response_data[key] = booking_data;
             }
+
+            std::cout << boost::json::serialize(response_data) << std::endl;
             
+            response = boost::json::serialize(response_data);
         }
         catch (const std::exception& e) {
             Logger::getInstance().log("Avalibality Exception: " + std::string(e.what()) +

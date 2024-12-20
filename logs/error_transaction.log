@@ -1,0 +1,6 @@
+2024-12-21 01:38:12 Ошибка отката транзакции в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/Connect_to_DB.cpp на строке 131
+2024-12-21 01:38:12 Исключение: stoi
+2024-12-21 01:38:12 Avalibality Exception: stoi в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 93
+2024-12-21 01:40:43 Ошибка отката транзакции в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/Connect_to_DB.cpp на строке 131
+2024-12-21 01:40:43 Исключение: stoi
+2024-12-21 01:40:43 Avalibality Exception: stoi в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 93
