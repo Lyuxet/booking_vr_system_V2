@@ -12,5 +12,19 @@
 .header-controls {
     display: flex;
     gap: 10px;
+    
 }
 
+.main-header h1 {
+    text-align: center;
+    width: 100%;
+    font-size: 2.5rem; 
+}
+
+.main-header h1 .vr {
+    color: #f800ff;
+}
+
+.main-header h1 .real {
+    color: #00ff00;
+}

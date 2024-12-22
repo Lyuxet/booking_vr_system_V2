@@ -628,17 +628,13 @@ namespace vr{
         // Создаем код для даты в формате ММДД
         int date_code = (parsed_date.tm_mon + 1) * 100 + parsed_date.tm_mday;
 
-        // Проверка на праздн��чный день
+        // Проверка на праздничный день
         return holidays.count(date_code) > 0;
     }
 
     void Booking::GetAdminBooking(sql::Connection* conn, std::string& date, std::string& place_game, std::string& response) {
         try {
-
-           
             std::string month = date.substr(5, 2);
-            std::cout << "month: " << month << std::endl;
-            std::cout << "place_game: " << place_game << std::endl;
             std::string query = 
                 "SELECT g.*, c.first_name, c.last_name, c.phone, c.email "
                 "FROM GameSchedule g "
@@ -651,30 +647,75 @@ namespace vr{
 
             std::unique_ptr<sql::ResultSet> res_set_admin_booking(get_admin_booking->executeQuery());
             boost::json::object response_data;
-            while (res_set_admin_booking->next()){
-                boost::json::object booking_data;
-                booking_data["name_game"] = res_set_admin_booking->getString("name_game").c_str();
-                booking_data["type_game"] = res_set_admin_booking->getString("type_game").c_str();
-                booking_data["date_game"] = res_set_admin_booking->getString("date_game").c_str();
-                booking_data["time_game"] = res_set_admin_booking->getString("time_game").c_str();
-                booking_data["players_count"] = res_set_admin_booking->getString("players_count").c_str();
-                booking_data["price"] = res_set_admin_booking->getString("price").c_str();
-                
-                // Добавляем информацию о клиенте
-                booking_data["client_name"] = res_set_admin_booking->getString("first_name").c_str() + 
-                                            std::string(" ") + 
-                                            res_set_admin_booking->getString("last_name").c_str();
-                booking_data["client_phone"] = res_set_admin_booking->getString("phone").c_str();
-                booking_data["client_email"] = res_set_admin_booking->getString("email").c_str();
 
-                // Добавляем данные бронирования в общий ответ
-                std::string key = res_set_admin_booking->getString("date_game") + "_" + 
-                                res_set_admin_booking->getString("time_game");
-                response_data[key] = booking_data;
+            // Структура для хранения уникального ключа бронирования
+            struct BookingKey {
+                std::string date_game;
+                std::string time_game;
+                int client_id;
+                std::string place_game;
+            };
+
+            // Хэш-функция для структуры BookingKey
+            struct BookingKeyHash {
+                std::size_t operator()(const BookingKey& k) const {
+                    return std::hash<std::string>{}(k.date_game + k.time_game + 
+                           std::to_string(k.client_id) + k.place_game);
+                }
+            };
+
+            // Оператор сравнения для структуры BookingKey
+            struct BookingKeyEqual {
+                bool operator()(const BookingKey& lhs, const BookingKey& rhs) const {
+                    return lhs.date_game == rhs.date_game && 
+                           lhs.time_game == rhs.time_game &&
+                           lhs.client_id == rhs.client_id &&
+                           lhs.place_game == rhs.place_game;
+                }
+            };
+
+            // Временное хранилище для объединения бронирований
+            std::unordered_map<BookingKey, boost::json::object, BookingKeyHash, BookingKeyEqual> merged_bookings;
+
+            while (res_set_admin_booking->next()) {
+                BookingKey key{
+                    res_set_admin_booking->getString("date_game"),
+                    res_set_admin_booking->getString("time_game"),
+                    res_set_admin_booking->getInt("client_id"),
+                    res_set_admin_booking->getString("place_game")
+                };
+
+                auto it = merged_bookings.find(key);
+                if (it == merged_bookings.end()) {
+                    // Создаем новую запись
+                    boost::json::object booking_data;
+                    booking_data["name_game"] = res_set_admin_booking->getString("name_game").c_str();
+                    booking_data["type_game"] = res_set_admin_booking->getString("type_game").c_str();
+                    booking_data["date_game"] = key.date_game.c_str();
+                    booking_data["time_game"] = key.time_game.c_str();
+                    booking_data["players_count"] = res_set_admin_booking->getInt("players_count");
+                    booking_data["price"] = res_set_admin_booking->getInt("price");
+                    booking_data["client_name"] = res_set_admin_booking->getString("first_name").c_str();
+                    booking_data["client_phone"] = res_set_admin_booking->getString("phone").c_str();
+                    booking_data["client_email"] = res_set_admin_booking->getString("email").c_str();
+
+                    merged_bookings[key] = booking_data;
+                } else {
+                    // Обновляем существующую запись
+                    it->second["players_count"] = it->second["players_count"].as_int64() + 
+                                                res_set_admin_booking->getInt("players_count");
+                    it->second["price"] = it->second["price"].as_int64() + 
+                                        res_set_admin_booking->getInt("price");
+                }
             }
 
-            std::cout << boost::json::serialize(response_data) << std::endl;
-            
+            // Преобразуем объединенные бронирования в финальный ответ
+            boost::json::array bookings_array;
+            for (const auto& booking : merged_bookings) {
+                bookings_array.push_back(booking.second);
+            }
+            response_data["bookings"] = bookings_array;
+
             response = boost::json::serialize(response_data);
         }
         catch (const std::exception& e) {
