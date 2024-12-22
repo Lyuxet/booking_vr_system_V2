@@ -190,8 +190,10 @@ namespace vr{
     void GetAdminBooking(const http::request<http::string_body>& req, http::response<http::string_body>& res, ConnectionPool& pool) {
         auto formData = parse_form_data(req.target());
 
+
         std::string date = formData.at("date");
         std::string place_game = formData.at("place_game");
+        std::cout << "date: " << date << " place_game: " << place_game << std::endl;    
         std::string response;
         Booking arena(pool);
         response = arena.GetAdminBooking(date, place_game);

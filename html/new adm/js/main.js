@@ -3,6 +3,7 @@ import { initTheme } from './theme.js';
 import { initCalendar } from './calendar.js';
 import { initTable } from './table.js';
 import { initModal } from './modal.js';
+import { GetAdminBooking } from './getAdminBooking.js';
 
 document.addEventListener('DOMContentLoaded', function() {
     initSidebar();
@@ -10,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initCalendar();
     initTable();
     initModal();
+    GetAdminBooking();
 
     // Add event listener for the new "Забронировать" button
     const reserveBtn = document.getElementById('reserveBtn');
