@@ -646,8 +646,7 @@ namespace vr{
             get_admin_booking->setString(2, month);
 
             std::unique_ptr<sql::ResultSet> res_set_admin_booking(get_admin_booking->executeQuery());
-            boost::json::object response_data;
-
+            
             // Структура для хранения уникального ключа бронирования
             struct BookingKey {
                 std::string date_game;
@@ -658,11 +657,23 @@ namespace vr{
 
             // Хэш-функция для структуры BookingKey
             struct BookingKeyHash {
-                std::size_t operator()(const BookingKey& k) const {
-                    return std::hash<std::string>{}(k.date_game + k.time_game + 
-                           std::to_string(k.client_id) + k.place_game);
-                }
-            };
+            std::size_t operator()(const BookingKey& k) const {
+                // Используем комбинаторный подход для создания уникального хэша
+                std::size_t h1 = std::hash<std::string>{}(k.date_game);
+                std::size_t h2 = std::hash<std::string>{}(k.time_game);
+                std::size_t h3 = std::hash<std::string>{}(k.place_game);
+             
+                // Используем FNV-1a подход для комбинирования хэшей
+                // Простое сложение или XOR может привести к коллизиям
+                std::size_t hash = 14695981039346656037ULL; // FNV offset basis
+                hash = (hash ^ h1) * 1099511628211ULL;  // FNV prime
+                hash = (hash ^ h2) * 1099511628211ULL;
+                hash = (hash ^ h3) * 1099511628211ULL;
+                
+                
+                return hash;
+            }
+        };
 
             // Оператор сравнения для структуры BookingKey
             struct BookingKeyEqual {
@@ -689,6 +700,7 @@ namespace vr{
                 if (it == merged_bookings.end()) {
                     // Создаем новую запись
                     boost::json::object booking_data;
+                    booking_data["place_game"] = res_set_admin_booking->getString("place_game").c_str();
                     booking_data["name_game"] = res_set_admin_booking->getString("name_game").c_str();
                     booking_data["type_game"] = res_set_admin_booking->getString("type_game").c_str();
                     booking_data["date_game"] = key.date_game.c_str();
@@ -698,6 +710,9 @@ namespace vr{
                     booking_data["client_name"] = res_set_admin_booking->getString("first_name").c_str();
                     booking_data["client_phone"] = res_set_admin_booking->getString("phone").c_str();
                     booking_data["client_email"] = res_set_admin_booking->getString("email").c_str();
+                    booking_data["book_status"] = res_set_admin_booking->getString("book_status").c_str();
+                    booking_data["who_reservation"] = res_set_admin_booking->getString("who_reservation").c_str();
+                    booking_data["date_add_book"] = res_set_admin_booking->getString("date_add_book").c_str();
 
                     merged_bookings[key] = booking_data;
                 } else {
@@ -714,9 +729,11 @@ namespace vr{
             for (const auto& booking : merged_bookings) {
                 bookings_array.push_back(booking.second);
             }
-            response_data["bookings"] = bookings_array;
 
-            response = boost::json::serialize(response_data);
+            std::cout << bookings_array << std::endl;
+            std::cout << "--------------------------------" << std::endl;
+
+            response = boost::json::serialize(bookings_array);
         }
         catch (const std::exception& e) {
             Logger::getInstance().log("Avalibality Exception: " + std::string(e.what()) +

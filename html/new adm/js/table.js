@@ -7,315 +7,58 @@ export function initTable() {
     const columnHeaders = document.querySelectorAll('.column-header');
 
     let currentPage = 1;
-    let rowsPerPage = 20;
-    let filteredData = [];
+let rowsPerPage = 20;
+let filteredData = []; // Filtered data
+let originalData = []; // Add this line to store original data
 
-    const data = [
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '29 Окт 2024',
-            time: '11:15-12:00 x10',
-            client: 'Елена',
-            added: '23.10.2024',
-            personnel: 'Андрей',
-            status: 'Принят',
-            price: '10000 RUB',
-            comment: 'Через 6 суток'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '26 Окт 2024',
-            time: '16:15-17:00 x10',
-            client: 'Ольга',
-            added: '21.10.2024',
-            personnel: 'Михаил',
-            status: 'Подтвержден',
-            price: '15000 RUB',
-            comment: 'Через 3 суток'
-        },
-        {
-            service: 'Свободная игра м. Новокосино',
-            date: '20 Окт 2024',
-            time: '16:15-17:00 x2',
-            client: 'Дарья',
-            added: '19.10.2024',
-            personnel: 'Сергей',
-            status: 'Подтвержден',
-            price: '6400 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
-        },
-        {
-            service: 'Командная игра м. Новокосино',
-            date: '22 Окт 2024',
-            time: '17:15-18:00 x10',
-            client: 'Юлия',
-            added: '16.10.2024',
-            personnel: 'Андрей',
-            status: 'Подтвержден',
-            price: '27000 RUB',
-            comment: 'Истёк'
+
+    const place_game = "VR Кубы";
+    const date = "2025.01.01";
+
+    const url = `http://localhost:8081/getAdminBooking?place_game=${encodeURIComponent(place_game)}&date=${encodeURIComponent(date)}`;
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+    xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 300) {
+            const availability = JSON.parse(xhr.responseText);
+            originalData = availability; // Store original data
+            filteredData = [...originalData]; // Create a copy for filtering
+            console.log(filteredData);
+            renderTable(filteredData);
+        } else {
+            console.error('Ошибка запроса доступности. Статус:', xhr.status);
         }
-    ];
+    };
 
-    function renderTable() {
+    xhr.onerror = function() {
+        // Обработка ошибки сети без вывода в консоль
+        console.error('Произошла ошибка сети');
+    };
+
+    xhr.send();
+
+    function renderTable(data) {
+        if (!data) return; // Проверяем наличие данных
+        
         const start = (currentPage - 1) * rowsPerPage;
         const end = start + rowsPerPage;
-        const pageData = filteredData.slice(start, end);
-
+        const pageData = data.slice(start, end);
+    
         tableBody.innerHTML = '';
         pageData.forEach(item => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${item.service}</td>
-                <td>${item.date}</td>
-                <td>${item.time}</td>
-                <td>${item.client}</td>
-                <td>${item.added}</td>
-                <td>${item.personnel}</td>
-                <td>${item.status}</td>
-                <td>${item.price}</td>
+                <td>${item.place_game}</td>
+                <td>${item.date_game}</td>
+                <td>${item.time_game}</td>
+                <td>${item.client_name || ''}</td>
+                <td>${item.date_add_book || ''}</td>
+                <td>${item.who_reservation || ''}</td>
+                <td>${item.book_status || ''}</td>
+                <td>${item.price || ''}</td>
                 <td class="actions">
                     <button class="action-btn message-btn" title="Сообщение">
                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-circle"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
@@ -330,53 +73,68 @@ export function initTable() {
             `;
             tableBody.appendChild(row);
         });
-
+    
         currentPageSpan.textContent = currentPage;
         prevPageBtn.disabled = currentPage === 1;
-        nextPageBtn.disabled = currentPage === Math.ceil(filteredData.length / rowsPerPage);
+        nextPageBtn.disabled = currentPage === Math.ceil(data.length / rowsPerPage);
     }
+    
 
     function filterData() {
-        filteredData = data.filter(item => {
+        filteredData = originalData.filter(item => { // Filter from original data
             return (
-                (searchTerms.service === '' || item.service.toLowerCase().includes(searchTerms.service.toLowerCase())) &&
-                (searchTerms.date === '' || item.date.toLowerCase().includes(searchTerms.date.toLowerCase())) &&
-                (searchTerms.time === '' || item.time.toLowerCase().includes(searchTerms.time.toLowerCase())) &&
-                (searchTerms.client === '' || item.client.toLowerCase().includes(searchTerms.client.toLowerCase())) &&
-                (searchTerms.added === '' || item.added.toLowerCase().includes(searchTerms.added.toLowerCase())) &&
-                (searchTerms.personnel === '' || item.personnel.toLowerCase().includes(searchTerms.personnel.toLowerCase())) &&
-                (searchTerms.status === '' || item.status.toLowerCase().includes(searchTerms.status.toLowerCase())) &&
-                (searchTerms.price === '' || item.price.toLowerCase().includes(searchTerms.price.toLowerCase()))
+                (searchTerms.place_game === '' || (item.place_game || '').toLowerCase().includes(searchTerms.place_game.toLowerCase())) &&
+                (searchTerms.date_game === '' || (item.date_game || '').toLowerCase().includes(searchTerms.date_game.toLowerCase())) &&
+                (searchTerms.time_game === '' || (item.time_game || '').toLowerCase().includes(searchTerms.time_game.toLowerCase())) &&
+                (searchTerms.client_name === '' || (item.client_name || '').toLowerCase().includes(searchTerms.client_name.toLowerCase())) &&
+                (searchTerms.type_game === '' || (item.type_game || '').toLowerCase().includes(searchTerms.type_game.toLowerCase())) &&
+                (searchTerms.players_count === '' || String(item.players_count || '').includes(searchTerms.players_count)) &&
+                (searchTerms.client_phone === '' || (item.client_phone || '').toLowerCase().includes(searchTerms.client_phone.toLowerCase())) &&
+                (searchTerms.price === '' || String(item.price || '').includes(searchTerms.price)) &&
+                (searchTerms.client_email === '' || (item.client_email || '').toLowerCase().includes(searchTerms.client_email.toLowerCase())) &&
+                (searchTerms.book_status === '' || (item.book_status || '').toLowerCase().includes(searchTerms.book_status.toLowerCase())) &&
+                (searchTerms.who_reservation === '' || (item.who_reservation || '').toLowerCase().includes(searchTerms.who_reservation.toLowerCase())) &&
+                (searchTerms.date_add_book === '' || (item.date_add_book || '').toLowerCase().includes(searchTerms.date_add_book.toLowerCase()))
             );
         });
         currentPage = 1;
-        renderTable();
+        renderTable(filteredData);
     }
 
     rowsPerPageSelect.addEventListener('change', function() {
         rowsPerPage = parseInt(this.value);
         currentPage = 1;
-        renderTable();
+        renderTable(filteredData);
     });
 
     prevPageBtn.addEventListener('click', function() {
         if (currentPage > 1) {
             currentPage--;
-            renderTable();
+            renderTable(filteredData);
         }
     });
 
     nextPageBtn.addEventListener('click', function() {
         if (currentPage < Math.ceil(filteredData.length / rowsPerPage)) {
             currentPage++;
-            renderTable();
+            renderTable(filteredData);
         }
     });
 
     const searchTerms = {
-        service: '', date: '', time: '', client: '', added: '', personnel: '', status: '', price: ''
+        place_game: '', 
+        date_game: '', 
+        time_game: '', 
+        client_name: '', 
+        type_game: '', 
+        players_count: '', 
+        client_phone: '', 
+        price: '',
+        client_email: '',     // Added missing fields
+        book_status: '',      // Added missing fields
+        who_reservation: '',  // Added missing fields
+        date_add_book: ''    // Added missing fields
     };
-
     columnHeaders.forEach(header => {
         const field = header.getAttribute('data-field');
 
@@ -400,9 +158,4 @@ export function initTable() {
         // Сохраняем оригинальное значение
         header.setAttribute('data-original', header.value);
     });
-
-    // Инициализация
-    filteredData = [...data];
-    renderTable();
 }
-

@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initCalendar();
     initTable();
     initModal();
-    GetAdminBooking();
+    //GetAdminBooking();
 
     // Add event listener for the new "Забронировать" button
     const reserveBtn = document.getElementById('reserveBtn');
