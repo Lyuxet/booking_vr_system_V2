@@ -647,45 +647,6 @@ namespace vr{
 
             std::unique_ptr<sql::ResultSet> res_set_admin_booking(get_admin_booking->executeQuery());
             
-            // Структура для хранения уникального ключа бронирования
-            struct BookingKey {
-                std::string date_game;
-                std::string time_game;
-                int client_id;
-                std::string place_game;
-            };
-
-            // Хэш-функция для структуры BookingKey
-            struct BookingKeyHash {
-            std::size_t operator()(const BookingKey& k) const {
-                // Используем комбинаторный подход для создания уникального хэша
-                std::size_t h1 = std::hash<std::string>{}(k.date_game);
-                std::size_t h2 = std::hash<std::string>{}(k.time_game);
-                std::size_t h3 = std::hash<std::string>{}(k.place_game);
-             
-                // Используем FNV-1a подход для комбинирования хэшей
-                // Простое сложение или XOR может привести к коллизиям
-                std::size_t hash = 14695981039346656037ULL; // FNV offset basis
-                hash = (hash ^ h1) * 1099511628211ULL;  // FNV prime
-                hash = (hash ^ h2) * 1099511628211ULL;
-                hash = (hash ^ h3) * 1099511628211ULL;
-                
-                
-                return hash;
-            }
-        };
-
-            // Оператор сравнения для структуры BookingKey
-            struct BookingKeyEqual {
-                bool operator()(const BookingKey& lhs, const BookingKey& rhs) const {
-                    return lhs.date_game == rhs.date_game && 
-                           lhs.time_game == rhs.time_game &&
-                           lhs.client_id == rhs.client_id &&
-                           lhs.place_game == rhs.place_game;
-                }
-            };
-
-            // Временное хранилище для объединения бронирований
             std::unordered_map<BookingKey, boost::json::object, BookingKeyHash, BookingKeyEqual> merged_bookings;
 
             while (res_set_admin_booking->next()) {
@@ -729,10 +690,7 @@ namespace vr{
             for (const auto& booking : merged_bookings) {
                 bookings_array.push_back(booking.second);
             }
-
-            std::cout << bookings_array << std::endl;
-            std::cout << "--------------------------------" << std::endl;
-
+            
             response = boost::json::serialize(bookings_array);
         }
         catch (const std::exception& e) {

@@ -8,8 +8,8 @@ import { GetAdminBooking } from './getAdminBooking.js';
 document.addEventListener('DOMContentLoaded', function() {
     initSidebar();
     initTheme();
-    initCalendar();
-    initTable();
+    const calendar =initCalendar();
+    initTable(calendar);
     initModal();
     //GetAdminBooking();
 

@@ -88,7 +88,7 @@ CREATE TABLE Clients (
     last_name VARCHAR(100) NOT NULL,
     phone VARCHAR(20) NOT NULL,
     email VARCHAR(100) NOT NULL,
-    UNIQUE (phone, email)  
+    UNIQUE (phone)  
 );
 
 

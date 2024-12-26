@@ -7,7 +7,9 @@ export function initCalendar() {
     const nextMonthBtn = document.getElementById('nextMonth');
 
     let currentDate = new Date();
-    let selectedDate = null;
+    let selectedDate = currentDate;
+    calendarBtn.textContent = currentDate.toLocaleDateString('ru');
+    const dateChangeCallbacks = [];
 
     function isWeekend(date) {
         const day = date.getDay();
@@ -70,16 +72,28 @@ export function initCalendar() {
         }
     }
 
+    function onDateChange(callback) {
+        dateChangeCallbacks.push(callback);
+        if (selectedDate) {
+            callback(selectedDate);
+        }
+    }
+
     function selectDate(date) {
         selectedDate = date;
         calendarBtn.textContent = date.toLocaleDateString('ru');
         calendar.style.display = 'none';
         updateCalendar();
+        dateChangeCallbacks.forEach(callback => callback(date));
     }
 
     calendarBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        calendar.style.display = calendar.style.display === 'none' ? 'block' : 'none';
+        if (calendar.style.display === 'none' || calendar.style.display === '') {
+            calendar.style.display = 'block';
+        } else {
+            calendar.style.display = 'none';
+        }
     });
 
     prevMonthBtn.addEventListener('click', () => {
@@ -100,4 +114,9 @@ export function initCalendar() {
     });
 
     updateCalendar();
+
+    return {
+        onDateChange,
+        getSelectedDate: () => selectedDate
+    };
 }

@@ -19,8 +19,9 @@ table {
 
 th, td {
     padding: 12px;
-    text-align: left;
+    text-align: center;
     border-bottom: 1px solid var(--border-light);
+    vertical-align: middle;
 }
 
 th {
@@ -28,6 +29,7 @@ th {
     color: white;
     position: sticky;
     top: 0;
+    text-align: center;
 }
 
 .table-scroll-hint {
@@ -47,7 +49,7 @@ th {
     background-color: transparent;
     color: white;
     font-weight: bold;
-    text-align: left;
+    text-align: center;
 }
 
 .column-header:focus {
@@ -89,8 +91,7 @@ tr:hover {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    
 }
 
 td .actions {
@@ -103,8 +104,8 @@ td .actions {
 }
 
 .action-btn svg {
-    width: 21px;
-    height: 21px;
+    width: 23px;
+    height: 23px;
     vertical-align: middle;
 }
 
@@ -135,9 +136,68 @@ td .actions {
 td:last-child {
     white-space: nowrap;
     width: 120px;
-    padding: 25%; /* Убираем padding у ячейки */
+    padding: 24%; 
 }
 tbody tr:hover {
     background-color: rgba(52, 152, 219, 0.05);
+}
+
+.client-name {
+    cursor: help;
+    position: relative;
+}
+
+.client-name:hover::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px;
+    background-color: var(--tooltip-bg, rgba(0, 0, 0, 0.8));
+    color: var(--tooltip-color, white);
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: pre-line;
+    z-index: 1000;
+    min-width: 200px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.client-name-cell {
+    position: relative;
+    cursor: help;
+}
+
+.tooltip {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px;
+    background-color: var(--tooltip-bg, rgba(0, 0, 0, 0.8));
+    color: var(--tooltip-color, white);
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: pre-line;
+    z-index: 1000;
+    min-width: 200px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    user-select: text;
+    cursor: text;
+}
+
+.client-name-cell:hover .tooltip {
+    display: block;
+}
+
+/* Добавляем стили для выделения текста в tooltip */
+.tooltip div {
+    padding: 2px 0;
+}
+
+.tooltip div:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 

@@ -1,4 +1,4 @@
-export function initTable() {
+export function initTable(calendar) {
     const tableBody = document.getElementById('tableBody');
     const rowsPerPageSelect = document.getElementById('rowsPerPage');
     const prevPageBtn = document.getElementById('prevPage');
@@ -7,55 +7,84 @@ export function initTable() {
     const columnHeaders = document.querySelectorAll('.column-header');
 
     let currentPage = 1;
-let rowsPerPage = 20;
-let filteredData = []; // Filtered data
-let originalData = []; // Add this line to store original data
+    let rowsPerPage = 15;
+    let filteredData = []; // Filtered data
+    let originalData = []; // Add this line to store original data
+    let isInitialLoad = true;
 
+    // Функция для форматирования даты в нужный формат
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}.${month}.${day}`;
+    }
 
-    const place_game = "VR Кубы";
-    const date = "2025.01.01";
+    // Функция для загрузки данных с сервера
+    function loadTableData(date) {
+        const place_game = "VR Кубы";
+        const formattedDate = formatDate(date);
 
-    const url = `http://localhost:8081/getAdminBooking?place_game=${encodeURIComponent(place_game)}&date=${encodeURIComponent(date)}`;
+        const url = `http://localhost:8081/getAdminBooking?place_game=${encodeURIComponent(place_game)}&date=${encodeURIComponent(formattedDate)}`;
 
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-    xhr.onload = function () {
-        if (xhr.status >= 200 && xhr.status < 300) {
-            const availability = JSON.parse(xhr.responseText);
-            originalData = availability; // Store original data
-            filteredData = [...originalData]; // Create a copy for filtering
-            console.log(filteredData);
-            renderTable(filteredData);
-        } else {
-            console.error('Ошибка запроса доступности. Статус:', xhr.status);
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                const availability = JSON.parse(xhr.responseText);
+                originalData = availability; 
+                filteredData = [...originalData]; 
+                console.log(filteredData);
+                renderTable(filteredData);
+            } else {
+                console.error('Ошибка запроса доступности. Статус:', xhr.status);
+            }
+        };
+
+        xhr.onerror = function() {
+            console.error('Произошла ошибка сети');
+        };
+
+        xhr.send();
+    }
+
+    // Подписываемся на изменения даты в календаре
+    calendar.onDateChange((date) => {
+        if (isInitialLoad) {
+            isInitialLoad = false;
+            return;
         }
-    };
+        loadTableData(date);
+    });
 
-    xhr.onerror = function() {
-        // Обработка ошибки сети без вывода в консоль
-        console.error('Произошла ошибка сети');
-    };
-
-    xhr.send();
+    // Загружаем данные для начальной даты
+    const initialDate = calendar.getSelectedDate();
+    loadTableData(initialDate);
 
     function renderTable(data) {
-        if (!data) return; // Проверяем наличие данных
+        if (!data) return;
         
         const start = (currentPage - 1) * rowsPerPage;
         const end = start + rowsPerPage;
         const pageData = data.slice(start, end);
-    
+
         tableBody.innerHTML = '';
         pageData.forEach(item => {
+            const dateAddBook = item.date_add_book ? item.date_add_book.replace(' ', '<br>') : '';
+            
+            const timeWithPlayers = item.players_count ? 
+                `${item.time_game} × ${item.players_count}` : 
+                item.time_game;
+
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${item.place_game}</td>
                 <td>${item.date_game}</td>
-                <td>${item.time_game}</td>
-                <td>${item.client_name || ''}</td>
-                <td>${item.date_add_book || ''}</td>
+                <td>${timeWithPlayers}</td>
+                <td>${item.client_phone}</td>
+                <td>${dateAddBook}</td>
                 <td>${item.who_reservation || ''}</td>
                 <td>${item.book_status || ''}</td>
                 <td>${item.price || ''}</td>
@@ -73,7 +102,7 @@ let originalData = []; // Add this line to store original data
             `;
             tableBody.appendChild(row);
         });
-    
+
         currentPageSpan.textContent = currentPage;
         prevPageBtn.disabled = currentPage === 1;
         nextPageBtn.disabled = currentPage === Math.ceil(data.length / rowsPerPage);
