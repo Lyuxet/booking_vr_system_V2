@@ -27,12 +27,14 @@ std::string convertDate(std::string_view date) {
         {5, "мая"}, {6, "июня"}, {7, "июля"}, {8, "августа"}, 
         {9, "сентября"}, {10, "октября"}, {11, "ноября"}, {12, "декабря"}
     };
-
     std::vector<int> dateParts;
     std::string date_str(date); 
+
     std::istringstream iss(date_str);
     std::string part;
-    while (std::getline(iss, part, '.')) {
+    char delimiter = date_str.find('.') != std::string::npos ? '.' : '-';
+    
+    while (std::getline(iss, part, delimiter)) {
         dateParts.push_back(std::stoi(part));
     }
 
@@ -45,7 +47,7 @@ std::string convertDate(std::string_view date) {
     int day = dateParts[2];
 
     std::ostringstream oss;
-    oss << day << " " << months[month] << " " << year << " года";
+    oss << day << " " << months[month] << " " << year;
 
     return oss.str();
 }

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#3498db">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Админ панель</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <div class="container">
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <h2>Админ панель</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="admArena.html" class="active">VR Арена</a></li>
+                    <li><a href="admCubes.html">VR Кубы</a></li>
+                    <li><a href="#">Пользователи</a></li>
+                    <li><a href="#">Настройки</a></li>
+                    <li><a href="#">Отчеты</a></li>
+                </ul>
+            </nav>
+            <div class="theme-toggle-wrapper">
+                <input type="checkbox" id="themeToggle" class="theme-checkbox">
+                <label for="themeToggle" class="theme-label"></label>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <button id="toggleSidebar" class="toggle-sidebar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+
+            <header class="main-header">
+                <h1 style="text-align: center; width: 100%;">
+                    <span>VR Арена</span>
+                </h1>
+                <div class="header-controls">
+                    <button id="accountInfoBtn" class="icon-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <span>Аккаунт</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="controls-wrapper">
+                <div class="calendar-container">
+                    <button id="calendarBtn" class="icon-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        <span>Выберите дату</span>
+                    </button>
+                    <div id="calendar" class="calendar-popup">
+                        <div class="calendar-header">
+                            <button id="prevMonth">&lt;</button>
+                            <span id="currentMonth"></span>
+                            <button id="nextMonth">&gt;</button>
+                        </div>
+                        <div id="calendarGrid" class="calendar-grid"></div>
+                    </div>
+                </div>
+                <div class="actual">
+                    <button class="icon-button">Актуально: 0</button>
+                </div>
+                <div class="today">
+                    <button class="icon-button">Сегодня: 0</button>
+                </div>
+                <div class="bron">
+                    <button id="reserveBtn" class="icon-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        <span>Забронировать</span>
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="table-controls">
+                <div class="rows-and-pagination">
+                    <div class="rows-per-page-wrapper">
+                        <select id="rowsPerPage">
+                            <option value="15">15</option>
+                            <option value="25">25</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                    <div class="pagination">
+                        <button id="prevPage" class="pagination-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </button>
+                        <span id="currentPage">1</span>
+                        <button id="nextPage" class="pagination-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <div class="table-scroll-hint">Прокрутите таблицу горизонтально для просмотра всех данных</div>
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <th><input type="text" class="column-header" value="Услуга" data-original="Услуга" data-field="place_game"></th>
+                            <th><input type="text" class="column-header" value="Дата" data-original="Дата" data-field="date_game"></th>
+                            <th><input type="text" class="column-header" value="Время" data-original="Время" data-field="time_game"></th>
+                            <th><input type="text" class="column-header" value="Клиент" data-original="Клиент" data-field="client_name"></th>
+                            <th><input type="text" class="column-header" value="Добавлено" data-original="Добавлено" data-field="date_add_book"></th>
+                            <th><input type="text" class="column-header" value="Персонал" data-original="Персонал" data-field="who_reservation"></th>
+                            <th><input type="text" class="column-header" value="Статус" data-original="Статус" data-field="book_status"></th>
+                            <th><input type="text" class="column-header" value="Цена" data-original="Цена" data-field="price"></th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <div id="accountModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Информация об аккаунте</h2>
+            <p>Здесь будет отображаться информация о вашем аккаунте.</p>
+        </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

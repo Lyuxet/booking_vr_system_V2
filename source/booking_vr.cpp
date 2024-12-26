@@ -664,7 +664,7 @@ namespace vr{
                     booking_data["place_game"] = res_set_admin_booking->getString("place_game").c_str();
                     booking_data["name_game"] = res_set_admin_booking->getString("name_game").c_str();
                     booking_data["type_game"] = res_set_admin_booking->getString("type_game").c_str();
-                    booking_data["date_game"] = key.date_game.c_str();
+                    booking_data["date_game"] = convertDate(key.date_game.c_str());
                     booking_data["time_game"] = key.time_game.c_str();
                     booking_data["players_count"] = res_set_admin_booking->getInt("players_count");
                     booking_data["price"] = res_set_admin_booking->getInt("price");

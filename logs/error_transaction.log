@@ -1,28 +1,115 @@
-2024-12-23 15:17:49 Ошибка отката транзакции в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/Connect_to_DB.cpp на строке 131
-2024-12-23 15:17:49 Attempt 1 - SQLException: Cannot add or update a child row: a foreign key constraint fails (`booking_vr`.`Cubes`, CONSTRAINT `fk_cubes_schedule` FOREIGN KEY (`name_game`, `date_game`, `time_game`) REFERENCES `GameSchedule` (`name_game`, `date_game`, `time_game`) ON DELETE CASCADE) в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 119
-2024-12-23 15:17:49 Error code: 1452, SQLState: 23000 в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 122
-2024-12-23 15:17:49 Кубы Исключение: Cannot add or update a child row: a foreign key constraint fails (`booking_vr`.`Cubes`, CONSTRAINT `fk_cubes_schedule` FOREIGN KEY (`name_game`, `date_game`, `time_game`) REFERENCES `GameSchedule` (`name_game`, `date_game`, `time_game`) ON DELETE CASCADE) в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 110
-2024-12-23 15:17:49 Error: Cannot add or update a child row: a foreign key constraint fails (`booking_vr`.`Cubes`, CONSTRAINT `fk_cubes_schedule` FOREIGN KEY (`name_game`, `date_game`, `time_game`) REFERENCES `GameSchedule` (`name_game`, `date_game`, `time_game`) ON DELETE CASCADE) в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/requests_handler.cpp строке 181
-2024-12-23 15:19:46 Ошибка отката транзакции в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/Connect_to_DB.cpp на строке 131
-2024-12-23 15:19:46 Attempt 1 - SQLException: Cannot add or update a child row: a foreign key constraint fails (`booking_vr`.`Cubes`, CONSTRAINT `fk_cubes_schedule` FOREIGN KEY (`name_game`, `date_game`, `time_game`) REFERENCES `GameSchedule` (`name_game`, `date_game`, `time_game`) ON DELETE CASCADE) в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 119
-2024-12-23 15:19:46 Error code: 1452, SQLState: 23000 в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 122
-2024-12-23 15:19:46 Кубы Исключение: Cannot add or update a child row: a foreign key constraint fails (`booking_vr`.`Cubes`, CONSTRAINT `fk_cubes_schedule` FOREIGN KEY (`name_game`, `date_game`, `time_game`) REFERENCES `GameSchedule` (`name_game`, `date_game`, `time_game`) ON DELETE CASCADE) в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 110
-2024-12-23 15:19:46 Error: Cannot add or update a child row: a foreign key constraint fails (`booking_vr`.`Cubes`, CONSTRAINT `fk_cubes_schedule` FOREIGN KEY (`name_game`, `date_game`, `time_game`) REFERENCES `GameSchedule` (`name_game`, `date_game`, `time_game`) ON DELETE CASCADE) в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/requests_handler.cpp строке 181
-2024-12-23 15:26:30 Ошибка отката транзакции в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/Connect_to_DB.cpp на строке 131
-2024-12-23 15:26:30 Attempt 1 - SQLException: Cannot add or update a child row: a foreign key constraint fails (`booking_vr`.`Cubes`, CONSTRAINT `fk_cubes_schedule` FOREIGN KEY (`name_game`, `date_game`, `time_game`) REFERENCES `GameSchedule` (`name_game`, `date_game`, `time_game`) ON DELETE CASCADE) в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 119
-2024-12-23 15:26:30 Error code: 1452, SQLState: 23000 в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 122
-2024-12-23 15:26:30 Кубы Исключение: Cannot add or update a child row: a foreign key constraint fails (`booking_vr`.`Cubes`, CONSTRAINT `fk_cubes_schedule` FOREIGN KEY (`name_game`, `date_game`, `time_game`) REFERENCES `GameSchedule` (`name_game`, `date_game`, `time_game`) ON DELETE CASCADE) в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 110
-2024-12-23 15:26:30 Error: Cannot add or update a child row: a foreign key constraint fails (`booking_vr`.`Cubes`, CONSTRAINT `fk_cubes_schedule` FOREIGN KEY (`name_game`, `date_game`, `time_game`) REFERENCES `GameSchedule` (`name_game`, `date_game`, `time_game`) ON DELETE CASCADE) в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/requests_handler.cpp строке 181
-2024-12-23 15:45:58 Ошибка отката транзакции в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/Connect_to_DB.cpp на строке 131
-2024-12-23 15:45:58 Attempt 1 - SQLException: Duplicate entry '345345456-' for key 'Clients.phone' в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 119
-2024-12-23 15:45:58 Error code: 1062, SQLState: 23000 в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 122
-2024-12-23 15:45:58 Кубы Исключение: Duplicate entry '345345456-' for key 'Clients.phone' в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 110
-2024-12-23 15:45:58 Error: Duplicate entry '345345456-' for key 'Clients.phone' в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/requests_handler.cpp строке 181
-2024-12-23 15:49:19 Ошибка отката транзакции в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/Connect_to_DB.cpp на строке 131
-2024-12-23 15:49:19 Исключение: Недостаточно свободных мест для бронирования
-2024-12-23 15:49:19 Кубы Исключение: Недостаточно свободных мест для бронирования в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 110
-2024-12-23 15:49:19 Error: Недостаточно свободных мест для бронирования в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/requests_handler.cpp строке 181
-2024-12-23 15:50:46 Ошибка отката транзакции в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/Connect_to_DB.cpp на строке 131
-2024-12-23 15:50:46 Исключение: Недостаточно свободных мест для бронирования
-2024-12-23 15:50:46 Кубы Исключение: Недостаточно свободных мест для бронирования в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 110
-2024-12-23 15:50:46 Error: Недостаточно свободных мест для бронирования в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/requests_handler.cpp строке 181
+2024-12-26 16:59:10 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:10 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:11 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:11 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:11 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:12 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:12 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:12 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:13 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:13 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:13 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:13 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:14 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:14 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:14 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:15 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:15 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:15 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:16 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:16 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:16 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:17 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:17 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:17 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:17 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:18 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:18 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:18 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:18 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:19 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:19 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:19 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:19 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:20 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:20 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 16:59:20 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:00:13 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:00:14 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:00:14 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:00:14 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:00:15 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:00:15 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:00:15 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:00:15 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:00:36 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:20 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:23 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:24 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:24 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:24 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:24 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:25 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:25 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:25 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:25 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:26 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:26 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:26 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:27 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:27 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:27 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:27 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:28 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:28 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:28 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:28 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:29 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:29 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:29 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:29 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:29 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:30 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:30 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:30 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:30 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:31 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:31 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:31 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:31 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:31 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:32 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:32 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:32 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:32 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:32 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:33 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:33 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:02:33 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:03:04 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:35 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:36 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:36 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:36 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:37 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:37 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:37 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:37 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:38 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:38 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:38 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:38 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:39 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:39 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:39 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:39 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:40 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:40 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:40 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:40 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:41 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:41 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:41 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:41 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:42 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
+2024-12-26 17:06:42 Avalibality Exception: Invalid date format в файле /home/lyuxet/Рабочий стол/Project/booking_vr_system_V2/source/booking_vr.cpp строке 698
