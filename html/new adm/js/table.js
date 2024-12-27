@@ -12,6 +12,23 @@ export function initTable(calendar) {
     let originalData = []; // Add this line to store original data
     let isInitialLoad = true;
 
+    // Определяем searchTerms на верхнем уровне
+    const searchTerms = {
+        place_game: '', 
+        date_game: '', 
+        time_game: '', 
+        client_name: '', 
+        type_game: '', 
+        name_game: '',
+        players_count: '', 
+        client_phone: '', 
+        price: '',
+        client_email: '',
+        book_status: '',
+        who_reservation: '',
+        date_add_book: ''
+    };
+
     // Функция для форматирования даты в нужный формат
     function formatDate(date) {
         const year = date.getFullYear();
@@ -22,7 +39,7 @@ export function initTable(calendar) {
 
     // Функция для загрузки данных с сервера
     function loadTableData(date) {
-        const place_game = "VR Кубы";
+        const place_game = document.querySelector('.main-header h1 span').textContent;
         const formattedDate = formatDate(date);
 
         const url = `http://localhost:8081/getAdminBooking?place_game=${encodeURIComponent(place_game)}&date=${encodeURIComponent(formattedDate)}`;
@@ -69,6 +86,8 @@ export function initTable(calendar) {
         const start = (currentPage - 1) * rowsPerPage;
         const end = start + rowsPerPage;
         const pageData = data.slice(start, end);
+        const place_game = document.querySelector('.main-header h1 span').textContent;
+        const isVRArena = place_game === 'VR Арена';
 
         tableBody.innerHTML = '';
         pageData.forEach(item => {
@@ -79,9 +98,16 @@ export function initTable(calendar) {
                 item.time_game;
 
             const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${item.place_game}</td>
-                <td>${item.date_game}</td>
+            let rowContent = `
+                <td>${isVRArena ? item.type_game : item.place_game}</td>`;
+
+            // Добавляем столбец с названием игры только для VR Арены
+            if (isVRArena) {
+                rowContent += `<td>${item.name_game || ''}</td>`;
+            }
+
+            rowContent += `
+            <td>${item.date_game}</td>
                 <td>${timeWithPlayers}</td>
                 <td>${item.client_phone}</td>
                 <td>${dateAddBook}</td>
@@ -100,6 +126,7 @@ export function initTable(calendar) {
                     </button>
                 </td>
             `;
+            row.innerHTML = rowContent;
             tableBody.appendChild(row);
         });
 
@@ -110,11 +137,12 @@ export function initTable(calendar) {
     
 
     function filterData() {
-        filteredData = originalData.filter(item => { // Filter from original data
+        filteredData = originalData.filter(item => {
             return (
                 (searchTerms.place_game === '' || (item.place_game || '').toLowerCase().includes(searchTerms.place_game.toLowerCase())) &&
                 (searchTerms.date_game === '' || (item.date_game || '').toLowerCase().includes(searchTerms.date_game.toLowerCase())) &&
                 (searchTerms.time_game === '' || (item.time_game || '').toLowerCase().includes(searchTerms.time_game.toLowerCase())) &&
+                (searchTerms.name_game === '' || (item.name_game || '').toLowerCase().includes(searchTerms.name_game.toLowerCase())) &&
                 (searchTerms.client_name === '' || (item.client_name || '').toLowerCase().includes(searchTerms.client_name.toLowerCase())) &&
                 (searchTerms.type_game === '' || (item.type_game || '').toLowerCase().includes(searchTerms.type_game.toLowerCase())) &&
                 (searchTerms.players_count === '' || String(item.players_count || '').includes(searchTerms.players_count)) &&
@@ -150,22 +178,10 @@ export function initTable(calendar) {
         }
     });
 
-    const searchTerms = {
-        place_game: '', 
-        date_game: '', 
-        time_game: '', 
-        client_name: '', 
-        type_game: '', 
-        players_count: '', 
-        client_phone: '', 
-        price: '',
-        client_email: '',     // Added missing fields
-        book_status: '',      // Added missing fields
-        who_reservation: '',  // Added missing fields
-        date_add_book: ''    // Added missing fields
-    };
+    // Настройка обработчиков для заголовков колонок
     columnHeaders.forEach(header => {
         const field = header.getAttribute('data-field');
+        if (!field) return; // Пропускаем заголовки без data-field
 
         header.addEventListener('focus', function() {
             this.value = '';
@@ -184,7 +200,6 @@ export function initTable(calendar) {
             filterData();
         });
 
-        // Сохраняем оригинальное значение
         header.setAttribute('data-original', header.value);
     });
 }

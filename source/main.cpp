@@ -36,7 +36,7 @@ void handle_sigint(int sig) {
 
 int main() {
     std::signal(SIGINT, handle_sigint); 
-    ConnectionPool pool(100, "db_config.conf");
+    ConnectionPool pool(10, "db_config.conf");
     
     std::set<std::shared_ptr<WebSocketSession>> sessions;
     try {

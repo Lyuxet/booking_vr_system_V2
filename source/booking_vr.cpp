@@ -231,7 +231,7 @@ namespace vr{
             }
 
             
-            insertClient(conn);
+            insertClient(std::move(conn));
         
             
             std::string queryInsert = "INSERT INTO " + tableName +
@@ -632,8 +632,26 @@ namespace vr{
         return holidays.count(date_code) > 0;
     }
 
-    void Booking::GetAdminBooking(sql::Connection* conn, std::string& date, std::string& place_game, std::string& response) {
+    std::string Booking::GetAdminBooking(std::string& date, std::string& place_game) {
+        ScopeGuard guard(find_data_);
         try {
+            std::unique_ptr<sql::Connection> conn = pool_.GetConnection();
+            ConnectionGuard conn_guard(std::move(conn), pool_);
+            std::string response;
+            GetAdminBooking(std::move(conn_guard.getConnection()), date, place_game, response);
+            return response;
+        } catch (const std::exception& e) {
+            Logger::getInstance().log("Admin Booking Exception: " + std::string(e.what()) +
+                " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
+                "../logs/error_transaction.log");
+            return "";
+        }
+    }
+
+    void Booking::GetAdminBooking(sql::Connection* conn, std::string& date, std::string& place_game, std::string& response) {
+        executeTransactionWithRetry(conn, [&](sql::Connection* conn) {
+            conn->setAutoCommit(false);
+
             std::string month = date.substr(5, 2);
             std::string query = 
                 "SELECT g.*, c.first_name, c.last_name, c.phone, c.email "
@@ -692,28 +710,8 @@ namespace vr{
             }
             
             response = boost::json::serialize(bookings_array);
-        }
-        catch (const std::exception& e) {
-            Logger::getInstance().log("Avalibality Exception: " + std::string(e.what()) +
-                " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
-                "../logs/error_transaction.log");       
-        }
+            conn->commit();
+        });
     }
-
-    std::string Booking::GetAdminBooking(std::string& date, std::string& place_game) {
-        ScopeGuard guard(find_data_);
-        try {
-            std::unique_ptr<sql::Connection> conn = pool_.GetConnection();
-            ConnectionGuard conn_guard(std::move(conn), pool_);
-            std::string response;
-            GetAdminBooking(conn_guard.getConnection(), date, place_game, response);
-            return response;
-        } catch (const std::exception& e) {
-            Logger::getInstance().log("Avalibality Exception: " + std::string(e.what()) +
-                " в файле " + __FILE__ + " строке " + std::to_string(__LINE__),
-                "../logs/error_transaction.log");
-            return "";
-        }
-    }   
 
 }
