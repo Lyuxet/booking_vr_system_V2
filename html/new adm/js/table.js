@@ -11,6 +11,8 @@ export function initTable(calendar) {
     let filteredData = []; // Filtered data
     let originalData = []; // Add this line to store original data
     let isInitialLoad = true;
+    let isShowingTodayOnly = false;
+    let todayDate = '';
 
     // Определяем searchTerms на верхнем уровне
     const searchTerms = {
@@ -29,7 +31,7 @@ export function initTable(calendar) {
         date_add_book: ''
     };
 
-    // Функция для форматирования даты в нужный формат
+    // Функция дл�� форматирования даты в нужный формат
     function formatDate(date) {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -138,6 +140,11 @@ export function initTable(calendar) {
 
     function filterData() {
         filteredData = originalData.filter(item => {
+            // First check if we're showing today only
+            if (isShowingTodayOnly && item.date_game !== todayDate) {
+                return false;
+            }
+
             return (
                 (searchTerms.place_game === '' || (item.place_game || '').toLowerCase().includes(searchTerms.place_game.toLowerCase())) &&
                 (searchTerms.date_game === '' || (item.date_game || '').toLowerCase().includes(searchTerms.date_game.toLowerCase())) &&
@@ -201,5 +208,11 @@ export function initTable(calendar) {
         });
 
         header.setAttribute('data-original', header.value);
+    });
+
+    document.addEventListener('toggleTodayFilter', function(e) {
+        isShowingTodayOnly = e.detail.isShowingTodayOnly;
+        todayDate = e.detail.todayDate;
+        filterData();
     });
 }

@@ -108,3 +108,7 @@
 .bron {
     margin-left: auto;
 }
+
+.icon-button.active {
+    background-color: var(--success-color, #28a745);
+}
