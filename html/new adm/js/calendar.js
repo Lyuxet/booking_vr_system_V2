@@ -22,7 +22,8 @@ export function initCalendar() {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
         
-        currentMonthElement.textContent = new Date(year, month).toLocaleString('ru', { month: 'long', year: 'numeric' });
+        currentMonthElement.style.cursor = 'pointer';
+        currentMonthElement.textContent = new Date(year, month).toLocaleString('ru', { month: 'long' });
         
         const firstDay = new Date(year, month, 1);
         const lastDay = new Date(year, month + 1, 0);
@@ -61,7 +62,7 @@ export function initCalendar() {
             }
 
             dayElement.textContent = day;
-            dayElement.addEventListener('click', () => selectDate(new Date(year, month, day)));
+            dayElement.addEventListener('click', () => selectDate(new Date(year, month, day), false));
 
             if (selectedDate && 
                 selectedDate.getDate() === day && 
@@ -81,9 +82,11 @@ export function initCalendar() {
         }
     }
 
-    function selectDate(date) {
+    function selectDate(date, showOnlyMonth = false) {
         selectedDate = date;
-        calendarBtn.textContent = date.toLocaleDateString('ru');
+        calendarBtn.textContent = showOnlyMonth ? 
+            date.toLocaleString('ru', { month: 'long' }) : 
+            date.toLocaleDateString('ru');
         calendar.style.display = 'none';
         updateCalendar();
         dateChangeCallbacks.forEach(callback => callback(date));
@@ -117,6 +120,25 @@ export function initCalendar() {
         if (!calendar.contains(e.target) && e.target !== calendarBtn) {
             calendar.style.display = 'none';
         }
+    });
+
+    currentMonthElement.addEventListener('click', () => {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth() + 1;
+        const formattedMonth = month.toString().padStart(2, '0');
+        const monthStart = new Date(year, currentDate.getMonth(), 1);
+        
+        const formattedDate = `${year}.${formattedMonth}.00`;
+        
+        actualButton.classList.remove('active');
+        todayButton.classList.remove('active');
+        
+        selectDate(monthStart, true);
+        
+        const event = new CustomEvent('monthSelected', {
+            detail: { date: formattedDate }
+        });
+        document.dispatchEvent(event);
     });
 
     updateCalendar();

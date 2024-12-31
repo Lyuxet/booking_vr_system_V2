@@ -652,16 +652,28 @@ namespace vr{
         executeTransactionWithRetry(conn, [&](sql::Connection* conn) {
             conn->setAutoCommit(false);
 
+            std::string year = date.substr(0, 4);
+            std::string day = date.substr(8, 2);
             std::string month = date.substr(5, 2);
-            std::string query = 
+
+            
+            std::string query = day == "00" ?
                 "SELECT g.*, c.first_name, c.last_name, c.phone, c.email "
                 "FROM GameSchedule g "
                 "LEFT JOIN Clients c ON g.client_id = c.id "
-                "WHERE g.place_game = ? AND MONTH(g.date_game) = ?";
+                "WHERE g.place_game = ? AND MONTH(g.date_game) = ?" :
+                "SELECT g.*, c.first_name, c.last_name, c.phone, c.email "
+                "FROM GameSchedule g "
+                "LEFT JOIN Clients c ON g.client_id = c.id "
+                "WHERE g.place_game = ? AND DATE(g.date_game) = ?";
 
             std::unique_ptr<sql::PreparedStatement> get_admin_booking(conn->prepareStatement(query));
             get_admin_booking->setString(1, place_game);
-            get_admin_booking->setString(2, month);
+            if (day == "00") {
+                get_admin_booking->setString(2, month);
+            } else {
+                get_admin_booking->setString(2, date);  // Use full date when day is specified
+            }
 
             std::unique_ptr<sql::ResultSet> res_set_admin_booking(get_admin_booking->executeQuery());
             

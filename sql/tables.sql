@@ -1,3 +1,5 @@
+CREATE database booking_vr;
+
 use booking_vr;
 
 CREATE TABLE GameSchedule (

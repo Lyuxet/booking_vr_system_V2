@@ -37,7 +37,7 @@ body.dark-theme .calendar-header {
     border: none;
     font-size: 18px;
     cursor: pointer;
-    color: var(--primary-color);
+    color: #f0eeed;
 }
 
 .calendar-grid {
@@ -107,6 +107,14 @@ body.dark-theme .calendar-day.past-date {
 }
 
 .calendar-day.selected.past-date {
+    opacity: 0.8;
+}
+
+#currentMonth {
+    cursor: pointer;
+}
+
+#currentMonth:hover {
     opacity: 0.8;
 }
 

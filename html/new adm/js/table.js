@@ -231,4 +231,32 @@ export function initTable(calendar) {
             }
         });
     });
+
+    document.addEventListener('monthSelected', (event) => {
+        const formattedDate = event.detail.date;
+        const place_game = document.querySelector('.main-header h1 span').textContent;
+        
+        const url = `http://localhost:8081/getAdminBooking?place_game=${encodeURIComponent(place_game)}&date=${encodeURIComponent(formattedDate)}`;
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                const availability = JSON.parse(xhr.responseText);
+                originalData = availability;
+                filteredData = [...originalData];
+                renderTable(filteredData);
+            } else {
+                console.error('Ошибка запроса доступности. Статус:', xhr.status);
+            }
+        };
+
+        xhr.onerror = function() {
+            console.error('Произошла ошибка сети');
+        };
+
+        xhr.send();
+    });
 }
