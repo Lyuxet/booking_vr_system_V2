@@ -5,6 +5,8 @@ export function initCalendar() {
     const currentMonthElement = document.getElementById('currentMonth');
     const prevMonthBtn = document.getElementById('prevMonth');
     const nextMonthBtn = document.getElementById('nextMonth');
+    const todayButton = document.querySelector('.today .icon-button');
+    const actualButton = document.querySelector('.actual .icon-button');
 
     let currentDate = new Date();
     let selectedDate = currentDate;
@@ -98,11 +100,15 @@ export function initCalendar() {
 
     prevMonthBtn.addEventListener('click', () => {
         currentDate.setMonth(currentDate.getMonth() - 1);
+        actualButton.classList.remove('active');
+        todayButton.classList.remove('active');
         updateCalendar();
     });
 
     nextMonthBtn.addEventListener('click', () => {
         currentDate.setMonth(currentDate.getMonth() + 1);
+        actualButton.classList.remove('active');
+        todayButton.classList.remove('active');
         updateCalendar();
     });
 

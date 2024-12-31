@@ -31,7 +31,7 @@ export function initTable(calendar) {
         date_add_book: ''
     };
 
-    // Функция дл�� форматирования даты в нужный формат
+    // Функция для форматирования даты в нужный формат
     function formatDate(date) {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -55,7 +55,6 @@ export function initTable(calendar) {
                 const availability = JSON.parse(xhr.responseText);
                 originalData = availability; 
                 filteredData = [...originalData]; 
-                console.log(filteredData);
                 renderTable(filteredData);
             } else {
                 console.error('Ошибка запроса доступности. Статус:', xhr.status);
@@ -214,5 +213,22 @@ export function initTable(calendar) {
         isShowingTodayOnly = e.detail.isShowingTodayOnly;
         todayDate = e.detail.todayDate;
         filterData();
+    });
+
+    document.addEventListener('toggleActualFilter', function(event) {
+        const { isShowingActualOnly, startDate, endDate } = event.detail;
+        
+        const rows = document.querySelectorAll('#tableBody tr');
+        rows.forEach(row => {
+            const dateCell = row.cells[2]; // Получаем третью ячейку, где находится date_game
+            if (dateCell) {
+                const rowDate = dateCell.textContent.trim(); // Получаем текст даты
+                if (isShowingActualOnly) {
+                    row.style.display = (rowDate >= startDate && rowDate <= endDate) ? '' : 'none';
+                } else {
+                    row.style.display = '';
+                }
+            }
+        });
     });
 }
